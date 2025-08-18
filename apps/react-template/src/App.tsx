@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLanguage } from './contexts/AppContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ErrorBoundary from './components/ErrorBoundary';
+import { NetworkStatusBanner } from './components/ErrorHandling';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ProgramsPage from './pages/ProgramsPage';
@@ -17,17 +20,59 @@ import FAQPage from './pages/FAQPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsPage from './pages/TermsPage';
 
-type Language = 'ar' | 'en';
+import { Language } from './contexts/AppContext';
+
+// Wrapper components for proper parameter handling
+const ProgramDetailWrapper: React.FC<{ currentLang: Language; onBack: () => void }> = ({ currentLang, onBack }) => {
+  const { programId } = useParams<{ programId: string }>();
+  const parsedId = programId ? parseInt(programId, 10) : 1;
+  
+  if (isNaN(parsedId)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-secondary-700 mb-4">
+            {currentLang === 'ar' ? 'معرف البرنامج غير صحيح' : 'Invalid Program ID'}
+          </h2>
+          <button onClick={onBack} className="btn-primary">
+            {currentLang === 'ar' ? 'العودة للبرامج' : 'Back to Programs'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  return <ProgramDetailPage currentLang={currentLang} programId={parsedId} onBack={onBack} />;
+};
+
+const NewsDetailWrapper: React.FC<{ currentLang: Language; onBack: () => void }> = ({ currentLang, onBack }) => {
+  const { newsId } = useParams<{ newsId: string }>();
+  const parsedId = newsId ? parseInt(newsId, 10) : 1;
+  
+  if (isNaN(parsedId)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-secondary-700 mb-4">
+            {currentLang === 'ar' ? 'معرف الخبر غير صحيح' : 'Invalid News ID'}
+          </h2>
+          <button onClick={onBack} className="btn-primary">
+            {currentLang === 'ar' ? 'العودة للأخبار' : 'Back to News'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  return <NewsDetailPage currentLang={currentLang} newsId={parsedId} onBack={onBack} />;
+};
 
 function App() {
-  const [currentLang, setCurrentLang] = useState<Language>('ar');
+  const { currentLang, setLanguage } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    document.documentElement.lang = currentLang;
-    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-  }, [currentLang]);
+  // Language and direction are now handled by the AppProvider
 
   // Update page title based on current route
   useEffect(() => {
@@ -99,20 +144,24 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Skip to content for keyboard and screen readers */}
-      <a href="#main-content" className="skip-link">
-        {currentLang === 'ar' ? 'تخطي إلى المحتوى' : 'Skip to main content'}
-      </a>
-      
-      <Header 
-        currentLang={currentLang}
-        setCurrentLang={setCurrentLang}
-        currentPage={getCurrentPage()}
-      />
-      
-      <main id="main-content" tabIndex={-1} className="flex-1" role="main">
-        <Routes>
+    <ErrorBoundary level="global">
+      <div className="min-h-screen flex flex-col">
+        {/* Network Status Banner */}
+        <NetworkStatusBanner />
+        
+        {/* Skip to content for keyboard and screen readers */}
+        <a href="#main-content" className="skip-link">
+          {currentLang === 'ar' ? 'تخطي إلى المحتوى' : 'Skip to main content'}
+        </a>
+        
+        <Header 
+          currentLang={currentLang}
+          setCurrentLang={setLanguage}
+          currentPage={getCurrentPage()}
+        />
+        
+        <main id="main-content" tabIndex={-1} className="flex-1" role="main">
+          <Routes>
           {/* Home Routes */}
           <Route path="/" element={<HomePage currentLang={currentLang} />} />
           <Route path="/home" element={<HomePage currentLang={currentLang} />} />
@@ -127,13 +176,7 @@ function App() {
           />
           <Route 
             path="/programs/:programId" 
-            element={
-              <ProgramDetailPage 
-                currentLang={currentLang} 
-                programId={parseInt(location.pathname.split('/')[2]) || 1}
-                onBack={handleBackToPrograms}
-              />
-            } 
+            element={<ProgramDetailWrapper currentLang={currentLang} onBack={handleBackToPrograms} />} 
           />
           
           {/* News Routes */}
@@ -143,13 +186,7 @@ function App() {
           />
           <Route 
             path="/news/:newsId" 
-            element={
-              <NewsDetailPage 
-                currentLang={currentLang} 
-                newsId={parseInt(location.pathname.split('/')[2]) || 1}
-                onBack={handleBackToNews}
-              />
-            } 
+            element={<NewsDetailWrapper currentLang={currentLang} onBack={handleBackToNews} />} 
           />
           
           {/* Events Routes */}
@@ -179,10 +216,11 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicyPage currentLang={currentLang} />} />
           <Route path="/terms" element={<TermsPage currentLang={currentLang} />} />
         </Routes>
-      </main>
-      
-      <Footer currentLang={currentLang} />
-    </div>
+        </main>
+        
+        <Footer currentLang={currentLang} />
+      </div>
+    </ErrorBoundary>
   );
 }
 
