@@ -1,0 +1,7 @@
+id,name_ar,name_en,description_ar,description_en,sort_order,status,created_at,updated_at
+1,عن المعهد,About the Institute,أسئلة عامة حول المعهد وتاريخه ورؤيته,General questions about the Institute its history and vision,1,active,2024-01-01,2024-01-01
+2,التسجيل والبرامج,Registration and Programs,أسئلة حول التسجيل في البرامج والمتطلبات,Questions about program registration and requirements,2,active,2024-01-01,2024-01-01
+3,الشهادات والاعتماد,Certificates and Accreditation,أسئلة حول الشهادات والاعتماد المهني,Questions about certificates and professional accreditation,3,active,2024-01-01,2024-01-01
+4,المنصة والتقنية,Platform and Technology,أسئلة تقنية حول استخدام المنصة,Technical questions about platform usage,4,active,2024-01-01,2024-01-01
+5,التواصل والدعم,Contact and Support,أسئلة حول التواصل والحصول على الدعم,Questions about contact and getting support,5,active,2024-01-01,2024-01-01
+6,الشراكات والبرامج الخاصة,Partnerships and Special Programs,أسئلة حول الشراكات والبرامج المتخصصة,Questions about partnerships and specialized programs,6,active,2024-01-01,2024-01-01

@@ -83,6 +83,7 @@ html {
   background: var(--page-bg); 
   color: var(--ink); 
   scroll-behavior: smooth;
+  background-color: #fbfcfc;
 }
 
 /* Skip link utility */

@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1,
+    "key": "site_name",
+    "value_ar": "المعهد الوطني للتطوير المهني التعليمي",
+    "value_en": "National Institute for Educational Professional Development",
+    "type": "text",
+    "category": "general",
+    "description_ar": "اسم الموقع الرسمي",
+    "description_en": "Official site name",
+    "status": "active",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 2,
+    "key": "site_tagline",
+    "value_ar": "رائد وشريك استراتيجي في بناء القدرات التعليمية",
+    "value_en": "Leading strategic partner in building educational capacities",
+    "type": "text",
+    "category": "general",
+    "description_ar": "شعار الموقع",
+    "description_en": "Site tagline",
+    "status": "active",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 4,
+    "key": "default_locale",
+    "value_ar": "ar",
+    "value_en": "en",
+    "type": "select",
+    "category": "localization",
+    "description_ar": "اللغة الافتراضية",
+    "description_en": "Default language",
+    "status": "active",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 6,
+    "key": "contact_email",
+    "value_ar": "niepd@moe.gov.sa",
+    "value_en": "niepd@moe.gov.sa",
+    "type": "email",
+    "category": "contact",
+    "description_ar": "البريد الإلكتروني الرئيسي",
+    "description_en": "Main contact email",
+    "status": "active",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 12,
+    "key": "twitter_url",
+    "value_ar": "https://x.com/niepd_edu",
+    "value_en": "https://x.com/niepd_edu",
+    "type": "url",
+    "category": "social",
+    "description_ar": "رابط تويتر",
+    "description_en": "Twitter URL",
+    "status": "active",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  }
+]

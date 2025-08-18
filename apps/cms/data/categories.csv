@@ -1,0 +1,27 @@
+id,slug,name_ar,name_en,type,description_ar,description_en,parent_id,sort_order,status,created_at,updated_at
+1,programs,البرامج,Programs,news,أخبار البرامج والدورات التدريبية,News about programs and training courses,,1,active,2024-01-01,2024-01-01
+2,events,الفعاليات,Events,news,الفعاليات واللقاءات والمؤتمرات,Events meetings and conferences,,2,active,2024-01-01,2024-01-01
+3,partnerships,الشراكات,Partnerships,news,أخبار الشراكات والتعاونات,Partnership and collaboration news,,3,active,2024-01-01,2024-01-01
+4,management,الإدارة,Management,news,أخبار الإدارة والتعيينات,Management and appointment news,,4,active,2024-01-01,2024-01-01
+5,platforms,المنصات,Platforms,news,أخبار المنصات والتقنيات,Platform and technology news,,5,active,2024-01-01,2024-01-01
+6,workshops,ورش عمل,Workshops,news,ورش العمل والتدريب,Workshops and training,,6,active,2024-01-01,2024-01-01
+7,general-education,التربوي العام,General Education,program,برامج التطوير المهني العامة,General professional development programs,,1,active,2024-01-01,2024-01-01
+8,teacher-preparation,إعداد المعلم,Teacher Preparation,program,برامج إعداد المعلمين الجدد,New teacher preparation programs,,2,active,2024-01-01,2024-01-01
+9,basic-skills,المهارات الأساسية,Basic Skills,program,برامج المهارات الأساسية,Basic skills programs,,3,active,2024-01-01,2024-01-01
+10,educational-leadership,القيادة التعليمية,Educational Leadership,program,برامج القيادة التعليمية,Educational leadership programs,,4,active,2024-01-01,2024-01-01
+11,special-education,التربية الخاصة,Special Education,program,برامج التربية الخاصة,Special education programs,,5,active,2024-01-01,2024-01-01
+12,languages,اللغات,Languages,program,برامج تعليم اللغات,Language learning programs,,6,active,2024-01-01,2024-01-01
+13,science-technology,العلوم والتكنولوجيا,Science and Technology,program,برامج العلوم والتكنولوجيا,Science and technology programs,,7,active,2024-01-01,2024-01-01
+14,student-guidance,التوجيه الطلابي,Student Guidance,program,برامج التوجيه والإرشاد الطلابي,Student guidance and counseling programs,,8,active,2024-01-01,2024-01-01
+15,early-intervention,التدخل المبكر,Early Intervention,program,برامج التدخل المبكر,Early intervention programs,,9,active,2024-01-01,2024-01-01
+16,effective-teaching,التدريس الفعال,Effective Teaching,program,برامج التدريس الفعال,Effective teaching programs,,10,active,2024-01-01,2024-01-01
+17,educational-planning,التخطيط التعليمي,Educational Planning,program,برامج التخطيط التعليمي,Educational planning programs,,11,active,2024-01-01,2024-01-01
+18,classroom-management,إدارة الصف,Classroom Management,program,برامج إدارة الفصل الدراسي,Classroom management programs,,12,active,2024-01-01,2024-01-01
+19,assessment-evaluation,التقويم والتقييم,Assessment and Evaluation,program,برامج التقويم والتقييم,Assessment and evaluation programs,,13,active,2024-01-01,2024-01-01
+20,educational-technology,التقنيات التعليمية,Educational Technology,program,برامج التقنيات التعليمية,Educational technology programs,,14,active,2024-01-01,2024-01-01
+21,digital-citizenship,المواطنة الرقمية,Digital Citizenship,program,برامج المواطنة الرقمية,Digital citizenship programs,,15,active,2024-01-01,2024-01-01
+22,critical-thinking,التفكير الناقد,Critical Thinking,program,برامج التفكير الناقد,Critical thinking programs,,16,active,2024-01-01,2024-01-01
+23,artificial-intelligence,الذكاء الاصطناعي,Artificial Intelligence,program,برامج الذكاء الاصطناعي,Artificial intelligence programs,,17,active,2024-01-01,2024-01-01
+24,cybersecurity,الأمن السيبراني,Cybersecurity,program,برامج الأمن السيبراني,Cybersecurity programs,,18,active,2024-01-01,2024-01-01
+25,educational-research,البحث التربوي,Educational Research,program,برامج البحث التربوي,Educational research programs,,19,active,2024-01-01,2024-01-01
+26,research-methodology,منهجية البحث,Research Methodology,program,برامج منهجية البحث,Research methodology programs,,20,active,2024-01-01,2024-01-01

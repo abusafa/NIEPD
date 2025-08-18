@@ -1,0 +1,439 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  AUTHOR
+  VIEWER
+}
+
+enum ContentStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Language {
+  AR
+  EN
+  BOTH
+}
+
+enum CategoryType {
+  NEWS
+  PROGRAM
+  EVENT
+  FAQ
+  GENERAL
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  PAST
+  CANCELLED
+}
+
+enum ProgramLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum DurationType {
+  HOURS
+  DAYS
+  WEEKS
+  MONTHS
+}
+
+// User management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  firstName String?
+  lastName  String?
+  role      UserRole @default(AUTHOR)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Content relationships
+  news        News[]
+  events      Event[]
+  programs    Program[]
+  pages       Page[]
+  faqs        FAQ[]
+  partners    Partner[]
+
+  @@map("users")
+}
+
+// Categories for organizing content
+model Category {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  nameAr      String
+  nameEn      String
+  type        CategoryType
+  descriptionAr String?
+  descriptionEn String?
+  parentId    String?
+  sortOrder   Int         @default(0)
+  status      ContentStatus @default(PUBLISHED)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relationships
+  parent      Category?   @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[]  @relation("CategoryHierarchy")
+  news        News[]
+  programs    Program[]
+  events      Event[]
+  faqs        FAQ[]
+
+  @@map("categories")
+}
+
+// Tags for flexible content categorization
+model Tag {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  nameAr    String
+  nameEn    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  news      NewsTag[]
+  programs  ProgramTag[]
+  events    EventTag[]
+
+  @@map("tags")
+}
+
+// News/Articles
+model News {
+  id          String        @id @default(cuid())
+  titleAr     String
+  titleEn     String
+  summaryAr   String?
+  summaryEn   String?
+  contentAr   String
+  contentEn   String
+  slug        String        @unique
+  authorAr    String?
+  authorEn    String?
+  image       String?
+  featured    Boolean       @default(false)
+  status      ContentStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relationships
+  categoryId  String?
+  category    Category?     @relation(fields: [categoryId], references: [id])
+  authorId    String?
+  author      User?         @relation(fields: [authorId], references: [id])
+  tags        NewsTag[]
+
+  @@map("news")
+}
+
+model NewsTag {
+  newsId String
+  tagId  String
+  news   News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([newsId, tagId])
+  @@map("news_tags")
+}
+
+// Training Programs
+model Program {
+  id                  String        @id @default(cuid())
+  titleAr             String
+  titleEn             String
+  descriptionAr       String
+  descriptionEn       String
+  slug                String        @unique
+  duration            Int
+  durationType        DurationType
+  level               ProgramLevel
+  instructorAr        String?
+  instructorEn        String?
+  rating              Float?        @default(0)
+  participants        Int           @default(0)
+  image               String?
+  partnerAr           String?
+  partnerEn           String?
+  featuresAr          Json?         // Array of features in Arabic
+  featuresEn          Json?         // Array of features in English
+  targetAudienceAr    String?
+  targetAudienceEn    String?
+  prerequisitesAr     String?
+  prerequisitesEn     String?
+  certification       String?
+  featured            Boolean       @default(false)
+  isFree              Boolean       @default(true)
+  isCertified         Boolean       @default(false)
+  status              ContentStatus @default(DRAFT)
+  launchDate          DateTime?
+  publishedAt         DateTime?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  // Relationships
+  categoryId          String?
+  category            Category?     @relation(fields: [categoryId], references: [id])
+  authorId            String?
+  author              User?         @relation(fields: [authorId], references: [id])
+  tags                ProgramTag[]
+
+  @@map("programs")
+}
+
+model ProgramTag {
+  programId String
+  tagId     String
+  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([programId, tagId])
+  @@map("program_tags")
+}
+
+// Events and workshops
+model Event {
+  id                    String        @id @default(cuid())
+  titleAr               String
+  titleEn               String
+  summaryAr             String?
+  summaryEn             String?
+  descriptionAr         String
+  descriptionEn         String
+  slug                  String        @unique
+  startDate             DateTime
+  endDate               DateTime
+  startTime             String?
+  endTime               String?
+  locationAr            String?
+  locationEn            String?
+  venueAr               String?
+  venueEn               String?
+  registrationUrl       String?
+  capacity              Int?
+  registrationDeadline  DateTime?
+  eventTypeAr           String?
+  eventTypeEn           String?
+  image                 String?
+  featured              Boolean       @default(false)
+  eventStatus           EventStatus   @default(UPCOMING)
+  status                ContentStatus @default(DRAFT)
+  publishedAt           DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  // Relationships
+  categoryId            String?
+  category              Category?     @relation(fields: [categoryId], references: [id])
+  authorId              String?
+  author                User?         @relation(fields: [authorId], references: [id])
+  tags                  EventTag[]
+
+  @@map("events")
+}
+
+model EventTag {
+  eventId String
+  tagId   String
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tag     Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, tagId])
+  @@map("event_tags")
+}
+
+// Website Pages
+model Page {
+  id                String        @id @default(cuid())
+  slug              String        @unique
+  titleAr           String
+  titleEn           String
+  metaTitleAr       String?
+  metaTitleEn       String?
+  metaDescriptionAr String?
+  metaDescriptionEn String?
+  contentAr         String?
+  contentEn         String?
+  template          String        @default("page")
+  language          Language      @default(BOTH)
+  parentId          String?
+  sortOrder         Int           @default(0)
+  status            ContentStatus @default(DRAFT)
+  publishedAt       DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // Relationships
+  parent            Page?         @relation("PageHierarchy", fields: [parentId], references: [id])
+  children          Page[]        @relation("PageHierarchy")
+  authorId          String?
+  author            User?         @relation(fields: [authorId], references: [id])
+
+  @@map("pages")
+}
+
+// FAQ entries
+model FAQ {
+  id          String        @id @default(cuid())
+  questionAr  String
+  questionEn  String
+  answerAr    String
+  answerEn    String
+  sortOrder   Int           @default(0)
+  status      ContentStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relationships
+  categoryId  String?
+  category    Category?     @relation(fields: [categoryId], references: [id])
+  authorId    String?
+  author      User?         @relation(fields: [authorId], references: [id])
+
+  @@map("faqs")
+}
+
+// Partners and collaborations
+model Partner {
+  id            String        @id @default(cuid())
+  nameAr        String
+  nameEn        String
+  descriptionAr String?
+  descriptionEn String?
+  slug          String        @unique
+  logo          String?
+  website       String?
+  type          String?       // "local", "international", "academic", "corporate"
+  featured      Boolean       @default(false)
+  sortOrder     Int           @default(0)
+  status        ContentStatus @default(DRAFT)
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relationships
+  authorId      String?
+  author        User?         @relation(fields: [authorId], references: [id])
+
+  @@map("partners")
+}
+
+// Navigation structure
+model Navigation {
+  id        String   @id @default(cuid())
+  labelAr   String
+  labelEn   String
+  url       String
+  parentId  String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  target    String?  @default("_self") // "_self", "_blank"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  parent    Navigation?  @relation("NavigationHierarchy", fields: [parentId], references: [id])
+  children  Navigation[] @relation("NavigationHierarchy")
+
+  @@map("navigation")
+}
+
+// Contact information
+model ContactInfo {
+  id        String   @id @default(cuid())
+  type      String   // "phone", "email", "address", "social"
+  labelAr   String
+  labelEn   String
+  valueAr   String
+  valueEn   String
+  icon      String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contact_info")
+}
+
+// Site settings and configuration
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  valueAr   String?
+  valueEn   String?
+  type      String   @default("text") // "text", "number", "boolean", "json"
+  groupName String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// Organizational structure
+model OrganizationalStructure {
+  id            String   @id @default(cuid())
+  nameAr        String
+  nameEn        String
+  positionAr    String
+  positionEn    String
+  descriptionAr String?
+  descriptionEn String?
+  image         String?
+  parentId      String?
+  sortOrder     Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  parent        OrganizationalStructure?  @relation("StructureHierarchy", fields: [parentId], references: [id])
+  children      OrganizationalStructure[] @relation("StructureHierarchy")
+
+  @@map("organizational_structure")
+}
+
+// Media library
+model Media {
+  id          String   @id @default(cuid())
+  filename    String
+  originalName String
+  mimeType    String
+  size        Int
+  path        String
+  alt         String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("media")
+}

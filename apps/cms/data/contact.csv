@@ -1,0 +1,16 @@
+id,type,label_ar,label_en,value,display_value_ar,display_value_en,icon,url,status,sort_order,created_at,updated_at
+1,address,العنوان الرئيسي,Main Address,"الرياض - جامعة الإمام محمد بن سعود، 8286، الرياض، 13318","الرياض - جامعة الإمام محمد بن سعود، 8286، الرياض، 13318","Riyadh - Imam Muhammad ibn Saud University, 8286, Riyadh, 13318",map-pin,https://maps.google.com/?q=Imam+Muhammad+ibn+Saud+University+Riyadh,active,1,2024-01-01,2024-01-01
+2,email,البريد الإلكتروني الرئيسي,Main Email,niepd@moe.gov.sa,niepd@moe.gov.sa,niepd@moe.gov.sa,mail,mailto:niepd@moe.gov.sa,active,2,2024-01-01,2024-01-01
+3,website,الموقع الإلكتروني,Official Website,https://niepd.futurex.sa/,https://niepd.futurex.sa/,https://niepd.futurex.sa/,globe,https://niepd.futurex.sa/,active,3,2024-01-01,2024-01-01
+4,social,تويتر (X),Twitter (X),@niepd_edu,@niepd_edu,@niepd_edu,twitter,https://x.com/niepd_edu,active,4,2024-01-01,2024-01-01
+5,social,يوتيوب,YouTube,@NIEPD,@NIEPD,@NIEPD,youtube,https://youtube.com/@NIEPD,active,5,2024-01-01,2024-01-01
+6,social,لينكدإن,LinkedIn,niepd,المعهد الوطني للتطوير المهني التعليمي,National Institute for Educational Professional Development,linkedin,https://www.linkedin.com/company/niepd,active,6,2024-01-01,2024-01-01
+7,registration,رابط التسجيل في البرامج,Program Registration Link,https://niepd.futurex.sa/courses,سجل في برامجنا,Register for Our Programs,book-open,https://niepd.futurex.sa/courses,active,7,2024-01-01,2024-01-01
+8,support,الدعم الفني,Technical Support,support@niepd.futurex.sa,الدعم الفني,Technical Support,headphones,mailto:support@niepd.futurex.sa,active,8,2024-01-01,2024-01-01
+9,info,معلومات عامة,General Information,info@niepd.futurex.sa,معلومات عامة,General Information,info,mailto:info@niepd.futurex.sa,active,9,2024-01-01,2024-01-01
+10,hours,ساعات العمل,Working Hours,"الأحد - الخميس: 8:00 صباحاً - 4:00 مساءً","الأحد - الخميس: 8:00 صباحاً - 4:00 مساءً","Sunday - Thursday: 8:00 AM - 4:00 PM",clock,,active,10,2024-01-01,2024-01-01
+11,phone,هاتف المعهد,Institute Phone,+966-11-XXXXXXX,+966-11-XXXXXXX,+966-11-XXXXXXX,phone,tel:+966-11-XXXXXXX,inactive,11,2024-01-01,2024-01-01
+12,fax,فاكس,Fax,+966-11-XXXXXXX,+966-11-XXXXXXX,+966-11-XXXXXXX,printer,,inactive,12,2024-01-01,2024-01-01
+13,postal,صندوق بريد,P.O. Box,"ص.ب 8286، الرياض 13318","ص.ب 8286، الرياض 13318","P.O. Box 8286, Riyadh 13318",mail-box,,active,13,2024-01-01,2024-01-01
+14,emergency,الطوارئ,Emergency Contact,emergency@niepd.futurex.sa,اتصال الطوارئ,Emergency Contact,alert-triangle,mailto:emergency@niepd.futurex.sa,active,14,2024-01-01,2024-01-01
+15,media,الإعلام والعلاقات العامة,Media & Public Relations,media@niepd.futurex.sa,الإعلام والعلاقات العامة,Media & Public Relations,camera,mailto:media@niepd.futurex.sa,active,15,2024-01-01,2024-01-01

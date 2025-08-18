@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "nameAr": "وزارة التعليم",
+    "nameEn": "Ministry of Education",
+    "descriptionAr": "الجهة الحكومية المشرفة على التعليم في المملكة العربية السعودية",
+    "descriptionEn": "The government body overseeing education in the Kingdom of Saudi Arabia",
+    "type": "local",
+    "categoryAr": "حكومي",
+    "categoryEn": "Government",
+    "since": "2019",
+    "website": "https://moe.gov.sa",
+    "logo": "https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=200"
+  },
+  {
+    "id": 2,
+    "nameAr": "جامعة سنغافورة الوطنية",
+    "nameEn": "National University of Singapore",
+    "descriptionAr": "إحدى الجامعات الرائدة عالمياً في مجال التعليم والبحث العلمي",
+    "descriptionEn": "One of the world's leading universities in education and scientific research",
+    "type": "international",
+    "categoryAr": "أكاديمي",
+    "categoryEn": "Academic",
+    "since": "2021",
+    "website": "https://nus.edu.sg",
+    "logo": "https://images.pexels.com/photos/5212700/pexels-photo-5212700.jpeg?auto=compress&cs=tinysrgb&w=200"
+  },
+  {
+    "id": 3,
+    "nameAr": "المركز الوطني للتعليم الإلكتروني",
+    "nameEn": "National Center for E-Learning",
+    "descriptionAr": "مركز متخصص في تطوير وتنظيم التعليم الإلكتروني في المملكة",
+    "descriptionEn": "A specialized center for developing and regulating e-learning in the Kingdom",
+    "type": "local",
+    "categoryAr": "تعليمي",
+    "categoryEn": "Educational",
+    "since": "2020",
+    "website": "https://nelc.gov.sa",
+    "logo": "https://images.pexels.com/photos/1181534/pexels-photo-1181534.jpeg?auto=compress&cs=tinysrgb&w=200"
+  },
+  {
+    "id": 4,
+    "nameAr": "مجموعة السليمان",
+    "nameEn": "Al-Sulaiman Group",
+    "descriptionAr": "مجموعة رائدة في القطاع الخاص تدعم التطوير التعليمي والتقني",
+    "descriptionEn": "A leading private sector group supporting educational and technical development",
+    "type": "local",
+    "categoryAr": "قطاع خاص",
+    "categoryEn": "Private Sector",
+    "since": "2020",
+    "website": "https://alsulaiman.com",
+    "logo": "https://images.pexels.com/photos/5428010/pexels-photo-5428010.jpeg?auto=compress&cs=tinysrgb&w=200"
+  },
+  {
+    "id": 5,
+    "nameAr": "معهد ماساتشوستس للتكنولوجيا",
+    "nameEn": "Massachusetts Institute of Technology",
+    "descriptionAr": "معهد رائد في التكنولوجيا والابتكار في التعليم",
+    "descriptionEn": "Leading institute in technology and innovation in education",
+    "type": "international",
+    "categoryAr": "أكاديمي",
+    "categoryEn": "Academic",
+    "since": "2022",
+    "website": "https://mit.edu",
+    "logo": "https://images.pexels.com/photos/5427648/pexels-photo-5427648.jpeg?auto=compress&cs=tinysrgb&w=200"
+  },
+  {
+    "id": 6,
+    "nameAr": "شركة أرامكو السعودية",
+    "nameEn": "Saudi Aramco",
+    "descriptionAr": "شركة النفط الوطنية وداعم التطوير المهني في مجال STEM",
+    "descriptionEn": "National oil company and supporter of professional development in STEM fields",
+    "type": "local",
+    "categoryAr": "قطاع خاص",
+    "categoryEn": "Private Sector",
+    "since": "2021",
+    "website": "https://aramco.com",
+    "logo": "https://images.pexels.com/photos/8500434/pexels-photo-8500434.jpeg?auto=compress&cs=tinysrgb&w=200"
+  }
+]

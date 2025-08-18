@@ -1,0 +1,33 @@
+id,menu_type,parent_id,title_ar,title_en,url,icon,sort_order,status,target,css_class,description_ar,description_en,created_at,updated_at
+1,main,,الرئيسية,Home,/,home,1,active,_self,nav-home,الصفحة الرئيسية للمعهد,Institute's main page,2024-01-01,2024-01-01
+2,main,,عن المعهد,About Us,/about,info,2,active,_self,nav-about,معلومات عن المعهد,Information about the Institute,2024-01-01,2024-01-01
+3,main,2,الرؤية والرسالة,Vision & Mission,/vision-mission,target,1,active,_self,nav-vision,رؤية ورسالة المعهد,Institute's vision and mission,2024-01-01,2024-01-01
+4,main,2,الهيكل التنظيمي,Organizational Structure,/organizational-structure,users,2,active,_self,nav-structure,الهيكل التنظيمي للمعهد,Institute's organizational structure,2024-01-01,2024-01-01
+5,main,2,التاريخ والتأسيس,History & Establishment,/history,calendar,3,active,_self,nav-history,تاريخ تأسيس المعهد,Institute's establishment history,2024-01-01,2024-01-01
+6,main,,البرامج والخدمات,Programs & Services,/programs,book-open,3,active,_self,nav-programs,برامج التطوير المهني,Professional development programs,2024-01-01,2024-01-01
+7,main,6,برامج المعلمين,Teacher Programs,/teacher-programs,user-check,1,active,_self,nav-teacher-programs,برامج التطوير المهني للمعلمين,Professional development programs for teachers,2024-01-01,2024-01-01
+8,main,6,برامج القيادات,Leadership Programs,/leadership-programs,crown,2,active,_self,nav-leadership-programs,برامج التطوير المهني للقيادات,Professional development programs for leaders,2024-01-01,2024-01-01
+9,main,6,البرامج التخصصية,Specialized Programs,/specialized-programs,star,3,active,_self,nav-specialized-programs,البرامج التخصصية المتقدمة,Advanced specialized programs,2024-01-01,2024-01-01
+10,main,,الأخبار والفعاليات,News & Events,/news,newspaper,4,active,_self,nav-news,آخر الأخبار والفعاليات,Latest news and events,2024-01-01,2024-01-01
+11,main,,الشركاء والتعاونات,Partners & Collaborations,/partners,handshake,5,active,_self,nav-partners,شركاء المعهد والتعاونات,Institute partners and collaborations,2024-01-01,2024-01-01
+12,main,,اتصل بنا,Contact Us,/contact,phone,6,active,_self,nav-contact,معلومات الاتصال,Contact information,2024-01-01,2024-01-01
+13,footer,,الرئيسية,Home,/,home,1,active,_self,footer-home,الصفحة الرئيسية,Home page,2024-01-01,2024-01-01
+14,footer,,عن المعهد,About Us,/about,info,2,active,_self,footer-about,عن المعهد,About the Institute,2024-01-01,2024-01-01
+15,footer,,البرامج,Programs,/programs,book-open,3,active,_self,footer-programs,البرامج التدريبية,Training programs,2024-01-01,2024-01-01
+16,footer,,الأخبار,News,/news,newspaper,4,active,_self,footer-news,الأخبار والفعاليات,News and events,2024-01-01,2024-01-01
+17,footer,,الشركاء,Partners,/partners,handshake,5,active,_self,footer-partners,الشركاء والتعاونات,Partners and collaborations,2024-01-01,2024-01-01
+18,footer,,اتصل بنا,Contact,/contact,phone,6,active,_self,footer-contact,اتصل بنا,Contact us,2024-01-01,2024-01-01
+19,footer,,سياسة الخصوصية,Privacy Policy,/privacy-policy,shield,7,active,_self,footer-privacy,سياسة الخصوصية,Privacy policy,2024-01-01,2024-01-01
+20,footer,,شروط الاستخدام,Terms of Use,/terms-of-use,file-text,8,active,_self,footer-terms,شروط الاستخدام,Terms of use,2024-01-01,2024-01-01
+21,footer,,خريطة الموقع,Site Map,/sitemap,map,9,active,_self,footer-sitemap,خريطة الموقع,Site map,2024-01-01,2024-01-01
+22,quick,,التسجيل في البرامج,Register for Programs,https://niepd.futurex.sa/courses,user-plus,1,active,_blank,quick-register,سجل في برامج التطوير المهني,Register for professional development programs,2024-01-01,2024-01-01
+23,quick,,البحث عن البرامج,Search Programs,/programs/search,search,2,active,_self,quick-search,ابحث عن البرامج المناسبة,Search for suitable programs,2024-01-01,2024-01-01
+24,quick,,المساعدة والدعم,Help & Support,/support,help-circle,3,active,_self,quick-support,المساعدة والدعم الفني,Help and technical support,2024-01-01,2024-01-01
+25,quick,,الأسئلة الشائعة,FAQ,/faq,message-circle,4,active,_self,quick-faq,الأسئلة الشائعة,Frequently asked questions,2024-01-01,2024-01-01
+26,social,,تويتر,Twitter,https://x.com/niepd_edu,twitter,1,active,_blank,social-twitter,تابعنا على تويتر,Follow us on Twitter,2024-01-01,2024-01-01
+27,social,,يوتيوب,YouTube,https://youtube.com/@NIEPD,youtube,2,active,_blank,social-youtube,قناتنا على يوتيوب,Our YouTube channel,2024-01-01,2024-01-01
+28,social,,لينكدإن,LinkedIn,https://www.linkedin.com/company/niepd,linkedin,3,active,_blank,social-linkedin,صفحتنا على لينكدإن,Our LinkedIn page,2024-01-01,2024-01-01
+29,breadcrumb,,الرئيسية,Home,/,home,1,active,_self,breadcrumb-home,الصفحة الرئيسية,Home page,2024-01-01,2024-01-01
+30,mobile,,القائمة,Menu,#,menu,1,active,_self,mobile-menu,القائمة الرئيسية,Main menu,2024-01-01,2024-01-01
+31,mobile,,البحث,Search,/search,search,2,active,_self,mobile-search,البحث في الموقع,Search the site,2024-01-01,2024-01-01
+32,mobile,,اللغة,Language,#,globe,3,active,_self,mobile-language,تغيير اللغة,Change language,2024-01-01,2024-01-01
