@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name_ar": "المركز الوطني للتعليم الإلكتروني",
+    "name_en": "National Center for E-Learning",
+    "type_ar": "مركز حكومي",
+    "type_en": "Government Center",
+    "description_ar": "المركز الوطني للتعليم الإلكتروني هو الجهة المختصة بالتعليم الإلكتروني في المملكة، ويقدم منصات تعليمية متقدمة مثل FutureX و OERx",
+    "description_en": "National Center for E-Learning is the specialized entity for e-learning in the Kingdom, providing advanced educational platforms such as FutureX and OERx",
+    "logo_url": "/images/partners/nelc-logo.png",
+    "website_url": "https://nelc.gov.sa",
+    "partnership_type_ar": "شراكة استراتيجية",
+    "partnership_type_en": "Strategic Partnership",
+    "collaboration_areas_ar": "المنصات التعليمية، التطوير المهني الإلكتروني، الموارد التعليمية المفتوحة",
+    "collaboration_areas_en": "Educational Platforms, Electronic Professional Development, Open Educational Resources",
+    "status": "active",
+    "featured": true,
+    "start_date": "2021-01-01",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 2,
+    "name_ar": "المعهد الوطني للتعليم - سنغافورة",
+    "name_en": "National Institute of Education - Singapore",
+    "type_ar": "معهد تعليمي دولي",
+    "type_en": "International Educational Institute",
+    "description_ar": "المعهد الوطني للتعليم في سنغافورة هو أحد أبرز معاهد إعداد المعلمين في العالم، تابع لجامعة نانيانغ التكنولوجية",
+    "description_en": "National Institute of Education Singapore is one of the world's leading teacher preparation institutes, affiliated with Nanyang Technological University",
+    "logo_url": "/images/partners/nie-singapore-logo.png",
+    "website_url": "https://www.nie.edu.sg",
+    "partnership_type_ar": "شراكة دولية",
+    "partnership_type_en": "International Partnership",
+    "collaboration_areas_ar": "إعداد المعلمين، نقل أفضل الممارسات العالمية، التدريب المتخصص",
+    "collaboration_areas_en": "Teacher Preparation, Transfer of Global Best Practices, Specialized Training",
+    "status": "active",
+    "featured": true,
+    "start_date": "2024-01-01",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  }
+]

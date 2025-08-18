@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "slug": "teacher-preparation",
+    "name_ar": "إعداد المعلم",
+    "name_en": "Teacher Preparation",
+    "description_ar": "برامج إعداد وتأهيل المعلمين",
+    "description_en": "Teacher preparation and qualification programs",
+    "status": "active",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 2,
+    "slug": "singapore",
+    "name_ar": "سنغافورة",
+    "name_en": "Singapore",
+    "description_ar": "الشراكة مع سنغافورة",
+    "description_en": "Partnership with Singapore",
+    "status": "active",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 3,
+    "slug": "professional-development",
+    "name_ar": "تطوير مهني",
+    "name_en": "Professional Development",
+    "description_ar": "التطوير المهني للمعلمين",
+    "description_en": "Professional development for teachers",
+    "status": "active",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 4,
+    "slug": "stem",
+    "name_ar": "STEM",
+    "name_en": "STEM",
+    "description_ar": "العلوم والتكنولوجيا والهندسة والرياضيات",
+    "description_en": "Science Technology Engineering Mathematics",
+    "status": "active",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  }
+]

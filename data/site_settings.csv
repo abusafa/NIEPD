@@ -1,0 +1,31 @@
+id,key,value_ar,value_en,type,category,description_ar,description_en,status,created_at,updated_at
+1,site_name,المعهد الوطني للتطوير المهني التعليمي,National Institute for Educational Professional Development,text,general,اسم الموقع الرسمي,Official site name,active,2024-01-01,2024-01-01
+2,site_tagline,رائد وشريك استراتيجي في بناء القدرات التعليمية,Leading strategic partner in building educational capacities,text,general,شعار الموقع,Site tagline,active,2024-01-01,2024-01-01
+3,site_description,المعهد الوطني للتطوير المهني التعليمي - نقدم برامج تطوير مهني متميزة للمعلمين والقيادات التعليمية,National Institute for Educational Professional Development - We provide excellent professional development programs for teachers and educational leaders,textarea,general,وصف الموقع,Site description,active,2024-01-01,2024-01-01
+4,default_locale,ar,en,select,localization,اللغة الافتراضية,Default language,active,2024-01-01,2024-01-01
+5,supported_locales,"ar,en","ar,en",text,localization,اللغات المدعومة,Supported languages,active,2024-01-01,2024-01-01
+6,contact_email,niepd@moe.gov.sa,niepd@moe.gov.sa,email,contact,البريد الإلكتروني الرئيسي,Main contact email,active,2024-01-01,2024-01-01
+7,support_email,support@niepd.futurex.sa,support@niepd.futurex.sa,email,contact,بريد الدعم الفني,Technical support email,active,2024-01-01,2024-01-01
+8,address_ar,الرياض - جامعة الإمام محمد بن سعود، 8286، الرياض، 13318,Riyadh - Imam Muhammad ibn Saud University 8286 Riyadh 13318,textarea,contact,العنوان بالعربية,Address in Arabic,active,2024-01-01,2024-01-01
+9,address_en,Riyadh - Imam Muhammad ibn Saud University 8286 Riyadh 13318,الرياض - جامعة الإمام محمد بن سعود، 8286، الرياض، 13318,textarea,contact,العنوان بالإنجليزية,Address in English,active,2024-01-01,2024-01-01
+10,working_hours_ar,الأحد - الخميس: 8:00 صباحاً - 4:00 مساءً,Sunday - Thursday: 8:00 AM - 4:00 PM,text,contact,ساعات العمل بالعربية,Working hours in Arabic,active,2024-01-01,2024-01-01
+11,working_hours_en,Sunday - Thursday: 8:00 AM - 4:00 PM,الأحد - الخميس: 8:00 صباحاً - 4:00 مساءً,text,contact,ساعات العمل بالإنجليزية,Working hours in English,active,2024-01-01,2024-01-01
+12,twitter_url,https://x.com/niepd_edu,https://x.com/niepd_edu,url,social,رابط تويتر,Twitter URL,active,2024-01-01,2024-01-01
+13,youtube_url,https://youtube.com/@NIEPD,https://youtube.com/@NIEPD,url,social,رابط يوتيوب,YouTube URL,active,2024-01-01,2024-01-01
+14,linkedin_url,https://www.linkedin.com/company/niepd,https://www.linkedin.com/company/niepd,url,social,رابط لينكدإن,LinkedIn URL,active,2024-01-01,2024-01-01
+15,registration_url,https://niepd.futurex.sa/courses,https://niepd.futurex.sa/courses,url,programs,رابط التسجيل في البرامج,Program registration URL,active,2024-01-01,2024-01-01
+16,google_analytics_id,GA-XXXXXXXXXX,GA-XXXXXXXXXX,text,analytics,معرف جوجل أناليتكس,Google Analytics ID,active,2024-01-01,2024-01-01
+17,google_tag_manager_id,GTM-XXXXXXXX,GTM-XXXXXXXX,text,analytics,معرف جوجل تاج مانجر,Google Tag Manager ID,active,2024-01-01,2024-01-01
+18,theme_color,#04828F,#04828F,color,design,لون الموضوع الرئيسي,Primary theme color,active,2024-01-01,2024-01-01
+19,secondary_color,#162952,#162952,color,design,اللون الثانوي,Secondary color,active,2024-01-01,2024-01-01
+20,logo_horizontal,/images/logos/niepd-logo-horizontal.svg,/images/logos/niepd-logo-horizontal.svg,image,design,الشعار الأفقي,Horizontal logo,active,2024-01-01,2024-01-01
+21,logo_vertical,/images/logos/niepd-logo-vertical.svg,/images/logos/niepd-logo-vertical.svg,image,design,الشعار العمودي,Vertical logo,active,2024-01-01,2024-01-01
+22,favicon,/images/icons/niepd-favicon.ico,/images/icons/niepd-favicon.ico,image,design,أيقونة الموقع,Site favicon,active,2024-01-01,2024-01-01
+23,maintenance_mode,false,false,boolean,system,وضع الصيانة,Maintenance mode,active,2024-01-01,2024-01-01
+24,registration_enabled,true,true,boolean,programs,تفعيل التسجيل,Registration enabled,active,2024-01-01,2024-01-01
+25,newsletter_enabled,true,true,boolean,marketing,تفعيل النشرة الإخبارية,Newsletter enabled,active,2024-01-01,2024-01-01
+26,comments_enabled,false,false,boolean,content,تفعيل التعليقات,Comments enabled,active,2024-01-01,2024-01-01
+27,search_enabled,true,true,boolean,features,تفعيل البحث,Search enabled,active,2024-01-01,2024-01-01
+28,multilingual_enabled,true,true,boolean,localization,تفعيل تعدد اللغات,Multilingual enabled,active,2024-01-01,2024-01-01
+29,rtl_enabled,true,true,boolean,localization,تفعيل الكتابة من اليمين لليسار,RTL support enabled,active,2024-01-01,2024-01-01
+30,cache_enabled,true,true,boolean,performance,تفعيل التخزين المؤقت,Cache enabled,active,2024-01-01,2024-01-01

@@ -1,0 +1,25 @@
+[
+  {
+    "id": 1,
+    "type": "news",
+    "title_ar": "إطلاق برنامج إعداد المعلم المرحلة الثانية",
+    "title_en": "Launch of Teacher Preparation Program Phase Two",
+    "summary_ar": "المعهد الوطني للتطوير المهني التعليمي يطلق المرحلة الثانية من برنامج إعداد المعلم بالشراكة مع المعهد الوطني للتعليم في سنغافورة",
+    "summary_en": "National Institute for Educational Professional Development launches Phase Two of Teacher Preparation Program in partnership with National Institute of Education Singapore",
+    "content_ar": "يعلن المعهد الوطني للتطوير المهني التعليمي عن إطلاق المرحلة الثانية من برنامج إعداد المعلم، والذي يُعد مبادرة استراتيجية ضخمة تهدف إلى إحداث نقلة نوعية في تأهيل المعلمين الجدد.",
+    "content_en": "The National Institute for Educational Professional Development announces the launch of Phase Two of the Teacher Preparation Program, which is a major strategic initiative aimed at creating a qualitative leap in qualifying new teachers.",
+    "image_url": "/images/teacher-prep-program.jpg",
+    "publish_date": "2025-07-01",
+    "event_date": null,
+    "event_location_ar": null,
+    "event_location_en": null,
+    "status": "published",
+    "featured": true,
+    "category_ar": "البرامج",
+    "category_en": "Programs",
+    "tags_ar": "إعداد المعلم;سنغافورة;تطوير مهني",
+    "tags_en": "Teacher Preparation;Singapore;Professional Development",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  }
+]

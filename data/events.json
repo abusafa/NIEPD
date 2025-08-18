@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "slug": "school-administration-positive-relationships",
+    "title_ar": "لقاء دور الإدارة المدرسية في بناء العلاقات الإيجابية",
+    "title_en": "Session on School Administration Role in Building Positive Relationships",
+    "summary_ar": "لقاء تطويري متخصص يناقش دور الإدارة المدرسية في بناء العلاقات الإيجابية داخل المجتمع المدرسي",
+    "summary_en": "Specialized development session discussing the role of school administration in building positive relationships within the school community",
+    "description_ar": "ينظم المعهد الوطني للتطوير المهني التعليمي لقاءً تطويرياً متخصصاً حول دور الإدارة المدرسية في بناء العلاقات الإيجابية.",
+    "description_en": "The National Institute for Educational Professional Development organizes a specialized development session on the role of school administration in building positive relationships.",
+    "image_url": "/images/school-leadership.jpg",
+    "start_date": "2025-08-18",
+    "end_date": "2025-08-18",
+    "start_time": "09:00:00",
+    "end_time": "12:00:00",
+    "timezone": "Asia/Riyadh",
+    "location_ar": "افتراضي",
+    "location_en": "Virtual",
+    "venue_ar": "منصة زووم",
+    "venue_en": "Zoom Platform",
+    "registration_url": "https://niepd.futurex.sa/events/register/1",
+    "capacity": 500,
+    "registration_deadline": "2025-08-15",
+    "event_type_ar": "لقاء تطويري",
+    "event_type_en": "Development Session",
+    "status": "published",
+    "featured": true,
+    "category_id": 2,
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  }
+]

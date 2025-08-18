@@ -1,0 +1,39 @@
+id,slug,name_ar,name_en,description_ar,description_en,status,created_at,updated_at
+1,teacher-preparation,إعداد المعلم,Teacher Preparation,برامج إعداد وتأهيل المعلمين,Teacher preparation and qualification programs,active,2024-01-01,2024-01-01
+2,singapore,سنغافورة,Singapore,الشراكة مع سنغافورة,Partnership with Singapore,active,2024-01-01,2024-01-01
+3,professional-development,تطوير مهني,Professional Development,التطوير المهني للمعلمين,Professional development for teachers,active,2024-01-01,2024-01-01
+4,stem,STEM,STEM,العلوم والتكنولوجيا والهندسة والرياضيات,Science Technology Engineering Mathematics,active,2024-01-01,2024-01-01
+5,science,العلوم,Science,برامج العلوم,Science programs,active,2024-01-01,2024-01-01
+6,technology,التكنولوجيا,Technology,التكنولوجيا والتقنيات الحديثة,Technology and modern techniques,active,2024-01-01,2024-01-01
+7,mathematics,الرياضيات,Mathematics,برامج الرياضيات,Mathematics programs,active,2024-01-01,2024-01-01
+8,school-leadership,القيادة المدرسية,School Leadership,قيادة المدارس والإدارة التعليمية,School leadership and educational management,active,2024-01-01,2024-01-01
+9,positive-relationships,العلاقات الإيجابية,Positive Relationships,بناء العلاقات الإيجابية,Building positive relationships,active,2024-01-01,2024-01-01
+10,management,الإدارة,Management,الإدارة والقيادة,Management and leadership,active,2024-01-01,2024-01-01
+11,student-activities,الأنشطة الطلابية,Student Activities,الأنشطة الطلابية واللاصفية,Student and extracurricular activities,active,2024-01-01,2024-01-01
+12,learning,التعلم,Learning,عملية التعلم والتعليم,Learning and teaching process,active,2024-01-01,2024-01-01
+13,creativity,الإبداع,Creativity,الإبداع والابتكار,Creativity and innovation,active,2024-01-01,2024-01-01
+14,education-exhibition,معرض التعليم,Education Exhibition,المعرض الدولي للتعليم,International Education Exhibition,active,2024-01-01,2024-01-01
+15,partnerships,شراكات,Partnerships,الشراكات والتعاونات,Partnerships and collaborations,active,2024-01-01,2024-01-01
+16,vision-2030,رؤية 2030,Vision 2030,رؤية المملكة 2030,Saudi Vision 2030,active,2024-01-01,2024-01-01
+17,appointment,تعيين,Appointment,التعيينات الإدارية,Administrative appointments,active,2024-01-01,2024-01-01
+18,leadership,قيادة,Leadership,القيادة والإدارة,Leadership and management,active,2024-01-01,2024-01-01
+19,inspiring-teacher,المعلم الملهم,Inspiring Teacher,المعلم الملهم,Inspiring teacher,active,2024-01-01,2024-01-01
+20,seminar,ندوة,Seminar,الندوات والمحاضرات,Seminars and lectures,active,2024-01-01,2024-01-01
+21,flexible-development,التطوير المرن,Flexible Development,التطوير المهني المرن,Flexible professional development,active,2024-01-01,2024-01-01
+22,electronic-platform,منصة إلكترونية,Electronic Platform,المنصات الإلكترونية,Electronic platforms,active,2024-01-01,2024-01-01
+23,lifelong-learning,تعلم مدى الحياة,Lifelong Learning,التعلم مدى الحياة,Lifelong learning,active,2024-01-01,2024-01-01
+24,universities,جامعات,Universities,الجامعات السعودية,Saudi universities,active,2024-01-01,2024-01-01
+25,strategic-partnership,شراكة استراتيجية,Strategic Partnership,الشراكات الاستراتيجية,Strategic partnerships,active,2024-01-01,2024-01-01
+26,capacity-development,تطوير القدرات,Capacity Development,تطوير القدرات البشرية,Human capacity development,active,2024-01-01,2024-01-01
+27,assessment,التقويم,Assessment,التقويم والتقييم,Assessment and evaluation,active,2024-01-01,2024-01-01
+28,feedback,التغذية الراجعة,Feedback,التغذية الراجعة,Feedback,active,2024-01-01,2024-01-01
+29,pisa,PISA,PISA,برنامج التقييم الدولي للطلبة,Programme for International Student Assessment,active,2024-01-01,2024-01-01
+30,special-education,التربية الخاصة,Special Education,التربية الخاصة,Special education,active,2024-01-01,2024-01-01
+31,chinese-language,اللغة الصينية,Chinese Language,تعلم اللغة الصينية,Chinese language learning,active,2024-01-01,2024-01-01
+32,digital-citizenship,المواطنة الرقمية,Digital Citizenship,المواطنة الرقمية,Digital citizenship,active,2024-01-01,2024-01-01
+33,artificial-intelligence,الذكاء الاصطناعي,Artificial Intelligence,الذكاء الاصطناعي في التعليم,Artificial intelligence in education,active,2024-01-01,2024-01-01
+34,cybersecurity,الأمن السيبراني,Cybersecurity,الأمن السيبراني,Cybersecurity,active,2024-01-01,2024-01-01
+35,action-research,البحث الإجرائي,Action Research,البحث الإجرائي,Action research,active,2024-01-01,2024-01-01
+36,ministry-of-education,وزارة التعليم,Ministry of Education,وزارة التعليم,Ministry of Education,active,2024-01-01,2024-01-01
+37,nelc,المركز الوطني للتعليم الإلكتروني,National Center for E-Learning,المركز الوطني للتعليم الإلكتروني,National Center for E-Learning,active,2024-01-01,2024-01-01
+38,futurex,منصة فيوتشر إكس,FutureX Platform,منصة فيوتشر إكس التعليمية,FutureX educational platform,active,2024-01-01,2024-01-01

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "category_id": 1,
+    "question_ar": "ما هو المعهد الوطني للتطوير المهني التعليمي؟",
+    "question_en": "What is the National Institute for Educational Professional Development?",
+    "answer_ar": "المعهد الوطني للتطوير المهني التعليمي (NIEPD) هو جهة حكومية سعودية تابعة لوزارة التعليم، تهدف إلى إعداد وتطوير المعلمين والقيادات التعليمية في المملكة العربية السعودية.",
+    "answer_en": "The National Institute for Educational Professional Development (NIEPD) is a Saudi government entity affiliated with the Ministry of Education, aimed at preparing and developing teachers and educational leaders in the Kingdom of Saudi Arabia.",
+    "sort_order": 1,
+    "status": "published",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 5,
+    "category_id": 2,
+    "question_ar": "كيف يمكنني التسجيل في البرامج؟",
+    "question_en": "How can I register for programs?",
+    "answer_ar": "يمكنك التسجيل في البرامج عبر الموقع الرسمي للمعهد على الرابط: https://niepd.futurex.sa/courses",
+    "answer_en": "You can register for programs through the Institute's official website at: https://niepd.futurex.sa/courses",
+    "sort_order": 1,
+    "status": "published",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 9,
+    "category_id": 3,
+    "question_ar": "هل الشهادات معتمدة؟",
+    "question_en": "Are the certificates accredited?",
+    "answer_ar": "نعم، جميع الشهادات الممنوحة من المعهد معتمدة من وزارة التعليم ومعترف بها للترقيات الوظيفية.",
+    "answer_en": "Yes, all certificates issued by the Institute are accredited by the Ministry of Education and recognized for job promotions.",
+    "sort_order": 1,
+    "status": "published",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  }
+]

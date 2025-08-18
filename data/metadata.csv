@@ -1,0 +1,41 @@
+id,page_slug,meta_type,name,content_ar,content_en,property,lang,created_at,updated_at
+1,home,title,,المعهد الوطني للتطوير المهني التعليمي - الرئيسية,National Institute for Educational Professional Development - Home,,,2024-01-01,2024-01-01
+2,home,description,,المعهد الوطني للتطوير المهني التعليمي - رائد وشريك استراتيجي في بناء القدرات التعليمية. نقدم برامج تطوير مهني متميزة للمعلمين والقيادات التعليمية,National Institute for Educational Professional Development - Leading strategic partner in building educational capacities. We provide excellent professional development programs for teachers and educational leaders,,,2024-01-01,2024-01-01
+3,home,keywords,,المعهد الوطني للتطوير المهني التعليمي;NIEPD;تطوير مهني;معلمين;قيادات تعليمية;رؤية 2030;وزارة التعليم;السعودية,National Institute for Educational Professional Development;NIEPD;Professional Development;Teachers;Educational Leaders;Vision 2030;Ministry of Education;Saudi Arabia,,,2024-01-01,2024-01-01
+4,home,og:title,,,المعهد الوطني للتطوير المهني التعليمي,National Institute for Educational Professional Development,og:title,,2024-01-01,2024-01-01
+5,home,og:description,,,رائد وشريك استراتيجي في بناء القدرات التعليمية - برامج تطوير مهني متميزة للمعلمين والقيادات التعليمية,Leading strategic partner in building educational capacities - Excellent professional development programs for teachers and educational leaders,og:description,,2024-01-01,2024-01-01
+6,home,og:image,,,/images/og-image-ar.jpg,/images/og-image-en.jpg,og:image,,2024-01-01,2024-01-01
+7,home,og:url,,,https://niepd.futurex.sa/,https://niepd.futurex.sa/en,og:url,,2024-01-01,2024-01-01
+8,home,og:type,,,website,website,og:type,,2024-01-01,2024-01-01
+9,about,title,,عن المعهد الوطني للتطوير المهني التعليمي,About National Institute for Educational Professional Development,,,2024-01-01,2024-01-01
+10,about,description,,تعرف على تاريخ ورؤية ورسالة المعهد الوطني للتطوير المهني التعليمي وأهدافه الاستراتيجية في تطوير المعلمين والقيادات التعليمية,Learn about the history vision mission and strategic objectives of the National Institute for Educational Professional Development in developing teachers and educational leaders,,,2024-01-01,2024-01-01
+11,about,keywords,,عن المعهد;تاريخ;رؤية;رسالة;أهداف;هيكل تنظيمي;مجلس إدارة;وزارة التعليم,About Institute;History;Vision;Mission;Objectives;Organizational Structure;Board of Directors;Ministry of Education,,,2024-01-01,2024-01-01
+12,programs,title,,البرامج والخدمات - المعهد الوطني للتطوير المهني التعليمي,Programs & Services - National Institute for Educational Professional Development,,,2024-01-01,2024-01-01
+13,programs,description,,اكتشف برامج التطوير المهني المتنوعة للمعلمين والقيادات التعليمية - برامج معتمدة وشهادات مهنية معترف بها,Discover diverse professional development programs for teachers and educational leaders - Accredited programs and recognized professional certificates,,,2024-01-01,2024-01-01
+14,programs,keywords,,برامج تدريبية;تطوير مهني;معلمين;قيادات;شهادات معتمدة;إعداد المعلم;STEM;PISA;التربية الخاصة,Training Programs;Professional Development;Teachers;Leaders;Accredited Certificates;Teacher Preparation;STEM;PISA;Special Education,,,2024-01-01,2024-01-01
+15,news,title,,الأخبار والفعاليات - المعهد الوطني للتطوير المهني التعليمي,News & Events - National Institute for Educational Professional Development,,,2024-01-01,2024-01-01
+16,news,description,,آخر أخبار وفعاليات المعهد الوطني للتطوير المهني التعليمي - إطلاق برامج جديدة ولقاءات تطويرية متخصصة,Latest news and events from the National Institute for Educational Professional Development - New program launches and specialized development sessions,,,2024-01-01,2024-01-01
+17,news,keywords,,أخبار;فعاليات;إطلاق برامج;لقاءات تطويرية;ورش عمل;مؤتمرات;شراكات;معرض التعليم,News;Events;Program Launches;Development Sessions;Workshops;Conferences;Partnerships;Education Exhibition,,,2024-01-01,2024-01-01
+18,partners,title,,الشركاء والتعاونات - المعهد الوطني للتطوير المهني التعليمي,Partners & Collaborations - National Institute for Educational Professional Development,,,2024-01-01,2024-01-01
+19,partners,description,,تعرف على شركاء المعهد والتعاونات الاستراتيجية المحلية والدولية - شراكات مع أفضل الجامعات والمؤسسات التعليمية,Learn about the institute's partners and strategic local and international collaborations - Partnerships with the best universities and educational institutions,,,2024-01-01,2024-01-01
+20,partners,keywords,,شركاء;تعاونات;جامعات;مؤسسات تعليمية;شراكات استراتيجية;سنغافورة;المركز الوطني للتعليم الإلكتروني,Partners;Collaborations;Universities;Educational Institutions;Strategic Partnerships;Singapore;National Center for E-Learning,,,2024-01-01,2024-01-01
+21,contact,title,,اتصل بنا - المعهد الوطني للتطوير المهني التعليمي,Contact Us - National Institute for Educational Professional Development,,,2024-01-01,2024-01-01
+22,contact,description,,تواصل مع المعهد الوطني للتطوير المهني التعليمي - عنوان المقر الرئيسي والبريد الإلكتروني ووسائل التواصل الاجتماعي,Contact the National Institute for Educational Professional Development - Main headquarters address email and social media,,,2024-01-01,2024-01-01
+23,contact,keywords,,اتصل بنا;عنوان;بريد إلكتروني;هاتف;وسائل التواصل;تويتر;يوتيوب;لينكدإن;الرياض,Contact Us;Address;Email;Phone;Social Media;Twitter;YouTube;LinkedIn;Riyadh,,,2024-01-01,2024-01-01
+24,global,author,,المعهد الوطني للتطوير المهني التعليمي,National Institute for Educational Professional Development,,,2024-01-01,2024-01-01
+25,global,robots,,index follow,index follow,,,2024-01-01,2024-01-01
+26,global,viewport,,width=device-width initial-scale=1.0,width=device-width initial-scale=1.0,,,2024-01-01,2024-01-01
+27,global,charset,,UTF-8,UTF-8,,,2024-01-01,2024-01-01
+28,global,language,,ar,en,,,2024-01-01,2024-01-01
+29,global,theme-color,,#04828F,#04828F,,,2024-01-01,2024-01-01
+30,global,apple-mobile-web-app-capable,,yes,yes,,,2024-01-01,2024-01-01
+31,global,apple-mobile-web-app-status-bar-style,,default,default,,,2024-01-01,2024-01-01
+32,global,apple-mobile-web-app-title,,المعهد الوطني للتطوير المهني التعليمي,NIEPD,,,2024-01-01,2024-01-01
+33,global,application-name,,المعهد الوطني للتطوير المهني التعليمي,National Institute for Educational Professional Development,,,2024-01-01,2024-01-01
+34,global,msapplication-TileColor,,#04828F,#04828F,,,2024-01-01,2024-01-01
+35,global,msapplication-config,,/browserconfig.xml,/browserconfig.xml,,,2024-01-01,2024-01-01
+36,global,twitter:card,,summary_large_image,summary_large_image,,,2024-01-01,2024-01-01
+37,global,twitter:site,,@niepd_edu,@niepd_edu,,,2024-01-01,2024-01-01
+38,global,twitter:creator,,@niepd_edu,@niepd_edu,,,2024-01-01,2024-01-01
+39,global,og:site_name,,المعهد الوطني للتطوير المهني التعليمي,National Institute for Educational Professional Development,og:site_name,,2024-01-01,2024-01-01
+40,global,og:locale,,ar_SA,en_US,og:locale,,2024-01-01,2024-01-01
