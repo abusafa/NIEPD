@@ -1,0 +1,68 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pages",
+  "info": {
+    "singularName": "page",
+    "pluralName": "pages",
+    "displayName": "Page",
+    "description": "Website pages and content"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "titleAr": {
+      "type": "string",
+      "required": true
+    },
+    "titleEn": {
+      "type": "string",
+      "required": true
+    },
+    "metaTitleAr": {
+      "type": "string"
+    },
+    "metaTitleEn": {
+      "type": "string"
+    },
+    "metaDescriptionAr": {
+      "type": "text"
+    },
+    "metaDescriptionEn": {
+      "type": "text"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["draft", "published", "archived"],
+      "default": "draft"
+    },
+    "language": {
+      "type": "enumeration",
+      "enum": ["ar", "en", "both"],
+      "default": "both"
+    },
+    "parentId": {
+      "type": "integer"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "template": {
+      "type": "string",
+      "default": "page"
+    },
+    "contentAr": {
+      "type": "richtext"
+    },
+    "contentEn": {
+      "type": "richtext"
+    }
+  }
+}

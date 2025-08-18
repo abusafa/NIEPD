@@ -1,0 +1,90 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "Event",
+    "description": "Events, sessions, workshops, and conferences"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titleAr": {
+      "type": "string",
+      "required": true
+    },
+    "titleEn": {
+      "type": "string",
+      "required": true
+    },
+    "summaryAr": {
+      "type": "text"
+    },
+    "summaryEn": {
+      "type": "text"
+    },
+    "descriptionAr": {
+      "type": "richtext"
+    },
+    "descriptionEn": {
+      "type": "richtext"
+    },
+    "startDate": {
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "type": "date",
+      "required": true
+    },
+    "startTime": {
+      "type": "time"
+    },
+    "endTime": {
+      "type": "time"
+    },
+    "locationAr": {
+      "type": "string"
+    },
+    "locationEn": {
+      "type": "string"
+    },
+    "venueAr": {
+      "type": "string"
+    },
+    "venueEn": {
+      "type": "string"
+    },
+    "registrationUrl": {
+      "type": "string"
+    },
+    "capacity": {
+      "type": "integer"
+    },
+    "registrationDeadline": {
+      "type": "date"
+    },
+    "eventTypeAr": {
+      "type": "string"
+    },
+    "eventTypeEn": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["upcoming", "ongoing", "past", "cancelled"],
+      "default": "upcoming"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": ["sessions", "conferences", "seminars", "workshops", "exhibitions"]
+    }
+  }
+}

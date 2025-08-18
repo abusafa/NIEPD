@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { dataService, Event } from '../services/dataService';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -197,26 +198,32 @@ const EventRegistrationPage: React.FC<EventRegistrationPageProps> = ({ currentLa
   const t = content[currentLang];
   const ArrowIcon = currentLang === 'ar' ? ArrowRight : ArrowLeft;
 
-  // Mock event data
+  // Fetch event data from API
   useEffect(() => {
-    const mockEvent: Event = {
-      id: parseInt(id || '1'),
-      titleAr: 'لقاء دور الإدارة المدرسية في بناء العلاقات الإيجابية',
-      titleEn: 'Session on School Administration Role in Building Positive Relationships',
-      startDate: '2025-08-18',
-      startTime: '09:00:00',
-      endTime: '12:00:00',
-      locationAr: 'افتراضي',
-      locationEn: 'Virtual',
-      venueAr: 'منصة زووم',
-      venueEn: 'Zoom Platform',
-      capacity: 500,
-      image: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800'
+    const fetchEventData = async () => {
+      try {
+        setLoading(true);
+        const events = await dataService.getEvents();
+        const eventId = parseInt(id || '1');
+        const foundEvent = events.find(e => e.id === eventId);
+
+        if (foundEvent) {
+          setEvent(foundEvent);
+        } else {
+          // If event not found, use first event as fallback
+          setEvent(events[0] || null);
+        }
+      } catch (error) {
+        console.error('Error fetching event:', error);
+        // Set a fallback event in case of error
+        setEvent(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    setEvent(mockEvent);
-    setLoading(false);
-  }, [id, currentLang]);
+    fetchEventData();
+  }, [id]);
 
   const validateStep = (step: number): boolean => {
     const newErrors: Partial<FormData> = {};

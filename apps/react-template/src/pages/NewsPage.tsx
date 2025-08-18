@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, User, ArrowLeft, ArrowRight, Search } from 'lucide-react';
+import { dataService, NewsItem } from '../services/dataService';
 
 interface NewsPageProps {
   currentLang: 'ar' | 'en';
@@ -9,6 +10,8 @@ interface NewsPageProps {
 const NewsPage: React.FC<NewsPageProps> = ({ currentLang, onNewsSelect }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const content = {
     ar: {
@@ -50,98 +53,22 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang, onNewsSelect }) => {
   const t = content[currentLang];
   const ArrowIcon = currentLang === 'ar' ? ArrowLeft : ArrowRight;
 
-  const newsItems = [
-    {
-      id: 1,
-      title: currentLang === 'ar' ? 'إطلاق المرحلة الثانية من البرامج التطويرية' : 'Launch of Second Phase of Development Programs',
-      excerpt: currentLang === 'ar' 
-        ? 'يسعد المعهد الإعلان عن بدء التسجيل في المرحلة الثانية من البرامج التطويرية للمعلمين، والتي تتضمن برامج متقدمة في التكنولوجيا التعليمية'
-        : 'The institute is pleased to announce the start of registration for the second phase of teacher development programs, which includes advanced programs in educational technology',
-      content: currentLang === 'ar'
-        ? 'أطلق المعهد الوطني للتطوير المهني التعليمي اليوم المرحلة الثانية من برامجه التطويرية المتقدمة، والتي تستهدف تطوير قدرات المعلمين والقيادات التعليمية في مجالات التكنولوجيا الحديثة والابتكار في التعليم. تتضمن هذه المرحلة 15 برنامجاً تدريبياً متخصصاً في الذكاء الاصطناعي، الواقع المعزز، وتحليل البيانات التعليمية.'
-        : 'The National Institute for Professional Educational Development today launched the second phase of its advanced development programs, targeting the development of teachers and educational leaders capabilities in modern technology and innovation in education. This phase includes 15 specialized training programs in artificial intelligence, augmented reality, and educational data analytics.',
-      category: 'programs',
-      author: currentLang === 'ar' ? 'إدارة الإعلام' : 'Media Department',
-      date: currentLang === 'ar' ? '15 يناير 2024' : 'January 15, 2024',
-      image: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800',
-      featured: true
-    },
-    {
-      id: 2,
-      title: currentLang === 'ar' ? 'شراكة استراتيجية مع جامعة سنغافورة الوطنية' : 'Strategic Partnership with National University of Singapore',
-      excerpt: currentLang === 'ar'
-        ? 'وقع المعهد اتفاقية شراكة مع جامعة سنغافورة الوطنية لتطوير برامج القيادة التعليمية وتبادل الخبرات في مجال التطوير المهني'
-        : 'The institute signed a partnership agreement with the National University of Singapore to develop educational leadership programs and exchange expertise in professional development',
-      content: currentLang === 'ar'
-        ? 'في خطوة مهمة نحو التطوير والتميز، وقع المعهد الوطني للتطوير المهني التعليمي اتفاقية شراكة استراتيجية مع جامعة سنغافورة الوطنية، إحدى الجامعات الرائدة عالمياً في مجال التعليم والبحث العلمي. تهدف هذه الشراكة إلى تطوير برامج القيادة التعليمية وتبادل أفضل الممارسات في مجال التطوير المهني للمعلمين.'
-        : 'In an important step towards development and excellence, the National Institute for Professional Educational Development signed a strategic partnership agreement with the National University of Singapore, one of the world\'s leading universities in education and scientific research. This partnership aims to develop educational leadership programs and exchange best practices in professional development for teachers.',
-      category: 'partnerships',
-      author: currentLang === 'ar' ? 'قسم الشراكات الدولية' : 'International Partnerships Department',
-      date: currentLang === 'ar' ? '10 يناير 2024' : 'January 10, 2024',
-      image: 'https://images.pexels.com/photos/5212700/pexels-photo-5212700.jpeg?auto=compress&cs=tinysrgb&w=800',
-      featured: true
-    },
-    {
-      id: 3,
-      title: currentLang === 'ar' ? 'مؤتمر التطوير المهني للمعلمين 2024' : 'Teachers Professional Development Conference 2024',
-      excerpt: currentLang === 'ar'
-        ? 'ينظم المعهد مؤتمره السنوي للتطوير المهني في مارس 2024 بمشاركة خبراء دوليين ومتخصصين في التعليم'
-        : 'The institute organizes its annual professional development conference in March 2024 with participation of international experts and education specialists',
-      content: currentLang === 'ar'
-        ? 'يستعد المعهد الوطني للتطوير المهني التعليمي لتنظيم مؤتمره السنوي الثالث للتطوير المهني للمعلمين، والذي سيعقد في الرياض خلال شهر مارس 2024. يشارك في المؤتمر أكثر من 500 مشارك من المعلمين والقيادات التعليمية، بالإضافة إلى خبراء دوليين من أكثر من 15 دولة.'
-        : 'The National Institute for Professional Educational Development is preparing to organize its third annual professional development conference for teachers, which will be held in Riyadh during March 2024. More than 500 participants including teachers and educational leaders will participate in the conference, along with international experts from more than 15 countries.',
-      category: 'events',
-      author: currentLang === 'ar' ? 'لجنة تنظيم المؤتمرات' : 'Conference Organization Committee',
-      date: currentLang === 'ar' ? '5 يناير 2024' : 'January 5, 2024',
-      image: 'https://images.pexels.com/photos/1181534/pexels-photo-1181534.jpeg?auto=compress&cs=tinysrgb&w=800',
-      featured: false
-    },
-    {
-      id: 4,
-      title: currentLang === 'ar' ? 'تخرج الدفعة الأولى من برنامج القيادة التعليمية' : 'First Batch Graduates from Educational Leadership Program',
-      excerpt: currentLang === 'ar'
-        ? 'احتفل المعهد بتخرج 150 قائد تعليمي من الدفعة الأولى لبرنامج القيادة التعليمية المتقدم'
-        : 'The institute celebrated the graduation of 150 educational leaders from the first batch of the advanced educational leadership program',
-      content: currentLang === 'ar'
-        ? 'احتفل المعهد الوطني للتطوير المهني التعليمي بتخرج الدفعة الأولى من برنامج القيادة التعليمية المتقدم، والتي ضمت 150 قائد تعليمي من مختلف المناطق في المملكة. البرنامج الذي استمر لمدة 8 أشهر ركز على تطوير مهارات القيادة الحديثة وإدارة التغيير في المؤسسات التعليمية.'
-        : 'The National Institute for Professional Educational Development celebrated the graduation of the first batch from the advanced educational leadership program, which included 150 educational leaders from various regions in the Kingdom. The program, which lasted 8 months, focused on developing modern leadership skills and change management in educational institutions.',
-      category: 'achievements',
-      author: currentLang === 'ar' ? 'قسم البرامج التدريبية' : 'Training Programs Department',
-      date: currentLang === 'ar' ? '28 ديسمبر 2023' : 'December 28, 2023',
-      image: 'https://images.pexels.com/photos/5428010/pexels-photo-5428010.jpeg?auto=compress&cs=tinysrgb&w=800',
-      featured: false
-    },
-    {
-      id: 5,
-      title: currentLang === 'ar' ? 'إطلاق منصة التعلم الإلكتروني الجديدة' : 'Launch of New E-Learning Platform',
-      excerpt: currentLang === 'ar'
-        ? 'أطلق المعهد منصة تعليمية رقمية متطورة تتيح للمتدربين الوصول للمحتوى التدريبي بسهولة ومرونة'
-        : 'The institute launched an advanced digital educational platform that allows trainees to access training content easily and flexibly',
-      content: currentLang === 'ar'
-        ? 'كشف المعهد الوطني للتطوير المهني التعليمي عن إطلاق منصته التعليمية الرقمية الجديدة "تطوير بلس"، والتي توفر تجربة تعلم متكاملة وتفاعلية للمتدربين. تضم المنصة أكثر من 200 ساعة تدريبية في مختلف التخصصات التعليمية، مع أدوات تقييم ذكية ونظام متابعة متقدم.'
-        : 'The National Institute for Professional Educational Development unveiled the launch of its new digital educational platform "Tatweer Plus", which provides an integrated and interactive learning experience for trainees. The platform includes more than 200 training hours in various educational specializations, with smart assessment tools and an advanced tracking system.',
-      category: 'programs',
-      author: currentLang === 'ar' ? 'فريق التطوير التقني' : 'Technical Development Team',
-      date: currentLang === 'ar' ? '20 ديسمبر 2023' : 'December 20, 2023',
-      image: 'https://images.pexels.com/photos/5427648/pexels-photo-5427648.jpeg?auto=compress&cs=tinysrgb&w=800',
-      featured: false
-    },
-    {
-      id: 6,
-      title: currentLang === 'ar' ? 'ورشة عمل حول الذكاء الاصطناعي في التعليم' : 'Workshop on Artificial Intelligence in Education',
-      excerpt: currentLang === 'ar'
-        ? 'ينظم المعهد ورشة عمل متخصصة حول تطبيقات الذكاء الاصطناعي في التعليم بمشاركة خبراء من وادي السيليكون'
-        : 'The institute organizes a specialized workshop on AI applications in education with experts from Silicon Valley',
-      content: currentLang === 'ar'
-        ? 'يستضيف المعهد الوطني للتطوير المهني التعليمي ورشة عمل متخصصة حول "تطبيقات الذكاء الاصطناعي في التعليم" بمشاركة نخبة من الخبراء الدوليين من وادي السيليكون وجامعات عالمية رائدة. الورشة التي ستعقد لمدة ثلاثة أيام ستركز على كيفية دمج تقنيات الذكاء الاصطناعي في العملية التعليمية.'
-        : 'The National Institute for Professional Educational Development hosts a specialized workshop on "Applications of Artificial Intelligence in Education" with participation of elite international experts from Silicon Valley and leading global universities. The three-day workshop will focus on how to integrate AI technologies into the educational process.',
-      category: 'events',
-      author: currentLang === 'ar' ? 'قسم الفعاليات العلمية' : 'Scientific Events Department',
-      date: currentLang === 'ar' ? '15 ديسمبر 2023' : 'December 15, 2023',
-      image: 'https://images.pexels.com/photos/8500434/pexels-photo-8500434.jpeg?auto=compress&cs=tinysrgb&w=800',
-      featured: false
-    }
-  ];
+  // Fetch news data from API
+  useEffect(() => {
+    const fetchNewsData = async () => {
+      try {
+        setLoading(true);
+        const news = await dataService.getNews();
+        setNewsItems(news);
+      } catch (error) {
+        console.error('Error fetching news:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNewsData();
+  }, []);
 
   const categories = [
     { key: 'all', label: t.allNews },
@@ -163,13 +90,26 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang, onNewsSelect }) => {
 
   const filteredNews = newsItems
     .filter(item => selectedCategory === 'all' || item.category === selectedCategory)
-    .filter(item => 
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    .filter(item => {
+      const title = currentLang === 'ar' ? item.titleAr : item.titleEn;
+      const summary = currentLang === 'ar' ? item.summaryAr : item.summaryEn;
+      return title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+             summary.toLowerCase().includes(searchTerm.toLowerCase());
+    });
 
   const featuredNews = filteredNews.filter(item => item.featured);
   const regularNews = filteredNews.filter(item => !item.featured);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-secondary-600">{currentLang === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -224,7 +164,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang, onNewsSelect }) => {
                   <div className="relative mb-6 overflow-hidden rounded-lg">
                     <img 
                       src={item.image}
-                      alt={item.title}
+                      alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
                       className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                     <div className="absolute top-4 left-4">
@@ -238,20 +178,20 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang, onNewsSelect }) => {
                     <div className="flex items-center gap-4 text-sm text-secondary-500">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        <time>{item.date}</time>
+                        <time>{currentLang === 'ar' ? item.dateAr : item.dateEn}</time>
                       </div>
                       <div className="flex items-center gap-2">
                         <User className="w-4 h-4" />
-                        <span>{item.author}</span>
+                        <span>{currentLang === 'ar' ? item.authorAr : item.authorEn}</span>
                       </div>
                     </div>
                     
                     <h3 className="text-xl font-bold text-secondary-700 leading-tight">
-                      {item.title}
+                      {currentLang === 'ar' ? item.titleAr : item.titleEn}
                     </h3>
                     
                     <p className="text-secondary-600 leading-relaxed">
-                      {item.excerpt}
+                      {currentLang === 'ar' ? item.summaryAr : item.summaryEn}
                     </p>
                     
                     <button 
@@ -280,7 +220,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang, onNewsSelect }) => {
                     <div className="relative mb-4 overflow-hidden rounded-lg">
                       <img 
                         src={item.image}
-                        alt={item.title}
+                        alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
                         className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                       />
                       <div className="absolute top-3 left-3">
@@ -294,20 +234,20 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang, onNewsSelect }) => {
                       <div className="flex items-center gap-3 text-xs text-secondary-500">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          <time>{item.date}</time>
+                          <time>{currentLang === 'ar' ? item.dateAr : item.dateEn}</time>
                         </div>
                         <div className="flex items-center gap-1">
                           <User className="w-3 h-3" />
-                          <span>{item.author}</span>
+                          <span>{currentLang === 'ar' ? item.authorAr : item.authorEn}</span>
                         </div>
                       </div>
                       
                       <h3 className="font-bold text-secondary-700 leading-tight line-clamp-2">
-                        {item.title}
+                        {currentLang === 'ar' ? item.titleAr : item.titleEn}
                       </h3>
                       
                       <p className="text-secondary-600 text-sm leading-relaxed line-clamp-3">
-                        {item.excerpt}
+                        {currentLang === 'ar' ? item.summaryAr : item.summaryEn}
                       </p>
                       
                       <button 

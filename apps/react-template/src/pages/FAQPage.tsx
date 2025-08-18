@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Search, HelpCircle, MessageCircle, Phone, Mail, Sparkles } from 'lucide-react';
+import { dataService, FAQ } from '../services/dataService';
 
 interface FAQPageProps {
   currentLang: 'ar' | 'en';
@@ -77,6 +78,8 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedItems, setExpandedItems] = useState<number[]>([]);
+  const [faqData, setFaqData] = useState<FAQ[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const content = {
     ar: {
@@ -121,169 +124,22 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
 
   const t = content[currentLang];
 
-  // FAQ data from the CSV
-  const faqData = [
-    {
-      id: 1,
-      category: 'aboutInstitute',
-      questionAr: 'ما هو المعهد الوطني للتطوير المهني التعليمي؟',
-      questionEn: 'What is the National Institute for Educational Professional Development?',
-      answerAr: 'المعهد الوطني للتطوير المهني التعليمي (NIEPD) هو جهة حكومية سعودية تابعة لوزارة التعليم، تهدف إلى إعداد وتطوير المعلمين والقيادات التعليمية في المملكة العربية السعودية.',
-      answerEn: 'The National Institute for Educational Professional Development (NIEPD) is a Saudi government entity affiliated with the Ministry of Education, aimed at preparing and developing teachers and educational leaders in the Kingdom of Saudi Arabia.'
-    },
-    {
-      id: 2,
-      category: 'aboutInstitute',
-      questionAr: 'متى تأسس المعهد؟',
-      questionEn: 'When was the Institute established?',
-      answerAr: 'تأسس المعهد في 5 نوفمبر 2019م (1441هـ) بقرار مجلس الوزراء رقم (197) وتاريخ 1441/3/8هـ، وبدأ تقديم برامجه في عام 2021م.',
-      answerEn: 'The Institute was established on November 5, 2019 (1441 AH) by Cabinet Resolution No. (197) dated 1441/3/8 AH, and began offering its programs in 2021.'
-    },
-    {
-      id: 3,
-      category: 'aboutInstitute',
-      questionAr: 'ما هي رؤية المعهد؟',
-      questionEn: 'What is the Institute\'s vision?',
-      answerAr: 'رؤية المعهد هي: رائد وشريك استراتيجي في بناء القدرات التعليمية.',
-      answerEn: 'The Institute\'s vision is: Leading strategic partner in building educational capacities.'
-    },
-    {
-      id: 4,
-      category: 'aboutInstitute',
-      questionAr: 'من هو المدير العام للمعهد؟',
-      questionEn: 'Who is the Director General of the Institute?',
-      answerAr: 'المدير العام الحالي للمعهد هو الدكتور بدر بن شجاع الحربي.',
-      answerEn: 'The current Director General of the Institute is Dr. Badr bin Shuja Al-Harbi.'
-    },
-    {
-      id: 5,
-      category: 'registrationPrograms',
-      questionAr: 'كيف يمكنني التسجيل في البرامج؟',
-      questionEn: 'How can I register for programs?',
-      answerAr: 'يمكنك التسجيل في البرامج عبر الموقع الرسمي للمعهد على الرابط: https://niepd.futurex.sa/courses',
-      answerEn: 'You can register for programs through the Institute\'s official website at: https://niepd.futurex.sa/courses'
-    },
-    {
-      id: 6,
-      category: 'registrationPrograms',
-      questionAr: 'هل البرامج مجانية؟',
-      questionEn: 'Are the programs free?',
-      answerAr: 'معظم برامج المعهد مجانية للمعلمين والقيادات التعليمية في القطاع الحكومي. بعض البرامج المتخصصة قد تتطلب رسوماً رمزية.',
-      answerEn: 'Most Institute programs are free for teachers and educational leaders in the government sector. Some specialized programs may require nominal fees.'
-    },
-    {
-      id: 7,
-      category: 'registrationPrograms',
-      questionAr: 'ما هي شروط التسجيل؟',
-      questionEn: 'What are the registration requirements?',
-      answerAr: 'تختلف شروط التسجيل حسب البرنامج، ولكن عموماً تتطلب: بكالوريوس في التخصص ذي العلاقة، وخبرة تدريسية (للبرامج المتقدمة)، وإكمال النماذج المطلوبة.',
-      answerEn: 'Registration requirements vary by program, but generally require: Bachelor\'s degree in relevant field, teaching experience (for advanced programs), and completion of required forms.'
-    },
-    {
-      id: 8,
-      category: 'registrationPrograms',
-      questionAr: 'كم تستغرق البرامج؟',
-      questionEn: 'How long do the programs take?',
-      answerAr: 'تتراوح مدة البرامج من 10 ساعات للبرامج القصيرة إلى 120 ساعة للبرامج الشاملة مثل برنامج إعداد المعلم.',
-      answerEn: 'Program duration ranges from 10 hours for short programs to 120 hours for comprehensive programs like the Teacher Preparation Program.'
-    },
-    {
-      id: 9,
-      category: 'certificates',
-      questionAr: 'هل الشهادات معتمدة؟',
-      questionEn: 'Are the certificates accredited?',
-      answerAr: 'نعم، جميع الشهادات الممنوحة من المعهد معتمدة من وزارة التعليم ومعترف بها للترقيات الوظيفية.',
-      answerEn: 'Yes, all certificates issued by the Institute are accredited by the Ministry of Education and recognized for job promotions.'
-    },
-    {
-      id: 10,
-      category: 'certificates',
-      questionAr: 'كيف أحصل على الشهادة؟',
-      questionEn: 'How do I get the certificate?',
-      answerAr: 'تُمنح الشهادة بعد إتمام جميع متطلبات البرنامج بنجاح، بما يشمل حضور الجلسات واجتياز التقييمات المطلوبة.',
-      answerEn: 'The certificate is awarded after successfully completing all program requirements, including attending sessions and passing required assessments.'
-    },
-    {
-      id: 11,
-      category: 'certificates',
-      questionAr: 'هل يمكنني طباعة الشهادة؟',
-      questionEn: 'Can I print the certificate?',
-      answerAr: 'نعم، يمكنك تحميل وطباعة الشهادة من حسابك على المنصة بعد إتمام البرنامج.',
-      answerEn: 'Yes, you can download and print the certificate from your platform account after completing the program.'
-    },
-    {
-      id: 12,
-      category: 'platformTechnology',
-      questionAr: 'ما هي المنصة المستخدمة للتدريب؟',
-      questionEn: 'What platform is used for training?',
-      answerAr: 'يستخدم المعهد المنصة الوطنية للتعليم الإلكتروني (FutureX) التابعة للمركز الوطني للتعليم الإلكتروني.',
-      answerEn: 'The Institute uses the National E-Learning Platform (FutureX) affiliated with the National Center for E-Learning.'
-    },
-    {
-      id: 13,
-      category: 'platformTechnology',
-      questionAr: 'هل أحتاج لبرامج خاصة؟',
-      questionEn: 'Do I need special software?',
-      answerAr: 'لا، المنصة تعمل عبر متصفح الإنترنت العادي. يُنصح باستخدام أحدث إصدارات المتصفحات للحصول على أفضل تجربة.',
-      answerEn: 'No, the platform works through a regular web browser. It\'s recommended to use the latest browser versions for the best experience.'
-    },
-    {
-      id: 14,
-      category: 'platformTechnology',
-      questionAr: 'كيف يتم التحقق من الهوية؟',
-      questionEn: 'How is identity verification done?',
-      answerAr: 'يتم التحقق من الهوية عبر بوابة النفاذ الوطني الموحد (نفاذ) وتقنيات إضافية مثل بصمة الوجه أثناء الاختبارات.',
-      answerEn: 'Identity verification is done through the National Single Sign-On (Nafath) portal and additional technologies like facial recognition during exams.'
-    },
-    {
-      id: 15,
-      category: 'contactSupport',
-      questionAr: 'كيف يمكنني التواصل مع المعهد؟',
-      questionEn: 'How can I contact the Institute?',
-      answerAr: 'يمكنك التواصل معنا عبر: البريد الإلكتروني: niepd@moe.gov.sa، أو الدعم الفني: support@niepd.futurex.sa',
-      answerEn: 'You can contact us via: Email: niepd@moe.gov.sa, or Technical Support: support@niepd.futurex.sa'
-    },
-    {
-      id: 16,
-      category: 'contactSupport',
-      questionAr: 'ما هي ساعات العمل؟',
-      questionEn: 'What are the working hours?',
-      answerAr: 'ساعات العمل: الأحد - الخميس من 8:00 صباحاً إلى 4:00 مساءً.',
-      answerEn: 'Working hours: Sunday - Thursday from 8:00 AM to 4:00 PM.'
-    },
-    {
-      id: 17,
-      category: 'contactSupport',
-      questionAr: 'أين يقع المعهد؟',
-      questionEn: 'Where is the Institute located?',
-      answerAr: 'المقر الرئيسي للمعهد في الرياض - جامعة الإمام محمد بن سعود، 8286، الرياض، 13318.',
-      answerEn: 'The Institute\'s main headquarters is in Riyadh - Imam Muhammad ibn Saud University, 8286, Riyadh, 13318.'
-    },
-    {
-      id: 18,
-      category: 'partnerships',
-      questionAr: 'من هم شركاء المعهد؟',
-      questionEn: 'Who are the Institute\'s partners?',
-      answerAr: 'يتعاون المعهد مع شركاء محليين مثل المركز الوطني للتعليم الإلكتروني والجامعات السعودية، وشركاء دوليين مثل المعهد الوطني للتعليم في سنغافورة.',
-      answerEn: 'The Institute collaborates with local partners such as the National Center for E-Learning and Saudi universities, and international partners like the National Institute of Education in Singapore.'
-    },
-    {
-      id: 19,
-      category: 'partnerships',
-      questionAr: 'ما هو برنامج إعداد المعلم؟',
-      questionEn: 'What is the Teacher Preparation Program?',
-      answerAr: 'برنامج إعداد المعلم هو مبادرة استراتيجية تهدف إلى إحداث نقلة نوعية في تأهيل المعلمين الجدد، ويتم تنفيذه بالشراكة مع المعهد الوطني للتعليم في سنغافورة.',
-      answerEn: 'The Teacher Preparation Program is a strategic initiative aimed at creating a qualitative leap in qualifying new teachers, implemented in partnership with the National Institute of Education in Singapore.'
-    },
-    {
-      id: 20,
-      category: 'partnerships',
-      questionAr: 'ما هي برامج STEM؟',
-      questionEn: 'What are the STEM programs?',
-      answerAr: 'برامج STEM تهدف إلى تطوير قدرات المعلمين في تطبيق منهجية العلوم والتكنولوجيا والهندسة والرياضيات، بالشراكة مع مجموعة السليمان الخيرية ومركز القصيم العلمي.',
-      answerEn: 'STEM programs aim to develop teachers\' capabilities in applying Science, Technology, Engineering, and Mathematics methodology, in partnership with Al-Sulaiman Charitable Group and Qassim Scientific Center.'
-    }
-  ];
+  // Fetch FAQ data from API
+  useEffect(() => {
+    const fetchFAQData = async () => {
+      try {
+        setLoading(true);
+        const faqs = await dataService.getFAQs();
+        setFaqData(faqs);
+      } catch (error) {
+        console.error('Error fetching FAQ data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFAQData();
+  }, []);
 
   const categories = [
     { key: 'all', label: t.allCategories },
@@ -383,7 +239,12 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
       <section className="section-spacing">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            {filteredFAQs.length > 0 ? (
+            {loading ? (
+              <div className="text-center py-16">
+                <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-secondary-600">{currentLang === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+              </div>
+            ) : filteredFAQs.length > 0 ? (
               <div className="space-y-6">
                 {filteredFAQs.map((faq, index) => {
                   const isExpanded = expandedItems.includes(faq.id);

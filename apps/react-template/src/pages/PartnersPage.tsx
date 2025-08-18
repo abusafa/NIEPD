@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Building, Globe, Users, Award, ExternalLink, ArrowLeft, ArrowRight, BookOpen } from 'lucide-react';
+import { dataService, Partner } from '../services/dataService';
 
 interface PartnersPageProps {
   currentLang: 'ar' | 'en';
 }
 
 const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [loading, setLoading] = useState(true);
   const content = {
     ar: {
       pageTitle: 'الشركاء والتعاونات',
@@ -54,92 +57,22 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
   const t = content[currentLang];
   const ArrowIcon = currentLang === 'ar' ? ArrowLeft : ArrowRight;
 
-  const partners = [
-    {
-      id: 1,
-      name: currentLang === 'ar' ? 'وزارة التعليم' : 'Ministry of Education',
-      nameEn: 'Ministry of Education',
-      nameAr: 'وزارة التعليم',
-      description: currentLang === 'ar' 
-        ? 'الجهة الحكومية المشرفة على التعليم في المملكة العربية السعودية'
-        : 'The government body overseeing education in the Kingdom of Saudi Arabia',
-      type: 'local',
-      category: currentLang === 'ar' ? 'حكومي' : 'Government',
-      since: '2019',
-      website: 'https://moe.gov.sa',
-      logo: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=200'
-    },
-    {
-      id: 2,
-      name: currentLang === 'ar' ? 'جامعة سنغافورة الوطنية' : 'National University of Singapore',
-      nameEn: 'National University of Singapore',
-      nameAr: 'جامعة سنغافورة الوطنية',
-      description: currentLang === 'ar'
-        ? 'إحدى الجامعات الرائدة عالمياً في مجال التعليم والبحث العلمي'
-        : 'One of the world\'s leading universities in education and scientific research',
-      type: 'international',
-      category: currentLang === 'ar' ? 'أكاديمي' : 'Academic',
-      since: '2021',
-      website: 'https://nus.edu.sg',
-      logo: 'https://images.pexels.com/photos/5212700/pexels-photo-5212700.jpeg?auto=compress&cs=tinysrgb&w=200'
-    },
-    {
-      id: 3,
-      name: currentLang === 'ar' ? 'المركز الوطني للتعليم الإلكتروني' : 'National Center for E-Learning',
-      nameEn: 'National Center for E-Learning',
-      nameAr: 'المركز الوطني للتعليم الإلكتروني',
-      description: currentLang === 'ar'
-        ? 'مركز متخصص في تطوير وتنظيم التعليم الإلكتروني في المملكة'
-        : 'A specialized center for developing and regulating e-learning in the Kingdom',
-      type: 'local',
-      category: currentLang === 'ar' ? 'تعليمي' : 'Educational',
-      since: '2020',
-      website: 'https://nelc.gov.sa',
-      logo: 'https://images.pexels.com/photos/1181534/pexels-photo-1181534.jpeg?auto=compress&cs=tinysrgb&w=200'
-    },
-    {
-      id: 4,
-      name: currentLang === 'ar' ? 'مجموعة السليمان' : 'Al-Sulaiman Group',
-      nameEn: 'Al-Sulaiman Group',
-      nameAr: 'مجموعة السليمان',
-      description: currentLang === 'ar'
-        ? 'مجموعة رائدة في القطاع الخاص تدعم التطوير التعليمي والتقني'
-        : 'A leading private sector group supporting educational and technical development',
-      type: 'local',
-      category: currentLang === 'ar' ? 'قطاع خاص' : 'Private Sector',
-      since: '2020',
-      website: 'https://alsulaiman.com',
-      logo: 'https://images.pexels.com/photos/5428010/pexels-photo-5428010.jpeg?auto=compress&cs=tinysrgb&w=200'
-    },
-    {
-      id: 5,
-      name: currentLang === 'ar' ? 'معهد ماساتشوستس للتكنولوجيا' : 'Massachusetts Institute of Technology',
-      nameEn: 'Massachusetts Institute of Technology',
-      nameAr: 'معهد ماساتشوستس للتكنولوجيا',
-      description: currentLang === 'ar'
-        ? 'معهد رائد في التكنولوجيا والابتكار في التعليم'
-        : 'Leading institute in technology and innovation in education',
-      type: 'international',
-      category: currentLang === 'ar' ? 'أكاديمي' : 'Academic',
-      since: '2022',
-      website: 'https://mit.edu',
-      logo: 'https://images.pexels.com/photos/5427648/pexels-photo-5427648.jpeg?auto=compress&cs=tinysrgb&w=200'
-    },
-    {
-      id: 6,
-      name: currentLang === 'ar' ? 'شركة أرامكو السعودية' : 'Saudi Aramco',
-      nameEn: 'Saudi Aramco',
-      nameAr: 'شركة أرامكو السعودية',
-      description: currentLang === 'ar'
-        ? 'شركة النفط الوطنية وداعم التطوير المهني في مجال STEM'
-        : 'National oil company and supporter of professional development in STEM fields',
-      type: 'local',
-      category: currentLang === 'ar' ? 'قطاع خاص' : 'Private Sector',
-      since: '2021',
-      website: 'https://aramco.com',
-      logo: 'https://images.pexels.com/photos/8500434/pexels-photo-8500434.jpeg?auto=compress&cs=tinysrgb&w=200'
-    }
-  ];
+  // Fetch partners data from API
+  useEffect(() => {
+    const fetchPartnersData = async () => {
+      try {
+        setLoading(true);
+        const partnersData = await dataService.getPartners();
+        setPartners(partnersData);
+      } catch (error) {
+        console.error('Error fetching partners data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPartnersData();
+  }, []);
 
   const partnershipBenefits = [
     {
@@ -225,48 +158,61 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
               {t.localPartners}
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {localPartners.map((partner) => (
-              <div key={partner.id} className="card group hover:scale-[1.02] transition-all duration-300">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 rounded-xl flex items-center justify-center overflow-hidden">
-                    <img 
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-secondary-700 leading-tight">{partner.name}</h3>
-                    <span className="text-sm text-primary-600 bg-primary-50 px-2 py-1 rounded-full">
-                      {partner.category}
-                    </span>
-                  </div>
-                </div>
+          {loading ? (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-secondary-600">{currentLang === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {localPartners.map((partner) => {
+                const name = currentLang === 'ar' ? partner.nameAr : partner.nameEn;
+                const description = currentLang === 'ar' ? partner.descriptionAr : partner.descriptionEn;
+                const category = currentLang === 'ar' ? partner.categoryAr : partner.categoryEn;
                 
-                <p className="text-secondary-600 mb-4 leading-relaxed">{partner.description}</p>
-                
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-secondary-500">{t.partnerSince}:</span>
-                    <span className="text-secondary-700 font-medium">{partner.since}</span>
+                return (
+                  <div key={partner.id} className="card group hover:scale-[1.02] transition-all duration-300">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 rounded-xl flex items-center justify-center overflow-hidden">
+                        <img 
+                          src={partner.logo}
+                          alt={name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-secondary-700 leading-tight">{name}</h3>
+                        <span className="text-sm text-primary-600 bg-primary-50 px-2 py-1 rounded-full">
+                          {category}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-secondary-600 mb-4 leading-relaxed">{description}</p>
+                    
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-secondary-500">{t.partnerSince}:</span>
+                        <span className="text-secondary-700 font-medium">{partner.since}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-3">
+                      <a 
+                        href={partner.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-secondary flex-1 text-sm"
+                      >
+                        {t.website}
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex gap-3">
-                  <a 
-                    href={partner.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-secondary flex-1 text-sm"
-                  >
-                    {t.website}
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -278,45 +224,58 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
               {t.internationalPartners}
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {internationalPartners.map((partner) => (
-              <div key={partner.id} className="card group hover:scale-[1.02] transition-all duration-300">
-                <div className="flex items-start gap-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-secondary-100 to-secondary-200 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
-                    <img 
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-xl font-bold text-secondary-700">{partner.name}</h3>
-                      <span className="text-sm text-secondary-600 bg-secondary-100 px-3 py-1 rounded-full">
-                        {partner.category}
-                      </span>
-                    </div>
-                    <p className="text-secondary-600 mb-4 leading-relaxed">{partner.description}</p>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="text-sm">
-                        <span className="text-secondary-500">{t.partnerSince}: </span>
-                        <span className="text-secondary-700 font-medium">{partner.since}</span>
+          {loading ? (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-secondary-600">{currentLang === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {internationalPartners.map((partner) => {
+                const name = currentLang === 'ar' ? partner.nameAr : partner.nameEn;
+                const description = currentLang === 'ar' ? partner.descriptionAr : partner.descriptionEn;
+                const category = currentLang === 'ar' ? partner.categoryAr : partner.categoryEn;
+                
+                return (
+                  <div key={partner.id} className="card group hover:scale-[1.02] transition-all duration-300">
+                    <div className="flex items-start gap-6">
+                      <div className="w-20 h-20 bg-gradient-to-br from-secondary-100 to-secondary-200 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
+                        <img 
+                          src={partner.logo}
+                          alt={name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="text-xl font-bold text-secondary-700">{name}</h3>
+                          <span className="text-sm text-secondary-600 bg-secondary-100 px-3 py-1 rounded-full">
+                            {category}
+                          </span>
+                        </div>
+                        <p className="text-secondary-600 mb-4 leading-relaxed">{description}</p>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-sm">
+                            <span className="text-secondary-500">{t.partnerSince}: </span>
+                            <span className="text-secondary-700 font-medium">{partner.since}</span>
+                          </div>
+                        </div>
+                        <a 
+                          href={partner.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-secondary inline-flex"
+                        >
+                          {t.website}
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
                       </div>
                     </div>
-                    <a 
-                      href={partner.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-secondary inline-flex"
-                    >
-                      {t.website}
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

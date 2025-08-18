@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "navigations",
+  "info": {
+    "singularName": "navigation",
+    "pluralName": "navigations",
+    "displayName": "Navigation",
+    "description": "Website navigation menu items"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "menuType": {
+      "type": "enumeration",
+      "enum": ["main", "footer", "sidebar"],
+      "default": "main"
+    },
+    "parentId": {
+      "type": "integer"
+    },
+    "titleAr": {
+      "type": "string",
+      "required": true
+    },
+    "titleEn": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "icon": {
+      "type": "string"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["active", "inactive"],
+      "default": "active"
+    },
+    "target": {
+      "type": "enumeration",
+      "enum": ["_self", "_blank"],
+      "default": "_self"
+    },
+    "cssClass": {
+      "type": "string"
+    },
+    "descriptionAr": {
+      "type": "text"
+    },
+    "descriptionEn": {
+      "type": "text"
+    }
+  }
+}

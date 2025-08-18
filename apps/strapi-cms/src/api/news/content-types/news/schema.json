@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "news",
+  "info": {
+    "singularName": "news",
+    "pluralName": "news-articles",
+    "displayName": "News",
+    "description": "News articles and announcements"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titleAr": {
+      "type": "string",
+      "required": true
+    },
+    "titleEn": {
+      "type": "string",
+      "required": true
+    },
+    "summaryAr": {
+      "type": "text"
+    },
+    "summaryEn": {
+      "type": "text"
+    },
+    "contentAr": {
+      "type": "richtext",
+      "required": true
+    },
+    "contentEn": {
+      "type": "richtext",
+      "required": true
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": ["programs", "partnerships", "events", "achievements", "announcements"]
+    },
+    "authorAr": {
+      "type": "string"
+    },
+    "authorEn": {
+      "type": "string"
+    },
+    "dateAr": {
+      "type": "string"
+    },
+    "dateEn": {
+      "type": "string"
+    },
+    "publishDate": {
+      "type": "datetime"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

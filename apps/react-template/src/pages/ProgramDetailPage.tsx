@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Clock, Users, Award, BookOpen, CheckCircle, Calendar, User, ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
+import { dataService, Program } from '../services/dataService';
 
 interface ProgramDetailPageProps {
   currentLang: 'ar' | 'en';
@@ -8,6 +9,9 @@ interface ProgramDetailPageProps {
 }
 
 const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, programId, onBack }) => {
+  const [program, setProgram] = useState<Program | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const content = {
     ar: {
       backToPrograms: 'العودة للبرامج',
@@ -72,136 +76,47 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
   const t = content[currentLang];
   const ArrowIcon = currentLang === 'ar' ? ArrowRight : ArrowLeft;
 
-  // Program data - in a real app, this would come from props or API
-  const programsData = [
-    {
-      id: 1,
-      titleAr: 'مسار المعلم الفاعل (1)',
-      titleEn: 'Effective Teacher Track (1)',
-      categoryAr: 'التربوي العام',
-      categoryEn: 'General Education',
-      descriptionAr: 'يمثل هذا المسار نقطة انطلاق أساسية، حيث يزود المعلمين بمهارات جوهرية في مجالات التعليم والتقنية والتقويم. ويشتمل على برامج نوعية مثل التعلم الجديد: مبادئ وأنماط علم أصول التدريس، وأسس التعليم من أجل التعلم، والتدريس العملي باستخدام التكنولوجيا.',
-      descriptionEn: 'This track represents a fundamental starting point, providing teachers with essential skills in education, technology, and assessment. It includes quality programs such as New Learning: Principles and Patterns of Pedagogy, Foundations of Teaching for Learning, and Practical Teaching Using Technology.',
-      durationHours: 40,
-      targetAudienceAr: 'جميع المعلمين',
-      targetAudienceEn: 'All Teachers',
-      prerequisitesAr: 'بكالوريوس في التخصص',
-      prerequisitesEn: 'Bachelor\'s degree in specialization',
-      certification: 'معتمدة',
-      status: 'active',
-      featured: true,
-      launchDate: '2021-03-01',
-      partnerAr: 'المركز الوطني للتعليم الإلكتروني',
-      partnerEn: 'National Center for E-Learning',
-      image: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800',
-      instructor: currentLang === 'ar' ? 'د. أحمد محمد' : 'Dr. Ahmed Mohamed',
-      participants: 1250,
-      level: 'beginner',
-      featuresAr: [
-        'تطوير مهارات التدريس الأساسية',
-        'استخدام التكنولوجيا في التعليم',
-        'أساليب التقويم الحديثة',
-        'إدارة الصف الفعالة',
-        'التعلم التفاعلي',
-        'التطوير المهني المستمر'
-      ],
-      featuresEn: [
-        'Developing basic teaching skills',
-        'Using technology in education',
-        'Modern assessment methods',
-        'Effective classroom management',
-        'Interactive learning',
-        'Continuous professional development'
-      ],
-      outlineAr: [
-        'مقدمة في علم أصول التدريس',
-        'نظريات التعلم الحديثة',
-        'استراتيجيات التدريس المتنوعة',
-        'التكنولوجيا التعليمية',
-        'أساليب التقويم والقياس',
-        'إدارة البيئة الصفية',
-        'التطبيق العملي والممارسة'
-      ],
-      outlineEn: [
-        'Introduction to Pedagogy',
-        'Modern Learning Theories',
-        'Diverse Teaching Strategies',
-        'Educational Technology',
-        'Assessment and Evaluation Methods',
-        'Classroom Environment Management',
-        'Practical Application and Practice'
-      ]
-    },
-    {
-      id: 2,
-      titleAr: 'برنامج إعداد المعلم',
-      titleEn: 'Teacher Preparation Program',
-      categoryAr: 'إعداد المعلم',
-      categoryEn: 'Teacher Preparation',
-      descriptionAr: 'يُعد هذا البرنامج مبادرة استراتيجية ضخمة تهدف إلى إحداث نقلة نوعية في تأهيل المعلمين الجدد. يتم تنفيذه بالشراكة مع المعهد الوطني للتعليم (NIE) في سنغافورة، وهو مصمم لنقل أفضل الممارسات العالمية إلى المملكة.',
-      descriptionEn: 'This program is a major strategic initiative aimed at creating a qualitative leap in qualifying new teachers. It is implemented in partnership with the National Institute of Education (NIE) in Singapore, and is designed to transfer global best practices to the Kingdom.',
-      durationHours: 120,
-      targetAudienceAr: 'المعلمون الجدد والخريجون',
-      targetAudienceEn: 'New Teachers and Graduates',
-      prerequisitesAr: 'بكالوريوس في التخصص',
-      prerequisitesEn: 'Bachelor\'s degree in specialization',
-      certification: 'معتمدة',
-      status: 'active',
-      featured: true,
-      launchDate: '2025-07-01',
-      partnerAr: 'المعهد الوطني للتعليم - سنغافورة',
-      partnerEn: 'National Institute of Education - Singapore',
-      image: 'https://images.pexels.com/photos/5212700/pexels-photo-5212700.jpeg?auto=compress&cs=tinysrgb&w=800',
-      instructor: currentLang === 'ar' ? 'د. فاطمة العلي' : 'Dr. Fatima Al-Ali',
-      participants: 890,
-      level: 'intermediate',
-      featuresAr: [
-        'منهج عالمي من سنغافورة',
-        'تدريب عملي مكثف',
-        'مرشدين متخصصين',
-        'تقييم مستمر',
-        'شهادة معتمدة دولياً',
-        'متابعة ما بعد التخرج'
-      ],
-      featuresEn: [
-        'Global curriculum from Singapore',
-        'Intensive practical training',
-        'Specialized mentors',
-        'Continuous assessment',
-        'Internationally accredited certificate',
-        'Post-graduation follow-up'
-      ],
-      outlineAr: [
-        'أسس التربية والتعليم',
-        'علم النفس التربوي',
-        'طرق التدريس المتقدمة',
-        'تقنيات التعليم الحديثة',
-        'إدارة الصف والطلاب',
-        'التقويم التربوي',
-        'التدريب الميداني',
-        'مشروع التخرج'
-      ],
-      outlineEn: [
-        'Foundations of Education',
-        'Educational Psychology',
-        'Advanced Teaching Methods',
-        'Modern Educational Technologies',
-        'Classroom and Student Management',
-        'Educational Assessment',
-        'Field Training',
-        'Graduation Project'
-      ]
-    }
-  ];
+  // Fetch program data from API
+  useEffect(() => {
+    const fetchProgramData = async () => {
+      try {
+        setLoading(true);
+        const programs = await dataService.getPrograms();
+        const foundProgram = programs.find(p => p.id === programId);
+        
+        if (foundProgram) {
+          setProgram(foundProgram);
+        } else {
+          setError('Program not found');
+        }
+      } catch (err) {
+        setError('Failed to load program');
+        console.error('Error fetching program:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const program = programsData.find(p => p.id === programId);
+    fetchProgramData();
+  }, [programId]);
 
-  if (!program) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-secondary-600">{currentLang === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !program) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-secondary-700 mb-4">
-            {currentLang === 'ar' ? 'البرنامج غير موجود' : 'Program Not Found'}
+            {error || (currentLang === 'ar' ? 'البرنامج غير موجود' : 'Program Not Found')}
           </h2>
           <button onClick={onBack} className="btn-primary">
             {t.backToPrograms}
@@ -214,11 +129,6 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
   const title = currentLang === 'ar' ? program.titleAr : program.titleEn;
   const description = currentLang === 'ar' ? program.descriptionAr : program.descriptionEn;
   const category = currentLang === 'ar' ? program.categoryAr : program.categoryEn;
-  const targetAudience = currentLang === 'ar' ? program.targetAudienceAr : program.targetAudienceEn;
-  const prerequisites = currentLang === 'ar' ? program.prerequisitesAr : program.prerequisitesEn;
-  const partner = currentLang === 'ar' ? program.partnerAr : program.partnerEn;
-  const features = currentLang === 'ar' ? program.featuresAr : program.featuresEn;
-  const outline = currentLang === 'ar' ? program.outlineAr : program.outlineEn;
 
   const getLevelLabel = (level: string) => {
     const labels: { [key: string]: string } = {
@@ -230,7 +140,20 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
     return labels[level] || level;
   };
 
-  const getDurationLabel = (hours: number) => {
+  const getDurationLabel = (duration: string) => {
+    // Handle different duration formats from the API
+    if (duration.includes('شهر') || duration.includes('month')) {
+      return duration;
+    }
+    if (duration.includes('أسبوع') || duration.includes('week')) {
+      return duration;
+    }
+    if (duration.includes('ساعة') || duration.includes('hour')) {
+      return duration;
+    }
+    // Fallback for numeric values
+    const hours = parseInt(duration);
+    if (!isNaN(hours)) {
     if (hours >= 40) {
       const months = Math.ceil(hours / 40);
       return `${months} ${t.months}`;
@@ -238,6 +161,8 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
       const weeks = Math.ceil(hours / 10);
       return `${weeks} ${t.weeks}`;
     }
+    }
+    return duration;
   };
 
   return (
@@ -277,7 +202,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
               <div className="flex flex-wrap gap-6 mb-8">
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-primary-300" />
-                  <span>{getDurationLabel(program.durationHours)}</span>
+                  <span>{getDurationLabel(program.duration)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <User className="w-5 h-5 text-primary-300" />
@@ -285,7 +210,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-primary-300" />
-                  <span>{program.participants}+ {t.enrolled}</span>
+                  <span>{program.enrolledCount || 0}+ {t.enrolled}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Award className="w-5 h-5 text-primary-300" />
@@ -320,7 +245,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
               <div>
                 <h2 className="text-3xl font-bold text-secondary-700 mb-6">{t.programFeatures}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {features.map((feature, index) => (
+                  {(currentLang === 'ar' ? program.featuresAr : program.featuresEn).map((feature, index) => (
                     <div key={index} className="flex items-center gap-3 p-4 bg-primary-50 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0" />
                       <span className="text-secondary-700">{feature}</span>
@@ -329,20 +254,13 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
                 </div>
               </div>
 
-              {/* Program Outline */}
+              {/* Program Description - since we don't have outline in the API, we'll show description */}
               <div>
-                <h2 className="text-3xl font-bold text-secondary-700 mb-6">{t.programOutline}</h2>
-                <div className="space-y-4">
-                  {outline.map((item, index) => (
-                    <div key={index} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                      <div className="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-secondary-700 mb-1">{item}</h3>
-                      </div>
-                    </div>
-                  ))}
+                <h2 className="text-3xl font-bold text-secondary-700 mb-6">
+                  {currentLang === 'ar' ? 'تفاصيل البرنامج' : 'Program Details'}
+                </h2>
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <p className="text-secondary-700 leading-relaxed text-lg">{description}</p>
                 </div>
               </div>
             </div>
@@ -357,7 +275,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
                 <div className="space-y-4">
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <span className="text-secondary-600">{t.duration}:</span>
-                    <span className="font-medium text-secondary-700">{program.durationHours} {t.hours}</span>
+                    <span className="font-medium text-secondary-700">{getDurationLabel(program.duration.toString())}</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <span className="text-secondary-600">{t.level}:</span>
@@ -365,7 +283,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <span className="text-secondary-600">{t.instructor}:</span>
-                    <span className="font-medium text-secondary-700">{program.instructor}</span>
+                    <span className="font-medium text-secondary-700">{currentLang === 'ar' ? program.instructorAr : program.instructorEn}</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <span className="text-secondary-600">{t.participants}:</span>
@@ -385,20 +303,20 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
               {/* Prerequisites */}
               <div className="card">
                 <h3 className="text-xl font-bold text-secondary-700 mb-4">{t.prerequisites}</h3>
-                <p className="text-secondary-600">{prerequisites}</p>
+                <p className="text-secondary-600">{currentLang === 'ar' ? program.prerequisitesAr : program.prerequisitesEn}</p>
               </div>
 
               {/* Target Audience */}
               <div className="card">
                 <h3 className="text-xl font-bold text-secondary-700 mb-4">{t.targetAudience}</h3>
-                <p className="text-secondary-600">{targetAudience}</p>
+                <p className="text-secondary-600">{currentLang === 'ar' ? program.targetAudienceAr : program.targetAudienceEn}</p>
               </div>
 
               {/* Partnership */}
-              {partner && (
+              {(program.partnerAr || program.partnerEn) && (
                 <div className="card">
                   <h3 className="text-xl font-bold text-secondary-700 mb-4">{t.partnershipWith}</h3>
-                  <p className="text-secondary-600">{partner}</p>
+                  <p className="text-secondary-600">{currentLang === 'ar' ? program.partnerAr : program.partnerEn}</p>
                 </div>
               )}
 
