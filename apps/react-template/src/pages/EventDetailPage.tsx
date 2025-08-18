@@ -273,7 +273,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-4">
           <button
             onClick={() => navigate('/events')}
@@ -321,7 +321,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
           <div className="lg:col-span-2 space-y-8">
             {/* Event Info Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 border border-gray-100">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                     <Calendar className="w-6 h-6 text-blue-600" />
@@ -333,7 +333,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 border border-gray-100">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                     <Clock className="w-6 h-6 text-green-600" />
@@ -345,7 +345,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 border border-gray-100">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
                     <MapPin className="w-6 h-6 text-purple-600" />
@@ -357,7 +357,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 border border-gray-100">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
                     <Users className="w-6 h-6 text-orange-600" />
@@ -378,7 +378,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
             </div>
 
             {/* Event Description */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+            <div className="bg-white rounded-2xl p-8 border border-gray-100">
               <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <Target className="w-6 h-6 text-primary-600" />
                 {currentLang === 'ar' ? 'تفاصيل الفعالية' : 'Event Details'}
@@ -408,7 +408,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
             </div>
 
             {/* Event Schedule */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+            <div className="bg-white rounded-2xl p-8 border border-gray-100">
               <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <Clock className="w-6 h-6 text-primary-600" />
                 {currentLang === 'ar' ? 'جدول الفعالية' : 'Event Schedule'}
@@ -448,7 +448,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Registration Card */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 sticky top-6">
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 sticky top-6">
               <div className="text-center mb-6">
                 <div className="text-3xl font-bold text-gray-900 mb-2">
                   {t.free}
@@ -508,7 +508,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
             </div>
 
             {/* Event Features */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <div className="bg-white rounded-2xl p-6 border border-gray-100">
               <h4 className="font-semibold text-gray-900 mb-4">{currentLang === 'ar' ? 'مميزات الفعالية' : 'Event Features'}</h4>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -531,7 +531,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
             </div>
 
             {/* Contact Info */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <div className="bg-white rounded-2xl p-6 border border-gray-100">
               <h4 className="font-semibold text-gray-900 mb-4">{t.contact}</h4>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -550,7 +550,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
             </div>
 
             {/* Event Type */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <div className="bg-white rounded-2xl p-6 border border-gray-100">
               <h4 className="font-semibold text-gray-900 mb-4">{currentLang === 'ar' ? 'نوع الفعالية' : 'Event Type'}</h4>
               <div className="flex flex-wrap gap-2">
                 <span className="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm">

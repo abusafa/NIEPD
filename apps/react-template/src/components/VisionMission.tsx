@@ -107,7 +107,7 @@ const VisionMission: React.FC<VisionMissionProps> = ({ currentLang }) => {
           {/* Vision Card */}
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-primary-600 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-            <div className="relative bg-white rounded-3xl shadow-xl p-8 md:p-10 border border-gray-100 group-hover:shadow-2xl transition-all duration-300">
+            <div className="relative bg-white rounded-3xl p-8 md:p-10 border border-gray-100 transition-all duration-300">
               {/* Icon */}
               <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
                 <Eye className="w-10 h-10 text-white" />
@@ -134,7 +134,7 @@ const VisionMission: React.FC<VisionMissionProps> = ({ currentLang }) => {
           {/* Mission Card */}
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-10"></div>
-            <div className="relative bg-white rounded-3xl shadow-xl p-8 md:p-10 border border-gray-100 group-hover:shadow-2xl transition-all duration-300">
+            <div className="relative bg-white rounded-3xl p-8 md:p-10 border border-gray-100 transition-all duration-300">
               {/* Icon */}
               <div className="w-20 h-20 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
                 <Heart className="w-10 h-10 text-white" />
@@ -178,7 +178,7 @@ const VisionMission: React.FC<VisionMissionProps> = ({ currentLang }) => {
               return (
                 <div 
                   key={index}
-                  className="group relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-gray-200"
+                  className="group relative bg-white rounded-2xl p-6 transition-all duration-300 border border-gray-100 hover:border-gray-200"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {/* Background Gradient */}

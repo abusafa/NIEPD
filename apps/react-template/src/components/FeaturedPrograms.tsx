@@ -165,7 +165,7 @@ const FeaturedPrograms: React.FC<FeaturedProgramsProps> = ({ currentLang, onProg
             return (
               <div 
                 key={program.id}
-                className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100"
+                className="group relative bg-white rounded-2xl transition-all duration-300 overflow-hidden border border-gray-100"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Featured Badge */}
