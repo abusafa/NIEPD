@@ -243,6 +243,13 @@ html[lang="en"] {
     background-position: 100% 50%;
   }
 }
+/* Hero scroll resize effect */
+.hero-scroll-container {
+  will-change: transform, height;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
 /* Scroll-triggered animations */
 @keyframes scrollFadeInUp {
   from {

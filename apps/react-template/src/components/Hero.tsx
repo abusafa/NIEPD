@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Logo from './Logo';
 
@@ -31,6 +31,7 @@ const Hero: React.FC<HeroProps> = ({
 }) => {
   const heroRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -56,10 +57,12 @@ const Hero: React.FC<HeroProps> = ({
     const elementsToObserve = heroRef.current?.querySelectorAll('.scroll-animate');
     elementsToObserve?.forEach((el) => observer.observe(el));
 
-    // Add scroll parallax effect
+    // Add scroll parallax effect and hero resize
     const handleScroll = () => {
+      const scrolled = window.pageYOffset;
+      setScrollY(scrolled);
+      
       if (heroRef.current) {
-        const scrolled = window.pageYOffset;
         const parallaxElements = heroRef.current.querySelectorAll('.parallax-element');
         
         parallaxElements.forEach((element, index) => {
@@ -91,8 +94,35 @@ const Hero: React.FC<HeroProps> = ({
     }
   };
 
+  // Calculate hero size based on scroll position
+  const getHeroStyle = () => {
+    const maxScroll = 500; // Maximum scroll distance for the effect
+    const scrollProgress = Math.min(scrollY / maxScroll, 1);
+    
+    // Scale from 100% to 85% as user scrolls
+    const scale = 1 - (scrollProgress * 0.15);
+    
+    // Reduce height from 100vh to 70vh
+    const heightVh = 100 - (scrollProgress * 30);
+    
+    // Subtle opacity fade (from 1 to 0.9)
+    const opacity = 1 - (scrollProgress * 0.1);
+    
+    return {
+      transform: `scale(${scale})`,
+      height: `${heightVh}vh`,
+      opacity: opacity,
+      transformOrigin: 'center top',
+      transition: scrollY === 0 ? 'all 0.3s ease-out' : 'none'
+    };
+  };
+
   return (
-    <section ref={heroRef} className={`relative min-h-screen flex items-center justify-center overflow-hidden ${getBackgroundClasses()} ${className}`}>
+    <section 
+      ref={heroRef} 
+      className={`hero-scroll-container relative min-h-screen flex items-center justify-center overflow-hidden ${getBackgroundClasses()} ${className}`}
+      style={getHeroStyle()}
+    >
       {/* Video Background */}
       {backgroundVariant === 'video' && (
         <div className="absolute inset-0 w-full h-full">
