@@ -3,9 +3,10 @@ import { BookOpen, Users, Award, TrendingUp, Clock, Star, User, ArrowLeft, Arrow
 
 interface ProgramsPageProps {
   currentLang: 'ar' | 'en';
+  onProgramSelect?: (programId: number) => void;
 }
 
-const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang }) => {
+const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang, onProgramSelect }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const content = {
@@ -326,7 +327,10 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang }) => {
                         {t.registerNow}
                         <ArrowIcon className="w-4 h-4" />
                       </button>
-                      <button className="btn-secondary">
+                      <button 
+                        className="btn-secondary"
+                        onClick={() => onProgramSelect && onProgramSelect(program.id)}
+                      >
                         {t.learnMore}
                       </button>
                     </div>

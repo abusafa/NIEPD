@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X, Globe } from 'lucide-react';
 import Logo from './Logo';
 
 type Language = 'ar' | 'en';
-type Page = 'home' | 'about' | 'programs' | 'news' | 'partners' | 'contact';
+type Page = 'home' | 'about' | 'programs' | 'news' | 'events' | 'partners' | 'contact' | 'faq' | 'privacy' | 'terms';
 
 interface HeaderProps {
   currentLang: Language;
   setCurrentLang: (lang: Language) => void;
   currentPage: Page;
-  setCurrentPage: (page: Page) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
   currentLang, 
   setCurrentLang, 
-  currentPage, 
-  setCurrentPage 
+  currentPage
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -25,9 +24,11 @@ const Header: React.FC<HeaderProps> = ({
       home: 'الرئيسية',
       about: 'عن المعهد',
       programs: 'البرامج والخدمات',
-      news: 'الأخبار والفعاليات',
+      news: 'الأخبار',
+      events: 'الفعاليات',
       partners: 'الشركاء',
       contact: 'اتصل بنا',
+      faq: 'الأسئلة الشائعة',
       register: 'سجّل الآن',
       instituteTitle: 'المعهد الوطني للتطوير المهني التعليمي'
     },
@@ -35,9 +36,11 @@ const Header: React.FC<HeaderProps> = ({
       home: 'Home',
       about: 'About Us',
       programs: 'Programs & Services',
-      news: 'News & Events',
+      news: 'News',
+      events: 'Events',
       partners: 'Partners',
       contact: 'Contact Us',
+      faq: 'FAQ',
       register: 'Register Now',
       instituteTitle: 'National Institute for Professional Educational Development'
     }
@@ -46,12 +49,14 @@ const Header: React.FC<HeaderProps> = ({
   const t = content[currentLang];
 
   const navigation = [
-    { key: 'home' as Page, label: t.home },
-    { key: 'about' as Page, label: t.about },
-    { key: 'programs' as Page, label: t.programs },
-    { key: 'news' as Page, label: t.news },
-    { key: 'partners' as Page, label: t.partners },
-    { key: 'contact' as Page, label: t.contact },
+    { key: 'home' as Page, label: t.home, path: '/home' },
+    { key: 'about' as Page, label: t.about, path: '/about' },
+    { key: 'programs' as Page, label: t.programs, path: '/programs' },
+    { key: 'news' as Page, label: t.news, path: '/news' },
+    { key: 'events' as Page, label: t.events, path: '/events' },
+    { key: 'partners' as Page, label: t.partners, path: '/partners' },
+    { key: 'faq' as Page, label: t.faq, path: '/faq' },
+    { key: 'contact' as Page, label: t.contact, path: '/contact' },
   ];
 
   return (
@@ -73,11 +78,10 @@ const Header: React.FC<HeaderProps> = ({
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8" aria-label={currentLang === 'ar' ? 'التنقل الرئيسي' : 'Primary navigation'} id="primary-navigation">
             {navigation.map((item) => (
-              <button
+              <Link
                 key={item.key}
-                onClick={() => setCurrentPage(item.key)}
+                to={item.path}
                 aria-current={currentPage === item.key ? 'page' : undefined}
-                type="button"
                 className={`nav-link font-medium transition-all duration-300 relative px-2 py-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 ${
                   currentPage === item.key 
                     ? 'text-primary-600 bg-primary-50' 
@@ -88,7 +92,7 @@ const Header: React.FC<HeaderProps> = ({
                 {currentPage === item.key && (
                   <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-full animate-scale-in"></span>
                 )}
-              </button>
+              </Link>
             ))}
           </nav>
 
@@ -105,12 +109,12 @@ const Header: React.FC<HeaderProps> = ({
               </span>
             </button>
 
-            <button 
-              onClick={() => setCurrentPage('programs')}
+            <Link 
+              to="/programs"
               className="btn-primary hidden md:flex transform hover:scale-105"
             >
               {t.register}
-            </button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <button
@@ -133,12 +137,10 @@ const Header: React.FC<HeaderProps> = ({
           <div id="mobile-menu" className="lg:hidden border-t border-secondary-100 py-6 animate-slide-down bg-white/95 backdrop-blur-sm rounded-b-2xl shadow-xl">
             <nav className="flex flex-col gap-4" aria-label={currentLang === 'ar' ? 'القائمة الجوال' : 'Mobile navigation'}>
               {navigation.map((item, index) => (
-                <button
+                <Link
                   key={item.key}
-                  onClick={() => {
-                    setCurrentPage(item.key);
-                    setIsMenuOpen(false);
-                  }}
+                  to={item.path}
+                  onClick={() => setIsMenuOpen(false)}
                   aria-current={currentPage === item.key ? 'page' : undefined}
                   className={`text-right py-3 px-6 rounded-xl font-medium transition-all duration-300 hover:scale-105 animate-fade-in-up focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 ${
                     currentPage === item.key 
@@ -148,17 +150,15 @@ const Header: React.FC<HeaderProps> = ({
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {item.label}
-                </button>
+                </Link>
               ))}
-              <button 
-                onClick={() => {
-                  setCurrentPage('programs');
-                  setIsMenuOpen(false);
-                }}
+              <Link 
+                to="/programs"
+                onClick={() => setIsMenuOpen(false)}
                 className="btn-primary mt-4 animate-fade-in-up animate-delay-500 transform hover:scale-105"
               >
                 {t.register}
-              </button>
+              </Link>
             </nav>
           </div>
         )}

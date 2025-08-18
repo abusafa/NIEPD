@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Twitter, Youtube, Linkedin, ExternalLink } from 'lucide-react';
 import Logo from './Logo';
 
@@ -154,12 +155,18 @@ const Footer: React.FC<FooterProps> = ({ currentLang }) => {
               © {new Date().getFullYear()} {t.institute}. {t.allRights}
             </p>
             <div className="flex gap-6 text-sm">
-              <a href="#" className="text-white/60 hover:text-primary-400 transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 rounded-md">
+              <Link 
+                to="/privacy"
+                className="text-white/60 hover:text-primary-400 transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 rounded-md"
+              >
                 {t.privacy}
-              </a>
-              <a href="#" className="text-white/60 hover:text-primary-400 transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 rounded-md">
+              </Link>
+              <Link 
+                to="/terms"
+                className="text-white/60 hover:text-primary-400 transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 rounded-md"
+              >
                 {t.terms}
-              </a>
+              </Link>
             </div>
           </div>
         </div>

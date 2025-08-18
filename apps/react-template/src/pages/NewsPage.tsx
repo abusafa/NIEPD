@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Calendar, User, Tag, ArrowLeft, ArrowRight, Search, Filter } from 'lucide-react';
+import { Calendar, User, ArrowLeft, ArrowRight, Search } from 'lucide-react';
 
 interface NewsPageProps {
   currentLang: 'ar' | 'en';
+  onNewsSelect?: (newsId: number) => void;
 }
 
-const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
+const NewsPage: React.FC<NewsPageProps> = ({ currentLang, onNewsSelect }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -253,7 +254,10 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
                       {item.excerpt}
                     </p>
                     
-                    <button className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium group">
+                    <button 
+                      className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium group"
+                      onClick={() => onNewsSelect && onNewsSelect(item.id)}
+                    >
                       {t.readMore}
                       <ArrowIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
@@ -306,7 +310,10 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
                         {item.excerpt}
                       </p>
                       
-                      <button className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium text-sm group">
+                      <button 
+                        className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium text-sm group"
+                        onClick={() => onNewsSelect && onNewsSelect(item.id)}
+                      >
                         {t.readMore}
                         <ArrowIcon className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                       </button>
