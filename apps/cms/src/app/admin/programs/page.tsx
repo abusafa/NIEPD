@@ -68,7 +68,22 @@ export default function ProgramsPage() {
 
   const fetchPrograms = async () => {
     try {
-      // Mock data for now - you can replace with API call
+      const url = new URL('/api/programs', window.location.origin);
+      if (statusFilter !== 'all') url.searchParams.set('status', statusFilter);
+
+      const response = await fetch(url.toString());
+      
+      if (response.ok) {
+        const data = await response.json();
+        setPrograms(data.programs || []);
+      } else {
+        console.error('Failed to fetch programs');
+        setPrograms([]);
+      }
+    } catch (error) {
+      console.error('Error fetching programs:', error);
+      setPrograms([]);
+      // Fallback to mock data for demonstration
       const mockPrograms: ProgramItem[] = [
         {
           id: '1',
@@ -152,8 +167,6 @@ export default function ProgramsPage() {
       ];
 
       setPrograms(mockPrograms);
-    } catch (error) {
-      console.error('Error fetching programs:', error);
     } finally {
       setLoading(false);
     }

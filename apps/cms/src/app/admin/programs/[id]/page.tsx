@@ -72,54 +72,41 @@ export default function ProgramDetailPage() {
 
   const fetchProgram = async () => {
     try {
-      // Mock data - replace with API call
-      const mockProgram: ProgramItem = {
-        id: programId,
-        titleAr: 'برنامج تطوير المهارات القيادية للمعلمين',
-        titleEn: 'Leadership Skills Development Program for Teachers',
-        summaryAr: 'برنامج تدريبي شامل يهدف إلى تطوير المهارات القيادية لدى المعلمين وتعزيز قدراتهم على القيادة التعليمية الفعالة',
-        summaryEn: 'Comprehensive training program aimed at developing leadership skills among teachers and enhancing their effective educational leadership capabilities',
-        descriptionAr: 'هذا البرنامج التدريبي المتقدم يركز على تنمية المهارات القيادية الأساسية للمعلمين، بما في ذلك القيادة التحويلية، إدارة الفرق، واتخاذ القرارات الاستراتيجية في البيئة التعليمية.',
-        descriptionEn: 'This advanced training program focuses on developing essential leadership skills for teachers, including transformational leadership, team management, and strategic decision-making in the educational environment.',
-        level: 'INTERMEDIATE',
-        duration: 40,
-        durationType: 'HOURS',
-        rating: 4.8,
-        participants: 1250,
-        status: 'PUBLISHED',
-        featured: true,
-        featuredImage: '/uploads/programs/leadership-program.jpg',
-        requirements: [
-          'Minimum 2 years teaching experience',
-          'Bachelor degree in Education or related field',
-          'Basic computer skills',
-          'Fluency in Arabic and English'
-        ],
-        objectives: [
-          'Develop transformational leadership skills',
-          'Master effective communication techniques',
-          'Learn strategic planning and decision-making',
-          'Build collaborative team management skills',
-          'Understand change management in education'
-        ],
-        createdAt: '2024-01-10T14:30:00Z',
-        updatedAt: '2024-01-15T09:45:00Z',
-        author: {
-          firstName: 'Dr. Sarah',
-          lastName: 'Ahmed',
-          username: 'sarah.ahmed'
-        },
-        category: {
-          nameAr: 'القيادة التعليمية',
-          nameEn: 'Educational Leadership',
-          color: '#8B5CF6'
-        }
-      };
+      const response = await fetch(`/api/programs/${programId}`);
 
-      setProgramItem(mockProgram);
+      if (response.ok) {
+        const program = await response.json();
+        setProgramItem({
+          id: program.id,
+          titleAr: program.titleAr || '',
+          titleEn: program.titleEn || '',
+          summaryAr: program.descriptionAr || '',
+          summaryEn: program.descriptionEn || '',
+          descriptionAr: program.descriptionAr || '',
+          descriptionEn: program.descriptionEn || '',
+          level: program.level || 'BEGINNER',
+          duration: program.duration || 0,
+          durationType: program.durationType || 'HOURS',
+          rating: program.rating || 0,
+          participants: program.participants || 0,
+          status: program.status || 'DRAFT',
+          featured: program.featured || false,
+          featuredImage: program.image || '',
+          requirements: [], // TODO: Add to schema if needed
+          objectives: [], // TODO: Add to schema if needed
+          createdAt: program.createdAt || '',
+          updatedAt: program.updatedAt || '',
+          author: program.author || { firstName: '', lastName: '', username: '' },
+          category: program.category || { nameAr: '', nameEn: '', color: '#8B5CF6' }
+        });
+      } else {
+        toast.error('Failed to load program data');
+        setProgramItem(null);
+      }
     } catch (error) {
       console.error('Error fetching program:', error);
       toast.error('Failed to load program');
+      setProgramItem(null);
     } finally {
       setLoading(false);
     }
@@ -136,9 +123,20 @@ export default function ProgramDetailPage() {
 
     setActionLoading(true);
     try {
-      // Mock delete - replace with API call
-      toast.success('Program deleted successfully');
-      router.push('/admin/programs');
+      const response = await fetch(`/api/programs/${programId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (response.ok) {
+        toast.success('Program deleted successfully');
+        router.push('/admin/programs');
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to delete program');
+      }
     } catch (error) {
       console.error('Error deleting program:', error);
       toast.error('Failed to delete program');

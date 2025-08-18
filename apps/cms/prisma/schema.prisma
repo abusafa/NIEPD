@@ -325,25 +325,29 @@ model FAQ {
 
 // Partners and collaborations
 model Partner {
-  id            String        @id @default(cuid())
-  nameAr        String
-  nameEn        String
-  descriptionAr String?
-  descriptionEn String?
-  slug          String        @unique
-  logo          String?
-  website       String?
-  type          String?       // "local", "international", "academic", "corporate"
-  featured      Boolean       @default(false)
-  sortOrder     Int           @default(0)
-  status        ContentStatus @default(DRAFT)
-  publishedAt   DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id              String        @id @default(cuid())
+  nameAr          String
+  nameEn          String
+  organizationAr  String
+  organizationEn  String
+  descriptionAr   String?
+  descriptionEn   String?
+  slug            String?       @unique
+  logo            String?
+  website         String?
+  email           String?
+  phone           String?
+  type            String?       // "PARTNER", "SPONSOR", "COLLABORATOR", "SUPPLIER"
+  featured        Boolean       @default(false)
+  sortOrder       Int           @default(0)
+  status          ContentStatus @default(PUBLISHED)
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
   // Relationships
-  authorId      String?
-  author        User?         @relation(fields: [authorId], references: [id])
+  authorId        String?
+  author          User?         @relation(fields: [authorId], references: [id])
 
   @@map("partners")
 }

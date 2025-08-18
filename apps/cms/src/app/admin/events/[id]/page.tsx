@@ -78,48 +78,46 @@ export default function EventDetailPage() {
 
   const fetchEvent = async () => {
     try {
-      // For now, use mock data - replace with API call
-      const mockEvent: EventItem = {
-        id: eventId,
-        titleAr: 'لقاء دور الإدارة المدرسية في بناء العلاقات الإيجابية',
-        titleEn: 'Session on School Administration Role in Building Positive Relationships',
-        summaryAr: 'لقاء تطويري متخصص يناقش دور الإدارة المدرسية في بناء العلاقات الإيجابية داخل المجتمع المدرسي',
-        summaryEn: 'Specialized development session discussing the role of school administration in building positive relationships',
-        contentAr: 'محتوى مفصل باللغة العربية حول دور الإدارة المدرسية في بناء العلاقات الإيجابية وتعزيز بيئة التعلم الفعالة',
-        contentEn: 'Detailed content in English about the role of school administration in building positive relationships and fostering an effective learning environment',
-        startDate: '2025-08-18',
-        endDate: '2025-08-18',
-        startTime: '09:00',
-        endTime: '12:00',
-        locationAr: 'افتراضي',
-        locationEn: 'Virtual',
-        venueAr: 'منصة زووم',
-        venueEn: 'Zoom Platform',
-        capacity: 500,
-        eventTypeAr: 'لقاء تطويري',
-        eventTypeEn: 'Development Session',
-        status: 'PUBLISHED',
-        eventStatus: 'UPCOMING',
-        featured: true,
-        featuredImage: '/uploads/events/event-placeholder.jpg',
-        createdAt: '2024-01-15T10:00:00Z',
-        updatedAt: '2024-01-15T10:30:00Z',
-        author: {
-          firstName: 'Admin',
-          lastName: 'User',
-          username: 'admin'
-        },
-        category: {
-          nameAr: 'الجلسات',
-          nameEn: 'Sessions',
-          color: '#3B82F6'
-        }
-      };
+      const response = await fetch(`/api/events/${eventId}`);
 
-      setEventItem(mockEvent);
+      if (response.ok) {
+        const event = await response.json();
+        setEventItem({
+          id: event.id,
+          titleAr: event.titleAr || '',
+          titleEn: event.titleEn || '',
+          summaryAr: event.summaryAr || '',
+          summaryEn: event.summaryEn || '',
+          contentAr: event.descriptionAr || '',
+          contentEn: event.descriptionEn || '',
+          startDate: event.startDate ? new Date(event.startDate).toISOString().split('T')[0] : '',
+          endDate: event.endDate ? new Date(event.endDate).toISOString().split('T')[0] : '',
+          startTime: event.startTime || '',
+          endTime: event.endTime || '',
+          locationAr: event.locationAr || '',
+          locationEn: event.locationEn || '',
+          venueAr: event.venueAr || '',
+          venueEn: event.venueEn || '',
+          capacity: event.capacity || 0,
+          eventTypeAr: event.eventTypeAr || '',
+          eventTypeEn: event.eventTypeEn || '',
+          status: event.status || 'DRAFT',
+          eventStatus: event.eventStatus || 'UPCOMING',
+          featured: event.featured || false,
+          featuredImage: event.image || '',
+          createdAt: event.createdAt || '',
+          updatedAt: event.updatedAt || '',
+          author: event.author || { firstName: '', lastName: '', username: '' },
+          category: event.category || { nameAr: '', nameEn: '', color: '#3B82F6' }
+        });
+      } else {
+        toast.error('Failed to load event data');
+        setEventItem(null);
+      }
     } catch (error) {
       console.error('Error fetching event:', error);
       toast.error('Failed to load event');
+      setEventItem(null);
     } finally {
       setLoading(false);
     }
@@ -136,9 +134,20 @@ export default function EventDetailPage() {
 
     setActionLoading(true);
     try {
-      // Mock delete - replace with API call
-      toast.success('Event deleted successfully');
-      router.push('/admin/events');
+      const response = await fetch(`/api/events/${eventId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (response.ok) {
+        toast.success('Event deleted successfully');
+        router.push('/admin/events');
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to delete event');
+      }
     } catch (error) {
       console.error('Error deleting event:', error);
       toast.error('Failed to delete event');

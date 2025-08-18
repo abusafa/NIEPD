@@ -105,41 +105,34 @@ export default function EditProgramPage() {
 
   const fetchProgram = async () => {
     try {
-      // Mock data - replace with API call
-      const mockProgram = {
-        titleAr: 'برنامج تطوير المهارات القيادية للمعلمين',
-        titleEn: 'Leadership Skills Development Program for Teachers',
-        summaryAr: 'برنامج تدريبي شامل يهدف إلى تطوير المهارات القيادية لدى المعلمين وتعزيز قدراتهم على القيادة التعليمية الفعالة',
-        summaryEn: 'Comprehensive training program aimed at developing leadership skills among teachers and enhancing their effective educational leadership capabilities',
-        descriptionAr: 'هذا البرنامج التدريبي المتقدم يركز على تنمية المهارات القيادية الأساسية للمعلمين، بما في ذلك القيادة التحويلية، إدارة الفرق، واتخاذ القرارات الاستراتيجية في البيئة التعليمية.',
-        descriptionEn: 'This advanced training program focuses on developing essential leadership skills for teachers, including transformational leadership, team management, and strategic decision-making in the educational environment.',
-        level: 'INTERMEDIATE' as const,
-        duration: '40',
-        durationType: 'HOURS' as const,
-        rating: '4.8',
-        participants: '1250',
-        status: 'PUBLISHED' as const,
-        featured: true,
-        featuredImage: '/uploads/programs/leadership-program.jpg',
-        requirements: [
-          'Minimum 2 years teaching experience',
-          'Bachelor degree in Education or related field',
-          'Basic computer skills',
-          'Fluency in Arabic and English'
-        ],
-        objectives: [
-          'Develop transformational leadership skills',
-          'Master effective communication techniques',
-          'Learn strategic planning and decision-making',
-          'Build collaborative team management skills',
-          'Understand change management in education'
-        ],
-        slug: 'leadership-skills-development-program',
-        categoryId: 'cat-1',
-        selectedTags: ['tag-1', 'tag-2'],
-      };
+      const response = await fetch(`/api/programs/${programId}`);
 
-      setFormData(mockProgram);
+      if (response.ok) {
+        const program = await response.json();
+        setFormData({
+          titleAr: program.titleAr || '',
+          titleEn: program.titleEn || '',
+          summaryAr: program.descriptionAr || '', // Using descriptionAr for both
+          summaryEn: program.descriptionEn || '', // Using descriptionEn for both
+          descriptionAr: program.descriptionAr || '',
+          descriptionEn: program.descriptionEn || '',
+          level: program.level || 'BEGINNER',
+          duration: program.duration?.toString() || '0',
+          durationType: program.durationType || 'HOURS',
+          rating: program.rating?.toString() || '0',
+          participants: program.participants?.toString() || '0',
+          status: program.status || 'DRAFT',
+          featured: program.featured || false,
+          featuredImage: program.image || '',
+          requirements: [], // TODO: Add to schema if needed
+          objectives: [], // TODO: Add to schema if needed
+          slug: program.slug || '',
+          categoryId: program.categoryId || '',
+          selectedTags: program.tags ? program.tags.map((t: any) => t.tag.id) : [],
+        });
+      } else {
+        toast.error('Failed to load program data');
+      }
     } catch (error) {
       console.error('Error fetching program:', error);
       toast.error('Failed to load program');

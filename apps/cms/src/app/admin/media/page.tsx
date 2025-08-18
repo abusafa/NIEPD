@@ -56,67 +56,15 @@ export default function MediaPage() {
       const params = new URLSearchParams();
       if (typeFilter !== 'all') params.set('type', typeFilter);
       
-      const response = await fetch(`/api/media?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      const response = await fetch(`/api/media?${params}`);
 
       if (response.ok) {
         const data = await response.json();
-        setMedia(data.media);
+        setMedia(data.media || []);
       } else {
-        // Fallback to mock data
-        const mockMedia: MediaItem[] = [
-        {
-          id: '1',
-          filename: 'conference-2024.jpg',
-          originalName: 'NIEPD Conference 2024.jpg',
-          mimeType: 'image/jpeg',
-          size: 2048576, // 2MB
-          path: '/uploads/media/conference-2024.jpg',
-          alt: 'NIEPD Conference 2024',
-          description: 'Annual NIEPD professional development conference',
-          createdAt: '2024-01-15T10:00:00Z',
-          updatedAt: '2024-01-15T10:00:00Z',
-        },
-        {
-          id: '2',
-          filename: 'training-materials.pdf',
-          originalName: 'Teacher Training Materials.pdf',
-          mimeType: 'application/pdf',
-          size: 5242880, // 5MB
-          path: '/uploads/media/training-materials.pdf',
-          description: 'Comprehensive training materials for teachers',
-          createdAt: '2024-01-14T15:20:00Z',
-          updatedAt: '2024-01-14T15:20:00Z',
-        },
-        {
-          id: '3',
-          filename: 'workshop-video.mp4',
-          originalName: 'Digital Learning Workshop.mp4',
-          mimeType: 'video/mp4',
-          size: 104857600, // 100MB
-          path: '/uploads/media/workshop-video.mp4',
-          alt: 'Digital Learning Workshop Video',
-          description: 'Workshop on digital learning strategies',
-          createdAt: '2024-01-12T09:15:00Z',
-          updatedAt: '2024-01-12T09:15:00Z',
-        },
-        {
-          id: '4',
-          filename: 'logo-niepd.png',
-          originalName: 'NIEPD Logo.png',
-          mimeType: 'image/png',
-          size: 512000, // 512KB
-          path: '/uploads/media/logo-niepd.png',
-          alt: 'NIEPD Official Logo',
-          description: 'Official NIEPD logo for use in publications',
-          createdAt: '2024-01-10T14:30:00Z',
-          updatedAt: '2024-01-10T14:30:00Z',
-        }
-              ];
-        setMedia(mockMedia);
+        console.error('Failed to fetch media:', response.statusText);
+        // Fallback to empty array
+        setMedia([]);
       }
     } catch (error) {
       console.error('Error fetching media:', error);
@@ -126,6 +74,7 @@ export default function MediaPage() {
       setLoading(false);
     }
   };
+
 
   const handleFileUpload = async (files: FileList) => {
     if (!files || files.length === 0) return;

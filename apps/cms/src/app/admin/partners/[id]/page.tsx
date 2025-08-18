@@ -59,30 +59,36 @@ export default function PartnerDetailPage() {
 
   const fetchPartner = async () => {
     try {
-      // Mock data - replace with API call
-      const mockPartner: PartnerItem = {
-        id: partnerId,
-        nameAr: 'د. محمد أحمد السعيد',
-        nameEn: 'Dr. Mohammed Ahmed Al-Saeed',
-        organizationAr: 'جامعة الملك سعود',
-        organizationEn: 'King Saud University',
-        descriptionAr: 'شراكة استراتيجية في مجال التطوير الأكاديمي وتطوير المناهج التعليمية، مع التركيز على الابتكار في التعليم العالي وتطوير قدرات أعضاء هيئة التدريس.',
-        descriptionEn: 'Strategic partnership in academic development and educational curriculum development, focusing on innovation in higher education and faculty capacity building.',
-        logo: '/uploads/partners/ksu-logo.png',
-        website: 'https://www.ksu.edu.sa',
-        email: 'partnership@ksu.edu.sa',
-        phone: '+966-11-467-0000',
-        type: 'PARTNER',
-        featured: true,
-        sortOrder: 1,
-        createdAt: '2024-01-08T10:00:00Z',
-        updatedAt: '2024-01-15T14:30:00Z'
-      };
+      const response = await fetch(`/api/partners/${partnerId}`);
 
-      setPartnerItem(mockPartner);
+      if (response.ok) {
+        const partner = await response.json();
+        setPartnerItem({
+          id: partner.id,
+          nameAr: partner.nameAr || '',
+          nameEn: partner.nameEn || '',
+          organizationAr: partner.organizationAr || '',
+          organizationEn: partner.organizationEn || '',
+          descriptionAr: partner.descriptionAr || '',
+          descriptionEn: partner.descriptionEn || '',
+          logo: partner.logo || '',
+          website: partner.website || '',
+          email: partner.email || '',
+          phone: partner.phone || '',
+          type: partner.type || 'PARTNER',
+          featured: partner.featured || false,
+          sortOrder: partner.sortOrder || 0,
+          createdAt: partner.createdAt || '',
+          updatedAt: partner.updatedAt || ''
+        });
+      } else {
+        toast.error('Failed to load partner data');
+        setPartnerItem(null);
+      }
     } catch (error) {
       console.error('Error fetching partner:', error);
       toast.error('Failed to load partner');
+      setPartnerItem(null);
     } finally {
       setLoading(false);
     }
@@ -99,9 +105,20 @@ export default function PartnerDetailPage() {
 
     setActionLoading(true);
     try {
-      // Mock delete - replace with API call
-      toast.success('Partner deleted successfully');
-      router.push('/admin/partners');
+      const response = await fetch(`/api/partners/${partnerId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (response.ok) {
+        toast.success('Partner deleted successfully');
+        router.push('/admin/partners');
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to delete partner');
+      }
     } catch (error) {
       console.error('Error deleting partner:', error);
       toast.error('Failed to delete partner');

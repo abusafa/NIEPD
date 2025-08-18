@@ -4,24 +4,11 @@ import { getUserFromToken } from '@/lib/auth';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 
-// GET /api/media - List all media files
+// GET /api/media - List all media files (public access)
 export async function GET(request: NextRequest) {
   try {
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
-    }
-
-    const user = await getUserFromToken(token);
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
-    }
+    // Media GET is now publicly accessible - no authentication required
+    // This allows the MediaSelector to work without login
 
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');

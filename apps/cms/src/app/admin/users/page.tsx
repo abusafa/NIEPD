@@ -58,57 +58,26 @@ export default function UsersPage() {
 
   const fetchUsers = async () => {
     try {
-      // Mock data for now - replace with API call
-      const mockUsers: UserItem[] = [
-        {
-          id: '1',
-          email: 'admin@niepd.sa',
-          username: 'admin',
-          firstName: 'Super',
-          lastName: 'Admin',
-          role: 'SUPER_ADMIN',
-          isActive: true,
-          createdAt: '2024-01-01T00:00:00Z',
-          updatedAt: '2024-01-01T00:00:00Z',
-        },
-        {
-          id: '2',
-          email: 'editor@niepd.sa',
-          username: 'editor',
-          firstName: 'Content',
-          lastName: 'Editor',
-          role: 'EDITOR',
-          isActive: true,
-          createdAt: '2024-01-02T00:00:00Z',
-          updatedAt: '2024-01-15T10:30:00Z',
-        },
-        {
-          id: '3',
-          email: 'author@niepd.sa',
-          username: 'author1',
-          firstName: 'John',
-          lastName: 'Doe',
-          role: 'AUTHOR',
-          isActive: true,
-          createdAt: '2024-01-05T00:00:00Z',
-          updatedAt: '2024-01-10T15:20:00Z',
-        },
-        {
-          id: '4',
-          email: 'viewer@niepd.sa',
-          username: 'viewer1',
-          firstName: 'Jane',
-          lastName: 'Smith',
-          role: 'VIEWER',
-          isActive: false,
-          createdAt: '2024-01-08T00:00:00Z',
-          updatedAt: '2024-01-12T09:15:00Z',
-        },
-      ];
+      const url = new URL('/api/users', window.location.origin);
+      if (roleFilter !== 'all') url.searchParams.set('role', roleFilter);
+      if (statusFilter !== 'all') url.searchParams.set('isActive', statusFilter);
 
-      setUsers(mockUsers);
+      const response = await fetch(url.toString(), {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data.users || []);
+      } else {
+        console.error('Failed to fetch users');
+        setUsers([]);
+      }
     } catch (error) {
       console.error('Error fetching users:', error);
+      setUsers([]);
     } finally {
       setLoading(false);
     }

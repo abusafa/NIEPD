@@ -71,24 +71,28 @@ export default function EditPartnerPage() {
 
   const fetchPartner = async () => {
     try {
-      // Mock data - replace with API call
-      const mockPartner = {
-        nameAr: 'د. محمد أحمد السعيد',
-        nameEn: 'Dr. Mohammed Ahmed Al-Saeed',
-        organizationAr: 'جامعة الملك سعود',
-        organizationEn: 'King Saud University',
-        descriptionAr: 'شراكة استراتيجية في مجال التطوير الأكاديمي وتطوير المناهج التعليمية، مع التركيز على الابتكار في التعليم العالي وتطوير قدرات أعضاء هيئة التدريس.',
-        descriptionEn: 'Strategic partnership in academic development and educational curriculum development, focusing on innovation in higher education and faculty capacity building.',
-        logo: '/uploads/partners/ksu-logo.png',
-        website: 'https://www.ksu.edu.sa',
-        email: 'partnership@ksu.edu.sa',
-        phone: '+966-11-467-0000',
-        type: 'PARTNER' as const,
-        featured: true,
-        sortOrder: '1',
-      };
+      const response = await fetch(`/api/partners/${partnerId}`);
 
-      setFormData(mockPartner);
+      if (response.ok) {
+        const partner = await response.json();
+        setFormData({
+          nameAr: partner.nameAr || '',
+          nameEn: partner.nameEn || '',
+          organizationAr: partner.organizationAr || '',
+          organizationEn: partner.organizationEn || '',
+          descriptionAr: partner.descriptionAr || '',
+          descriptionEn: partner.descriptionEn || '',
+          logo: partner.logo || '',
+          website: partner.website || '',
+          email: partner.email || '',
+          phone: partner.phone || '',
+          type: partner.type || 'PARTNER',
+          featured: partner.featured || false,
+          sortOrder: partner.sortOrder?.toString() || '0',
+        });
+      } else {
+        toast.error('Failed to load partner data');
+      }
     } catch (error) {
       console.error('Error fetching partner:', error);
       toast.error('Failed to load partner');

@@ -86,7 +86,23 @@ export default function EventsPage() {
 
   const fetchEvents = async () => {
     try {
-      // Mock data for now - replace with API call
+      const url = new URL('/api/events', window.location.origin);
+      if (statusFilter !== 'all') url.searchParams.set('status', statusFilter);
+      if (eventStatusFilter !== 'all') url.searchParams.set('eventStatus', eventStatusFilter);
+
+      const response = await fetch(url.toString());
+      
+      if (response.ok) {
+        const data = await response.json();
+        setEvents(data.events || []);
+      } else {
+        console.error('Failed to fetch events');
+        setEvents([]);
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setEvents([]);
+      // Fallback to mock data for demonstration
       const mockEvents: EventItem[] = [
         {
           id: '1',
@@ -217,8 +233,6 @@ export default function EventsPage() {
       ];
 
       setEvents(mockEvents);
-    } catch (error) {
-      console.error('Error fetching events:', error);
     } finally {
       setLoading(false);
     }

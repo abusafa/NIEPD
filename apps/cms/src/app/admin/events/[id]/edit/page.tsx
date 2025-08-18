@@ -107,35 +107,39 @@ export default function EditEventPage() {
 
   const fetchEvent = async () => {
     try {
-      // Mock data - replace with API call
-      const mockEvent = {
-        titleAr: 'لقاء دور الإدارة المدرسية في بناء العلاقات الإيجابية',
-        titleEn: 'Session on School Administration Role in Building Positive Relationships',
-        summaryAr: 'لقاء تطويري متخصص يناقش دور الإدارة المدرسية في بناء العلاقات الإيجابية داخل المجتمع المدرسي',
-        summaryEn: 'Specialized development session discussing the role of school administration in building positive relationships',
-        contentAr: 'محتوى مفصل باللغة العربية حول دور الإدارة المدرسية في بناء العلاقات الإيجابية وتعزيز بيئة التعلم الفعالة',
-        contentEn: 'Detailed content in English about the role of school administration in building positive relationships and fostering an effective learning environment',
-        startDate: '2025-08-18',
-        endDate: '2025-08-18',
-        startTime: '09:00',
-        endTime: '12:00',
-        locationAr: 'افتراضي',
-        locationEn: 'Virtual',
-        venueAr: 'منصة زووم',
-        venueEn: 'Zoom Platform',
-        capacity: '500',
-        eventTypeAr: 'لقاء تطويري',
-        eventTypeEn: 'Development Session',
-        status: 'PUBLISHED' as const,
-        eventStatus: 'UPCOMING' as const,
-        featured: true,
-        featuredImage: '/uploads/events/event-placeholder.jpg',
-        slug: 'school-administration-positive-relationships',
-        categoryId: 'cat-1',
-        selectedTags: ['tag-1', 'tag-2'],
-      };
+      const response = await fetch(`/api/events/${eventId}`);
 
-      setFormData(mockEvent);
+      if (response.ok) {
+        const event = await response.json();
+        setFormData({
+          titleAr: event.titleAr || '',
+          titleEn: event.titleEn || '',
+          summaryAr: event.summaryAr || '',
+          summaryEn: event.summaryEn || '',
+          contentAr: event.descriptionAr || '',
+          contentEn: event.descriptionEn || '',
+          startDate: event.startDate ? new Date(event.startDate).toISOString().split('T')[0] : '',
+          endDate: event.endDate ? new Date(event.endDate).toISOString().split('T')[0] : '',
+          startTime: event.startTime || '',
+          endTime: event.endTime || '',
+          locationAr: event.locationAr || '',
+          locationEn: event.locationEn || '',
+          venueAr: event.venueAr || '',
+          venueEn: event.venueEn || '',
+          capacity: event.capacity?.toString() || '0',
+          eventTypeAr: event.eventTypeAr || '',
+          eventTypeEn: event.eventTypeEn || '',
+          status: event.status || 'DRAFT',
+          eventStatus: event.eventStatus || 'UPCOMING',
+          featured: event.featured || false,
+          featuredImage: event.image || '',
+          slug: event.slug || '',
+          categoryId: event.categoryId || '',
+          selectedTags: event.tags ? event.tags.map((t: any) => t.tag.id) : [],
+        });
+      } else {
+        toast.error('Failed to load event data');
+      }
     } catch (error) {
       console.error('Error fetching event:', error);
       toast.error('Failed to load event');

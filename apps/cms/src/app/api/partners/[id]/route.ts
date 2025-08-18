@@ -6,7 +6,7 @@ interface RouteParams {
   params: { id: string };
 }
 
-// GET /api/partners/[id]
+// GET /api/partners/[id] - Get single partner (public access)
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const partner = await prisma.partner.findUnique({

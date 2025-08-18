@@ -45,18 +45,18 @@ export default function MediaSelector({
   const fetchMedia = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/media?type=image', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      const response = await fetch('/api/media?type=image');
 
       if (response.ok) {
         const data = await response.json();
-        setMedia(data.media);
+        setMedia(data.media || []);
+      } else {
+        console.error('Failed to fetch media:', response.statusText);
+        setMedia([]);
       }
     } catch (error) {
       console.error('Error fetching media:', error);
+      setMedia([]);
     } finally {
       setLoading(false);
     }
@@ -88,6 +88,11 @@ export default function MediaSelector({
             src={selectedImage}
             alt="Selected image"
             className="w-48 h-32 object-cover rounded-lg border"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              console.log('Failed to load selected image:', selectedImage);
+              target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDE5MiAxMjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTI4IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik04MCA2NEw2MCA4NEw5NiAxMDBMMTMyIDg0TDE1MiAxMDBWMTEySDQ4VjY0SDgwWiIgZmlsbD0iIzlDQTNBRiIvPgo8Y2lyY2xlIGN4PSI4MCIgY3k9IjU2IiByPSI4IiBmaWxsPSIjOUNBM0FGIi8+CjwvU3ZnPgo='; // Placeholder SVG for preview
+            }}
           />
           <Button
             variant="destructive"
@@ -161,10 +166,11 @@ export default function MediaSelector({
                         className="w-full h-24 object-cover rounded-lg border group-hover:border-blue-500 transition-colors"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.src = '/placeholder-image.png'; // You might want to add a placeholder
+                          console.log('Failed to load image:', item.path);
+                          target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zNSA0MEwyNSA1MEw0MCA2NUw2MCA0NUw3NSA2MFY3NUgyNVY0MEgzNVoiIGZpbGw9IiM5Q0EzQUYiLz4KPGNpcmNsZSBjeD0iNDAiIGN5PSIzNSIgcj0iNSIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'; // Simple placeholder SVG
                         }}
                       />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-opacity" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-lg transition-all duration-200 pointer-events-none" />
                       <div className="absolute bottom-1 left-1 right-1">
                         <p className="text-xs text-white bg-black bg-opacity-50 px-1 py-0.5 rounded truncate">
                           {item.originalName}
