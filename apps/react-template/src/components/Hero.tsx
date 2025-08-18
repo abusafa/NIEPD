@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Logo from './Logo';
 
@@ -29,6 +29,55 @@ const Hero: React.FC<HeroProps> = ({
   videoSrc = '/vidoes/215475_small.mp4',
   className = ''
 }) => {
+  const heroRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-on-scroll');
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    // Observe the hero content
+    if (contentRef.current) {
+      observer.observe(contentRef.current);
+    }
+
+    // Observe individual elements within the hero
+    const elementsToObserve = heroRef.current?.querySelectorAll('.scroll-animate');
+    elementsToObserve?.forEach((el) => observer.observe(el));
+
+    // Add scroll parallax effect
+    const handleScroll = () => {
+      if (heroRef.current) {
+        const scrolled = window.pageYOffset;
+        const parallaxElements = heroRef.current.querySelectorAll('.parallax-element');
+        
+        parallaxElements.forEach((element, index) => {
+          const speed = 0.5 + (index * 0.1); // Different speeds for different elements
+          const yPos = -(scrolled * speed);
+          (element as HTMLElement).style.transform = `translateY(${yPos}px)`;
+        });
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const getBackgroundClasses = () => {
     switch (backgroundVariant) {
       case 'gradient':
@@ -43,7 +92,7 @@ const Hero: React.FC<HeroProps> = ({
   };
 
   return (
-    <section className={`relative min-h-screen flex items-center justify-center overflow-hidden ${getBackgroundClasses()} ${className}`}>
+    <section ref={heroRef} className={`relative min-h-screen flex items-center justify-center overflow-hidden ${getBackgroundClasses()} ${className}`}>
       {/* Video Background */}
       {backgroundVariant === 'video' && (
         <div className="absolute inset-0 w-full h-full">
@@ -63,22 +112,22 @@ const Hero: React.FC<HeroProps> = ({
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-float-up"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary-300/10 rounded-full blur-3xl animate-float-down"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-white/5 to-primary-200/10 rounded-full blur-3xl animate-pulse-subtle"></div>
+        <div className="parallax-element absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-float-up"></div>
+        <div className="parallax-element absolute -bottom-40 -left-40 w-96 h-96 bg-primary-300/10 rounded-full blur-3xl animate-float-down"></div>
+        <div className="parallax-element absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-white/5 to-primary-200/10 rounded-full blur-3xl animate-pulse-subtle"></div>
       </div>
 
       {/* Floating particles */}
-      <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/30 rounded-full animate-float-up" style={{ animationDelay: '0s' }}></div>
-      <div className="absolute top-1/3 right-1/4 w-3 h-3 bg-primary-200/40 rounded-full animate-float-down" style={{ animationDelay: '1s' }}></div>
-      <div className="absolute bottom-1/4 left-1/3 w-2 h-2 bg-white/25 rounded-full animate-float-up" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute top-3/4 right-1/3 w-6 h-6 bg-primary-300/30 rounded-full animate-float-down"></div>
-      <div className="absolute bottom-1/3 left-1/2 w-3 h-3 bg-white/15 rounded-full animate-float-up" style={{ animationDelay: '3s' }}></div>
+      <div className="parallax-element absolute top-1/4 left-1/4 w-2 h-2 bg-white/30 rounded-full animate-float-up" style={{ animationDelay: '0s' }}></div>
+      <div className="parallax-element absolute top-1/3 right-1/4 w-3 h-3 bg-primary-200/40 rounded-full animate-float-down" style={{ animationDelay: '1s' }}></div>
+      <div className="parallax-element absolute bottom-1/4 left-1/3 w-2 h-2 bg-white/25 rounded-full animate-float-up" style={{ animationDelay: '2s' }}></div>
+      <div className="parallax-element absolute top-3/4 right-1/3 w-6 h-6 bg-primary-300/30 rounded-full animate-float-down"></div>
+      <div className="parallax-element absolute bottom-1/3 left-1/2 w-3 h-3 bg-white/15 rounded-full animate-float-up" style={{ animationDelay: '3s' }}></div>
       
       <div className="container mx-auto px-4 relative">
-        <div className="max-w-4xl mx-auto text-center text-white">
+        <div ref={contentRef} className="max-w-4xl mx-auto text-center text-white scroll-animate opacity-0 transform translate-y-8">
           {showLogo && (
-            <div className="mb-8 animate-fade-in-up flex justify-center">
+            <div className="mb-8 scroll-animate opacity-0 transform translate-y-4 flex justify-center">
               <Logo 
                 variant="white" 
                 size="xl" 
@@ -88,21 +137,21 @@ const Hero: React.FC<HeroProps> = ({
             </div>
           )}
           
-          <div className="mb-4 animate-fade-in-up animate-delay-100">
+          <div className="mb-4 scroll-animate opacity-0 transform translate-y-4">
             <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium border border-white/20">
               {currentLang === 'ar' ? 'مرحباً بكم في' : 'Welcome to'}
             </span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-readex-bold mb-8 leading-tight animate-fade-in-up animate-delay-200">
+          <h1 className="text-4xl md:text-5xl font-readex-bold mb-8 leading-tight scroll-animate opacity-0 transform translate-y-6">
             {title}
           </h1>
           
-          <p className="text-xl md:text-2xl mb-12 leading-relaxed opacity-90 animate-fade-in-up animate-delay-300 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl mb-12 leading-relaxed opacity-90 scroll-animate transform translate-y-6 max-w-3xl mx-auto">
             {subtitle}
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up animate-delay-400">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center scroll-animate opacity-0 transform translate-y-8">
             <button 
               onClick={onPrimaryClick}
               className="btn-primary text-lg px-10 py-4 bg-white text-primary-600 hover:bg-gray-50 hover:shadow-2xl transform hover:scale-105"
