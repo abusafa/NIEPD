@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Clock, Users, Award, ArrowLeft, ArrowRight, ExternalLink, CheckCircle, Star } from 'lucide-react';
+import { dataService, Program } from '../services/dataService';
 
 interface FeaturedProgramsProps {
   currentLang: 'ar' | 'en';
@@ -7,6 +8,8 @@ interface FeaturedProgramsProps {
 }
 
 const FeaturedPrograms: React.FC<FeaturedProgramsProps> = ({ currentLang, onProgramSelect }) => {
+  const [featuredPrograms, setFeaturedPrograms] = useState<Program[]>([]);
+  const [loading, setLoading] = useState(true);
   const content = {
     ar: {
       title: 'البرامج المميزة',
@@ -51,74 +54,73 @@ const FeaturedPrograms: React.FC<FeaturedProgramsProps> = ({ currentLang, onProg
   const t = content[currentLang];
   const ArrowIcon = currentLang === 'ar' ? ArrowLeft : ArrowRight;
 
-  const featuredPrograms = [
-    {
-      id: 1,
-      titleAr: 'برنامج إعداد المعلم',
-      titleEn: 'Teacher Preparation Program',
-      descriptionAr: 'برنامج استراتيجي شامل لإعداد المعلمين الجدد وتأهيلهم للعمل في الميدان التعليمي بأعلى المعايير المهنية',
-      descriptionEn: 'Comprehensive strategic program for preparing new teachers and qualifying them to work in the educational field with the highest professional standards',
-      duration: 120,
-      participants: 890,
-      level: 'intermediate',
-      partnerAr: 'المعهد الوطني للتعليم - سنغافورة',
-      partnerEn: 'National Institute of Education - Singapore',
-      image: 'https://images.pexels.com/photos/5212700/pexels-photo-5212700.jpeg?auto=compress&cs=tinysrgb&w=800',
-      color: 'from-blue-500 to-blue-600',
-      features: [
-        { ar: 'منهج عالمي متطور', en: 'Advanced global curriculum' },
-        { ar: 'تدريب عملي مكثف', en: 'Intensive practical training' },
-        { ar: 'شهادة معتمدة دولياً', en: 'Internationally accredited certificate' }
-      ],
-      isFeatured: true,
-      isFree: true,
-      isCertified: true
-    },
-    {
-      id: 2,
-      titleAr: 'مسار المعلم الفاعل',
-      titleEn: 'Effective Teacher Track',
-      descriptionAr: 'مسار تطويري متدرج يزود المعلمين بالمهارات الأساسية في التعليم والتقنية والتقويم',
-      descriptionEn: 'Progressive development track that provides teachers with essential skills in education, technology, and assessment',
-      duration: 40,
-      participants: 1250,
-      level: 'beginner',
-      partnerAr: 'المركز الوطني للتعليم الإلكتروني',
-      partnerEn: 'National Center for E-Learning',
-      image: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800',
-      color: 'from-green-500 to-green-600',
-      features: [
-        { ar: 'مهارات التدريس الأساسية', en: 'Basic teaching skills' },
-        { ar: 'استخدام التكنولوجيا', en: 'Technology integration' },
-        { ar: 'أساليب التقويم الحديثة', en: 'Modern assessment methods' }
-      ],
-      isFeatured: true,
-      isFree: true,
-      isCertified: true
-    },
-    {
-      id: 3,
-      titleAr: 'برنامج القيادة التعليمية',
-      titleEn: 'Educational Leadership Program',
-      descriptionAr: 'برنامج متخصص لتطوير قدرات القيادات المدرسية والإدارية في المؤسسات التعليمية',
-      descriptionEn: 'Specialized program for developing the capabilities of school and administrative leaders in educational institutions',
-      duration: 60,
-      participants: 450,
-      level: 'advanced',
-      partnerAr: 'معهد الإدارة العامة',
-      partnerEn: 'Institute of Public Administration',
-      image: 'https://images.pexels.com/photos/5428010/pexels-photo-5428010.jpeg?auto=compress&cs=tinysrgb&w=800',
-      color: 'from-purple-500 to-purple-600',
-      features: [
-        { ar: 'مهارات القيادة التحويلية', en: 'Transformational leadership skills' },
-        { ar: 'إدارة التغيير', en: 'Change management' },
-        { ar: 'بناء الفرق الفعالة', en: 'Building effective teams' }
-      ],
-      isFeatured: true,
-      isFree: true,
-      isCertified: true
+  // Fetch featured programs
+  useEffect(() => {
+    const fetchFeaturedPrograms = async () => {
+      try {
+        setLoading(true);
+        const programs = await dataService.getFeaturedPrograms();
+        setFeaturedPrograms(programs);
+      } catch (error) {
+        console.error('Error fetching featured programs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedPrograms();
+  }, []);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <section className="section-spacing bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <p className="text-secondary-600">Loading programs...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Transform programs data for display
+  const displayPrograms = featuredPrograms.slice(0, 3).map(program => ({
+    id: program.id,
+    titleAr: program.titleAr,
+    titleEn: program.titleEn,
+    descriptionAr: program.descriptionAr,
+    descriptionEn: program.descriptionEn,
+    duration: program.duration,
+    participants: program.participants,
+    level: program.level,
+    partnerAr: program.partnerAr,
+    partnerEn: program.partnerEn,
+    image: program.image,
+    color: getColorForCategory(program.category),
+    features: program.featuresAr && program.featuresEn ? [
+      { ar: program.featuresAr[0] || '', en: program.featuresEn[0] || '' },
+      { ar: program.featuresAr[1] || '', en: program.featuresEn[1] || '' },
+      { ar: program.featuresAr[2] || '', en: program.featuresEn[2] || '' }
+    ] : [],
+    isFeatured: program.featured,
+    isFree: program.isFree,
+    isCertified: program.isCertified
+  }));
+
+  function getColorForCategory(category: string) {
+    switch (category) {
+      case 'educational':
+        return 'from-blue-500 to-blue-600';
+      case 'specialized':
+        return 'from-green-500 to-green-600';
+      case 'leadership':
+        return 'from-purple-500 to-purple-600';
+      default:
+        return 'from-gray-500 to-gray-600';
     }
-  ];
+  }
 
   const getLevelLabel = (level: string) => {
     const levels: { [key: string]: string } = {
@@ -156,7 +158,7 @@ const FeaturedPrograms: React.FC<FeaturedProgramsProps> = ({ currentLang, onProg
 
         {/* Programs Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {featuredPrograms.map((program, index) => {
+          {displayPrograms.map((program, index) => {
             const title = currentLang === 'ar' ? program.titleAr : program.titleEn;
             const description = currentLang === 'ar' ? program.descriptionAr : program.descriptionEn;
             const partner = currentLang === 'ar' ? program.partnerAr : program.partnerEn;

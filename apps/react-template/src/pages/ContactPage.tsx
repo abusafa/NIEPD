@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, Clock, Send, User, MessageSquare, Building } from 'lucide-react';
+import { dataService, ContactInfo } from '../services/dataService';
 
 interface ContactPageProps {
   currentLang: 'ar' | 'en';
@@ -13,6 +14,8 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
     subject: '',
     message: ''
   });
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const content = {
     ar: {
@@ -85,55 +88,62 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
 
   const t = content[currentLang];
 
-  const contactMethods = [
-    {
-      icon: MapPin,
-      title: t.address,
-      value: t.addressValue,
-      link: 'https://maps.google.com'
-    },
-    {
-      icon: Phone,
-      title: t.phone,
-      value: t.phoneValue,
-      link: 'tel:+966111234567'
-    },
-    {
-      icon: Mail,
-      title: t.email,
-      value: t.emailValue,
-      link: 'mailto:info@niepd.sa'
-    },
-    {
-      icon: Clock,
-      title: t.officeHours,
-      value: t.hours,
-      extraValue: t.hoursWeekend
-    }
-  ];
+  // Fetch contact information
+  useEffect(() => {
+    const fetchContactInfo = async () => {
+      try {
+        setLoading(true);
+        const data = await dataService.getContactInfo();
+        setContactInfo(data);
+      } catch (error) {
+        console.error('Error fetching contact info:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const departments = [
-    {
-      name: t.generalInquiries,
-      email: 'info@niepd.sa',
-      phone: '+966 11 123 4567'
-    },
-    {
-      name: t.programs,
-      email: 'programs@niepd.sa',
-      phone: '+966 11 123 4568'
-    },
-    {
-      name: t.partnerships,
-      email: 'partnerships@niepd.sa',
-      phone: '+966 11 123 4569'
-    },
-    {
-      name: t.technicalSupport,
-      email: 'support@niepd.sa',
-      phone: '+966 11 123 4570'
-    }
-  ];
+    fetchContactInfo();
+  }, []);
+
+  // Show loading state
+  if (loading || !contactInfo) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-secondary-600">Loading contact information...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Transform contact methods for display
+  const getIconComponent = (iconName: string) => {
+    const iconMap: { [key: string]: any } = {
+      MapPin, Phone, Mail, Clock
+    };
+    return iconMap[iconName] || Mail;
+  };
+
+  const contactMethods = contactInfo.contactMethods.map(method => {
+    const Icon = getIconComponent(method.icon);
+    return {
+      icon: Icon,
+      title: currentLang === 'ar' ? method.titleAr : method.titleEn,
+      value: currentLang === 'ar' ? method.valueAr : method.valueEn,
+      link: method.link,
+      extraValue: method.extraValueAr && method.extraValueEn 
+        ? (currentLang === 'ar' ? method.extraValueAr : method.extraValueEn)
+        : undefined
+    };
+  });
+
+  // Transform departments for display
+  const departments = contactInfo.departments.map(dept => ({
+    name: currentLang === 'ar' ? dept.nameAr : dept.nameEn,
+    email: dept.email,
+    phone: dept.phone
+  }));
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

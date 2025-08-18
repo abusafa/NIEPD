@@ -3,6 +3,7 @@ import { BookOpen, Users, Award, TrendingUp, Calendar, ExternalLink, ArrowLeft, 
 import Hero from '../components/Hero';
 import FeaturedPrograms from '../components/FeaturedPrograms';
 import VisionMission from '../components/VisionMission';
+import { dataService, Statistics, NewsItem } from '../services/dataService';
 
 interface HomePageProps {
   currentLang: 'ar' | 'en';
@@ -119,6 +120,8 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ value, duration = 200
 };
 
 const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
+  const [statistics, setStatistics] = useState<Statistics | null>(null);
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const content = {
     ar: {
       heroTitle: 'المعهد الوطني للتطوير المهني التعليمي',
@@ -165,32 +168,38 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
   const t = content[currentLang];
   const ArrowIcon = currentLang === 'ar' ? ArrowLeft : ArrowRight;
 
+  // Fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [statsData, newsData] = await Promise.all([
+          dataService.getStatistics(),
+          dataService.getNews()
+        ]);
+        setStatistics(statsData);
+        setNewsItems(newsData.slice(0, 3)); // Get first 3 news items
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
+    fetchData();
+  }, []);
 
-  const newsItems = [
-    {
-      title: t.newsTitle1,
-      date: currentLang === 'ar' ? '15 يناير 2024' : 'January 15, 2024',
-      image: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800'
-    },
-    {
-      title: t.newsTitle2,
-      date: currentLang === 'ar' ? '10 يناير 2024' : 'January 10, 2024',
-      image: 'https://images.pexels.com/photos/5212700/pexels-photo-5212700.jpeg?auto=compress&cs=tinysrgb&w=800'
-    },
-    {
-      title: t.newsTitle3,
-      date: currentLang === 'ar' ? '5 يناير 2024' : 'January 5, 2024',
-      image: 'https://images.pexels.com/photos/1181534/pexels-photo-1181534.jpeg?auto=compress&cs=tinysrgb&w=800'
-    }
-  ];
+  // Transform news items for display
+  const displayNewsItems = newsItems.map(item => ({
+    title: currentLang === 'ar' ? item.titleAr : item.titleEn,
+    date: currentLang === 'ar' ? item.dateAr : item.dateEn,
+    image: item.image
+  }));
 
-  const stats = [
-    { number: '15,000+', label: t.trainedTeachers, icon: Users },
-    { number: '50+', label: t.programs, icon: BookOpen },
-    { number: '25+', label: t.partners, icon: Award },
-    { number: '95%', label: t.satisfactionRate, icon: TrendingUp }
-  ];
+  // Create stats array from fetched data
+  const stats = statistics ? [
+    { number: statistics.trainedTeachers, label: t.trainedTeachers, icon: Users },
+    { number: statistics.programs, label: t.programs, icon: BookOpen },
+    { number: statistics.partners, label: t.partners, icon: Award },
+    { number: statistics.satisfactionRate, label: t.satisfactionRate, icon: TrendingUp }
+  ] : [];
 
   return (
     <div className="min-h-screen">
@@ -263,7 +272,7 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {newsItems.map((item, index) => (
+            {displayNewsItems.map((item, index) => (
               <article key={index} className="card group">
                 <div className="relative mb-4 overflow-hidden rounded-lg image-hover-zoom">
                   <img 

@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "page_id": 1,
+    "section_type": "hero",
+    "title_ar": "المعلم الملهم لرؤية طموحة 2030",
+    "title_en": "Inspiring Teacher for Ambitious Vision 2030",
+    "content_ar": "المعهد الوطني للتطوير المهني التعليمي - رائد وشريك استراتيجي في بناء القدرات التعليمية. نحن نؤمن بالدور المحوري للمعلم في تحقيق التحول الوطني الشامل ضمن رؤية المملكة 2030.",
+    "content_en": "National Institute for Educational Professional Development - Leading strategic partner in building educational capacities. We believe in the pivotal role of teachers in achieving comprehensive national transformation within Saudi Vision 2030.",
+    "image_url": "/images/hero-banner.jpg",
+    "cta_text_ar": "استكشف برامجنا",
+    "cta_text_en": "Explore Our Programs",
+    "cta_url": "/programs",
+    "sort_order": 1,
+    "status": "published",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  },
+  {
+    "id": 2,
+    "page_id": 1,
+    "section_type": "features",
+    "title_ar": "قيمنا الجوهرية",
+    "title_en": "Our Core Values",
+    "content_ar": "نعمل وفق ثلاث ركائز أساسية: الثقة - نقدم تعليماً موثوقاً يلبي تطلعات المستقبل، التكامل - نبني منظومة تعاونية مع كافة الشركاء، الابتكار - نطور قدرات مرنة تواكب التطورات العالمية.",
+    "content_en": "We operate on three fundamental pillars: Trust - We provide reliable education that meets future aspirations, Integration - We build a collaborative ecosystem with all partners, Innovation - We develop flexible capabilities that keep pace with global developments.",
+    "image_url": null,
+    "cta_text_ar": null,
+    "cta_text_en": null,
+    "cta_url": "/about",
+    "sort_order": 2,
+    "status": "published",
+    "created_at": "2024-01-01",
+    "updated_at": "2024-01-01"
+  }
+]

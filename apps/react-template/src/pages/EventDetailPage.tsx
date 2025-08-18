@@ -18,35 +18,10 @@ import {
   Award,
   Target
 } from 'lucide-react';
+import { dataService, Event } from '../services/dataService';
 
 interface EventDetailPageProps {
   currentLang: 'ar' | 'en';
-}
-
-interface Event {
-  id: number;
-  titleAr: string;
-  titleEn: string;
-  summaryAr: string;
-  summaryEn: string;
-  descriptionAr: string;
-  descriptionEn: string;
-  image: string;
-  startDate: string;
-  endDate: string;
-  startTime: string;
-  endTime: string;
-  locationAr: string;
-  locationEn: string;
-  venueAr: string;
-  venueEn: string;
-  capacity: number;
-  registrationDeadline: string;
-  eventTypeAr: string;
-  eventTypeEn: string;
-  status: 'upcoming' | 'ongoing' | 'completed';
-  featured: boolean;
-  category: string;
 }
 
 const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
@@ -54,6 +29,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
   const navigate = useNavigate();
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -141,66 +117,32 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang }) => {
   const t = content[currentLang];
   const ArrowIcon = currentLang === 'ar' ? ArrowRight : ArrowLeft;
 
-  // Mock data - in real app, this would come from API
+  // Fetch event data from API
   useEffect(() => {
-    const mockEvents: Event[] = [
-      {
-        id: 1,
-        titleAr: 'لقاء دور الإدارة المدرسية في بناء العلاقات الإيجابية',
-        titleEn: 'Session on School Administration Role in Building Positive Relationships',
-        summaryAr: 'لقاء تطويري متخصص يناقش دور الإدارة المدرسية في بناء العلاقات الإيجابية داخل المجتمع المدرسي',
-        summaryEn: 'Specialized development session discussing the role of school administration in building positive relationships within the school community',
-        descriptionAr: 'ينظم المعهد الوطني للتطوير المهني التعليمي لقاءً تطويرياً متخصصاً حول دور الإدارة المدرسية في بناء العلاقات الإيجابية. يهدف اللقاء إلى تزويد القيادات التعليمية بالمهارات والاستراتيجيات اللازمة لبناء علاقات إيجابية وفعالة مع جميع أطراف المجتمع المدرسي، بما يشمل المعلمين والطلاب وأولياء الأمور.',
-        descriptionEn: 'The National Institute for Educational Professional Development organizes a specialized development session on the role of school administration in building positive relationships. The session aims to provide educational leaders with the necessary skills and strategies to build positive and effective relationships with all members of the school community, including teachers, students, and parents.',
-        image: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800',
-        startDate: '2025-08-18',
-        endDate: '2025-08-18',
-        startTime: '09:00:00',
-        endTime: '12:00:00',
-        locationAr: 'افتراضي',
-        locationEn: 'Virtual',
-        venueAr: 'منصة زووم',
-        venueEn: 'Zoom Platform',
-        capacity: 500,
-        registrationDeadline: '2025-08-15',
-        eventTypeAr: 'لقاء تطويري',
-        eventTypeEn: 'Development Session',
-        status: 'upcoming',
-        featured: true,
-        category: 'sessions'
-      },
-      {
-        id: 2,
-        titleAr: 'لقاء دور الأنشطة الطلابية في المدرسة',
-        titleEn: 'Session on Student Activities Role in School',
-        summaryAr: 'لقاء يناقش أهمية الأنشطة الطلابية ودورها في تنمية شخصية الطلاب وتعزيز التعلم',
-        summaryEn: 'Session discussing the importance of student activities and their role in developing student personality and enhancing learning',
-        descriptionAr: 'يقيم المعهد الوطني للتطوير المهني التعليمي لقاءً متخصصاً حول دور الأنشطة الطلابية في المدرسة، والذي يهدف إلى تسليط الضوء على أهمية الأنشطة اللاصفية في تنمية شخصية الطلاب وتعزيز قدراتهم الإبداعية والقيادية.',
-        descriptionEn: 'The National Institute for Educational Professional Development holds a specialized session on the role of student activities in school, which aims to highlight the importance of extracurricular activities in developing student personality and enhancing their creative and leadership abilities.',
-        image: 'https://images.pexels.com/photos/5212700/pexels-photo-5212700.jpeg?auto=compress&cs=tinysrgb&w=800',
-        startDate: '2025-08-25',
-        endDate: '2025-08-25',
-        startTime: '10:00:00',
-        endTime: '13:00:00',
-        locationAr: 'افتراضي',
-        locationEn: 'Virtual',
-        venueAr: 'منصة تيمز',
-        venueEn: 'Teams Platform',
-        capacity: 300,
-        registrationDeadline: '2025-08-22',
-        eventTypeAr: 'لقاء متخصص',
-        eventTypeEn: 'Specialized Session',
-        status: 'upcoming',
-        featured: false,
-        category: 'sessions'
+    const fetchEventData = async () => {
+      try {
+        setLoading(true);
+        const events = await dataService.getEvents();
+        const eventId = parseInt(id || '1');
+        const foundEvent = events.find(e => e.id === eventId);
+        
+        if (foundEvent) {
+          setEvent(foundEvent);
+        } else {
+          setError('Event not found');
+        }
+      } catch (err) {
+        setError('Failed to load event');
+        console.error('Error fetching event:', err);
+      } finally {
+        setLoading(false);
       }
-    ];
+    };
 
-    const eventId = parseInt(id || '1');
-    const foundEvent = mockEvents.find(e => e.id === eventId);
-    setEvent(foundEvent || mockEvents[0]);
-    setLoading(false);
-  }, [id, currentLang]);
+    fetchEventData();
+  }, [id]);
+
+  // Event data is now fetched from API in useEffect above
 
   const handleRegister = () => {
     navigate(`/events/${id}/register`);

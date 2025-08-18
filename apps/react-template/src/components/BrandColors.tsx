@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { dataService, BrandColors as BrandColorsType } from '../services/dataService';
 
 interface BrandColorsProps {
   currentLang: 'ar' | 'en';
 }
 
 const BrandColors: React.FC<BrandColorsProps> = ({ currentLang }) => {
+  const [brandColors, setBrandColors] = useState<BrandColorsType | null>(null);
+  const [loading, setLoading] = useState(true);
   const content = {
     ar: {
       title: 'ألوان الهوية البصرية',
@@ -34,23 +37,46 @@ const BrandColors: React.FC<BrandColorsProps> = ({ currentLang }) => {
 
   const t = content[currentLang];
 
-  const colorGroups = [
-    {
-      title: t.primary,
-      colors: [
-        { name: t.teal, hex: '#00808A', class: 'bg-primary-600' },
-        { name: t.oxfordBlue, hex: '#00234E', class: 'bg-secondary-600' }
-      ]
-    },
-    {
-      title: t.accent,
-      colors: [
-        { name: t.orange, hex: '#D6A347', class: 'bg-accent-orange-500' },
-        { name: t.green, hex: '#2C8462', class: 'bg-accent-green-500' },
-        { name: t.purple, hex: '#3A1F6F', class: 'bg-accent-purple-500' }
-      ]
-    }
-  ];
+  // Fetch brand colors data
+  useEffect(() => {
+    const fetchBrandColors = async () => {
+      try {
+        setLoading(true);
+        const data = await dataService.getBrandColors();
+        setBrandColors(data);
+      } catch (error) {
+        console.error('Error fetching brand colors:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBrandColors();
+  }, []);
+
+  // Show loading state
+  if (loading || !brandColors) {
+    return (
+      <section className="section-spacing bg-neutral-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <p className="text-secondary-600">Loading brand colors...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Transform color groups for display
+  const colorGroups = brandColors.colorGroups.map(group => ({
+    title: currentLang === 'ar' ? group.titleAr : group.titleEn,
+    colors: group.colors.map(color => ({
+      name: currentLang === 'ar' ? color.nameAr : color.nameEn,
+      hex: color.hex,
+      class: color.class
+    }))
+  }));
 
   return (
     <section className="section-spacing bg-neutral-50">

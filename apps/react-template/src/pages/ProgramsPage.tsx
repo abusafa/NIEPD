@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookOpen, Users, Award, TrendingUp, Clock, Star, User, ArrowLeft, ArrowRight, Filter } from 'lucide-react';
+import { dataService, Program } from '../services/dataService';
 
 interface ProgramsPageProps {
   currentLang: 'ar' | 'en';
@@ -8,6 +9,9 @@ interface ProgramsPageProps {
 
 const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang, onProgramSelect }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const content = {
     ar: {
@@ -61,122 +65,76 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang, onProgramSelec
   const t = content[currentLang];
   const ArrowIcon = currentLang === 'ar' ? ArrowLeft : ArrowRight;
 
-  const programs = [
-    {
-      id: 1,
-      title: currentLang === 'ar' ? 'إعداد المعلم الجديد' : 'New Teacher Preparation',
-      description: currentLang === 'ar' 
-        ? 'برنامج شامل لإعداد المعلمين الجدد وتأهيلهم للميدان التعليمي بأحدث الطرق والأساليب التعليمية'
-        : 'Comprehensive program to prepare new teachers and qualify them for the educational field with the latest teaching methods and techniques',
-      category: 'educational',
-      duration: '6',
-      durationType: 'months',
-      level: 'beginner',
-      instructor: currentLang === 'ar' ? 'د. أحمد محمد' : 'Dr. Ahmed Mohamed',
-      rating: 4.8,
-      participants: 1250,
-      icon: BookOpen,
-      image: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800',
-      features: currentLang === 'ar' 
-        ? ['تطوير مهارات التدريس', 'إدارة الصف', 'التقويم والقياس', 'التكنولوجيا التعليمية']
-        : ['Teaching Skills Development', 'Classroom Management', 'Assessment & Evaluation', 'Educational Technology']
-    },
-    {
-      id: 2,
-      title: currentLang === 'ar' ? 'تنمية الكفايات في STEM' : 'STEM Skills Development',
-      description: currentLang === 'ar'
-        ? 'تطوير مهارات المعلمين في العلوم والتكنولوجيا والهندسة والرياضيات لإعداد جيل المستقبل'
-        : 'Developing teachers skills in Science, Technology, Engineering and Mathematics to prepare the future generation',
-      category: 'specialized',
-      duration: '4',
-      durationType: 'months',
-      level: 'intermediate',
-      instructor: currentLang === 'ar' ? 'د. فاطمة العلي' : 'Dr. Fatima Al-Ali',
-      rating: 4.9,
-      participants: 890,
-      icon: TrendingUp,
-      image: 'https://images.pexels.com/photos/8500434/pexels-photo-8500434.jpeg?auto=compress&cs=tinysrgb&w=800',
-      features: currentLang === 'ar'
-        ? ['التعلم التفاعلي', 'المختبرات الافتراضية', 'التطبيقات العملية', 'الابتكار والإبداع']
-        : ['Interactive Learning', 'Virtual Labs', 'Practical Applications', 'Innovation & Creativity']
-    },
-    {
-      id: 3,
-      title: currentLang === 'ar' ? 'برنامج القيادة التعليمية' : 'Educational Leadership Program',
-      description: currentLang === 'ar'
-        ? 'تأهيل القيادات التعليمية لإدارة المؤسسات التعليمية بكفاءة وفعالية عالية'
-        : 'Qualifying educational leaders to efficiently and effectively manage educational institutions',
-      category: 'leadership',
-      duration: '8',
-      durationType: 'months',
-      level: 'advanced',
-      instructor: currentLang === 'ar' ? 'د. خالد السعيد' : 'Dr. Khalid Al-Saeed',
-      rating: 4.7,
-      participants: 560,
-      icon: Users,
-      image: 'https://images.pexels.com/photos/5212700/pexels-photo-5212700.jpeg?auto=compress&cs=tinysrgb&w=800',
-      features: currentLang === 'ar'
-        ? ['التخطيط الاستراتيجي', 'إدارة التغيير', 'بناء الفرق', 'تطوير الأداء']
-        : ['Strategic Planning', 'Change Management', 'Team Building', 'Performance Development']
-    },
-    {
-      id: 4,
-      title: currentLang === 'ar' ? 'التعلم الرقمي والذكي' : 'Digital & Smart Learning',
-      description: currentLang === 'ar'
-        ? 'استخدام التكنولوجيا المتقدمة والذكاء الاصطناعي في التعليم لتحسين نواتج التعلم'
-        : 'Using advanced technology and artificial intelligence in education to improve learning outcomes',
-      category: 'specialized',
-      duration: '12',
-      durationType: 'weeks',
-      level: 'intermediate',
-      instructor: currentLang === 'ar' ? 'د. سارة أحمد' : 'Dr. Sara Ahmed',
-      rating: 4.6,
-      participants: 720,
-      icon: Award,
-      image: 'https://images.pexels.com/photos/5428010/pexels-photo-5428010.jpeg?auto=compress&cs=tinysrgb&w=800',
-      features: currentLang === 'ar'
-        ? ['الذكاء الاصطناعي', 'المنصات الرقمية', 'الواقع المعزز', 'التحليلات التعليمية']
-        : ['Artificial Intelligence', 'Digital Platforms', 'Augmented Reality', 'Learning Analytics']
-    },
-    {
-      id: 5,
-      title: currentLang === 'ar' ? 'تطوير المناهج الحديثة' : 'Modern Curriculum Development',
-      description: currentLang === 'ar'
-        ? 'تصميم وتطوير المناهج التعليمية وفقاً لأحدث المعايير والممارسات العالمية'
-        : 'Designing and developing educational curricula according to the latest international standards and practices',
-      category: 'educational',
-      duration: '5',
-      durationType: 'months',
-      level: 'expert',
-      instructor: currentLang === 'ar' ? 'د. محمد الخالدي' : 'Dr. Mohammed Al-Khalidi',
-      rating: 4.8,
-      participants: 340,
-      icon: BookOpen,
-      image: 'https://images.pexels.com/photos/5212329/pexels-photo-5212329.jpeg?auto=compress&cs=tinysrgb&w=800',
-      features: currentLang === 'ar'
-        ? ['التصميم التعليمي', 'المعايير الدولية', 'التقويم المستمر', 'البحث التربوي']
-        : ['Instructional Design', 'International Standards', 'Continuous Assessment', 'Educational Research']
-    },
-    {
-      id: 6,
-      title: currentLang === 'ar' ? 'إدارة الأزمات التعليمية' : 'Educational Crisis Management',
-      description: currentLang === 'ar'
-        ? 'تأهيل القيادات للتعامل مع الأزمات والتحديات في البيئة التعليمية بكفاءة'
-        : 'Qualifying leaders to efficiently handle crises and challenges in the educational environment',
-      category: 'leadership',
-      duration: '10',
-      durationType: 'weeks',
-      level: 'advanced',
-      instructor: currentLang === 'ar' ? 'د. ليلى حسن' : 'Dr. Layla Hassan',
-      rating: 4.5,
-      participants: 280,
-      icon: Users,
-      image: 'https://images.pexels.com/photos/5427648/pexels-photo-5427648.jpeg?auto=compress&cs=tinysrgb&w=800',
-      features: currentLang === 'ar'
-        ? ['إدارة المخاطر', 'اتخاذ القرارات', 'التواصل الفعال', 'الطوارئ التعليمية']
-        : ['Risk Management', 'Decision Making', 'Effective Communication', 'Educational Emergencies']
+  // Fetch programs data
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        setLoading(true);
+        const programsData = await dataService.getPrograms();
+        setPrograms(programsData);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load programs');
+        console.error('Error fetching programs:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrograms();
+  }, []);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-secondary-600">Loading programs...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="btn-primary"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Transform programs data to match the expected format
+  const transformedPrograms = programs.map(program => ({
+    ...program,
+    title: currentLang === 'ar' ? program.titleAr : program.titleEn,
+    description: currentLang === 'ar' ? program.descriptionAr : program.descriptionEn,
+    instructor: currentLang === 'ar' ? program.instructorAr : program.instructorEn,
+    features: currentLang === 'ar' ? program.featuresAr : program.featuresEn,
+    icon: getIconForCategory(program.category)
+  }));
+
+  function getIconForCategory(category: string) {
+    switch (category) {
+      case 'educational':
+        return BookOpen;
+      case 'specialized':
+        return TrendingUp;
+      case 'leadership':
+        return Users;
+      default:
+        return Award;
     }
-  ];
+  }
 
   const categories = [
     { key: 'all', label: t.allPrograms },
@@ -186,8 +144,8 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang, onProgramSelec
   ];
 
   const filteredPrograms = selectedCategory === 'all' 
-    ? programs 
-    : programs.filter(program => program.category === selectedCategory);
+    ? transformedPrograms 
+    : transformedPrograms.filter(program => program.category === selectedCategory);
 
   const getLevelLabel = (level: string) => {
     const labels: { [key: string]: string } = {
@@ -199,7 +157,10 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang, onProgramSelec
     return labels[level] || level;
   };
 
-  const getDurationLabel = (duration: string, type: string) => {
+  const getDurationLabel = (duration: number, type: string) => {
+    if (type === 'hours') {
+      return `${duration} ${currentLang === 'ar' ? 'ساعة' : 'Hours'}`;
+    }
     return `${duration} ${type === 'months' ? t.months : t.weeks}`;
   };
 

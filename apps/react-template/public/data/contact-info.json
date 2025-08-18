@@ -1,0 +1,63 @@
+{
+  "contactMethods": [
+    {
+      "icon": "MapPin",
+      "titleAr": "العنوان",
+      "titleEn": "Address",
+      "valueAr": "الرياض، المملكة العربية السعودية",
+      "valueEn": "Riyadh, Kingdom of Saudi Arabia",
+      "link": "https://maps.google.com"
+    },
+    {
+      "icon": "Phone",
+      "titleAr": "الهاتف",
+      "titleEn": "Phone",
+      "valueAr": "+966 11 123 4567",
+      "valueEn": "+966 11 123 4567",
+      "link": "tel:+966111234567"
+    },
+    {
+      "icon": "Mail",
+      "titleAr": "البريد الإلكتروني",
+      "titleEn": "Email",
+      "valueAr": "info@niepd.sa",
+      "valueEn": "info@niepd.sa",
+      "link": "mailto:info@niepd.sa"
+    },
+    {
+      "icon": "Clock",
+      "titleAr": "ساعات العمل",
+      "titleEn": "Office Hours",
+      "valueAr": "الأحد - الخميس: 8:00 ص - 4:00 م",
+      "valueEn": "Sunday - Thursday: 8:00 AM - 4:00 PM",
+      "extraValueAr": "الجمعة - السبت: مغلق",
+      "extraValueEn": "Friday - Saturday: Closed"
+    }
+  ],
+  "departments": [
+    {
+      "nameAr": "الاستفسارات العامة",
+      "nameEn": "General Inquiries",
+      "email": "info@niepd.sa",
+      "phone": "+966 11 123 4567"
+    },
+    {
+      "nameAr": "البرامج التدريبية",
+      "nameEn": "Training Programs",
+      "email": "programs@niepd.sa",
+      "phone": "+966 11 123 4568"
+    },
+    {
+      "nameAr": "الشراكات",
+      "nameEn": "Partnerships",
+      "email": "partnerships@niepd.sa",
+      "phone": "+966 11 123 4569"
+    },
+    {
+      "nameAr": "الدعم التقني",
+      "nameEn": "Technical Support",
+      "email": "support@niepd.sa",
+      "phone": "+966 11 123 4570"
+    }
+  ]
+}
