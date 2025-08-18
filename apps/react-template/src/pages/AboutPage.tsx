@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, MapPin, Users, Target, Award, Building, Eye, Heart } from 'lucide-react';
 import BrandColors from '../components/BrandColors';
+import OrganizationalStructure from '../components/OrganizationalStructure';
 
 interface AboutPageProps {
   currentLang: 'ar' | 'en';
@@ -26,11 +27,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ currentLang }) => {
       obj4: 'تطوير وتحديث المناهج والبرامج التعليمية وفقاً لأفضل الممارسات العالمية',
       obj5: 'إعداد المعلمين الجدد وتأهيلهم للعمل في الميدان التعليمي',
       obj6: 'تعزيز الابتكار والإبداع في طرق التدريس والتعلم',
-      organizationTitle: 'الهيكل التنظيمي',
-      directorGeneral: 'المدير العام',
-      academicAffairs: 'الشؤون الأكاديمية',
-      partnerships: 'الشراكات والتعاون',
-      research: 'البحوث والدراسات',
+
       legalTitle: 'التنظيم القانوني',
       legalDesc: 'يعمل المعهد تحت إشراف وزارة التعليم ويتمتع بصلاحيات واسعة في تطوير البرامج التدريبية وإبرام الشراكات الاستراتيجية مع المؤسسات المحلية والدولية.',
       resourcesTitle: 'الموارد والإمكانيات',
@@ -58,11 +55,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ currentLang }) => {
       obj4: 'Develop and update curricula and educational programs according to global best practices',
       obj5: 'Prepare and qualify new teachers for work in the educational field',
       obj6: 'Enhance innovation and creativity in teaching and learning methods',
-      organizationTitle: 'Organizational Structure',
-      directorGeneral: 'Director General',
-      academicAffairs: 'Academic Affairs',
-      partnerships: 'Partnerships & Cooperation',
-      research: 'Research & Studies',
+
       legalTitle: 'Legal Framework',
       legalDesc: 'The institute operates under the supervision of the Ministry of Education and enjoys extensive authority in developing training programs and establishing strategic partnerships with local and international institutions.',
       resourcesTitle: 'Resources & Capabilities',
@@ -78,13 +71,6 @@ const AboutPage: React.FC<AboutPageProps> = ({ currentLang }) => {
 
   const objectives = [t.obj1, t.obj2, t.obj3, t.obj4, t.obj5, t.obj6];
   const resources = [t.resource1, t.resource2, t.resource3, t.resource4, t.resource5];
-
-  const organizationChart = [
-    { title: t.directorGeneral, icon: Building, level: 0 },
-    { title: t.academicAffairs, icon: Users, level: 1 },
-    { title: t.partnerships, icon: Award, level: 1 },
-    { title: t.research, icon: Target, level: 1 }
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -187,46 +173,8 @@ const AboutPage: React.FC<AboutPageProps> = ({ currentLang }) => {
         </div>
       </section>
 
-      {/* Organizational Structure */}
-      <section className="section-spacing bg-gradient-to-br from-primary-50 to-secondary-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-secondary-700 mb-4">
-                {t.organizationTitle}
-              </h2>
-            </div>
-            <div className="space-y-6">
-              {organizationChart.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <div 
-                    key={index} 
-                    className={`flex items-center gap-6 p-6 bg-white rounded-xl shadow-md ${
-                      item.level === 0 ? 'border-l-4 border-primary-600' : 'ml-12 border-l-4 border-secondary-300'
-                    }`}
-                  >
-                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                      item.level === 0 ? 'bg-primary-100' : 'bg-secondary-100'
-                    }`}>
-                      <Icon className={`w-6 h-6 ${
-                        item.level === 0 ? 'text-primary-600' : 'text-secondary-600'
-                      }`} />
-                    </div>
-                    <div>
-                      <h3 className={`font-bold text-lg ${
-                        item.level === 0 ? 'text-primary-700' : 'text-secondary-700'
-                      }`}>
-                        {item.title}
-                      </h3>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Enhanced Organizational Structure */}
+      <OrganizationalStructure currentLang={currentLang} />
 
       {/* Legal Framework & Resources */}
       <section className="section-spacing bg-white">
