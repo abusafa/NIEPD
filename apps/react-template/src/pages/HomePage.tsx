@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BookOpen, Users, Award, TrendingUp, Calendar, ExternalLink, ArrowLeft, ArrowRight } from 'lucide-react';
 import Hero from '../components/Hero';
 import FeaturedPrograms from '../components/FeaturedPrograms';
@@ -7,6 +7,116 @@ import VisionMission from '../components/VisionMission';
 interface HomePageProps {
   currentLang: 'ar' | 'en';
 }
+
+// Custom hook for animated counter
+const useAnimatedCounter = (end: number, duration: number = 2000, start: number = 0) => {
+  const [count, setCount] = useState(start);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const animate = () => {
+    if (isAnimating) return;
+    
+    setIsAnimating(true);
+    const startTime = Date.now();
+    const startValue = start;
+    const endValue = end;
+
+    const updateCount = () => {
+      const now = Date.now();
+      const progress = Math.min((now - startTime) / duration, 1);
+      
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentValue = Math.floor(startValue + (endValue - startValue) * easeOutQuart);
+      
+      setCount(currentValue);
+      
+      if (progress < 1) {
+        requestAnimationFrame(updateCount);
+      } else {
+        setIsAnimating(false);
+      }
+    };
+    
+    requestAnimationFrame(updateCount);
+  };
+
+  return { count, animate, isAnimating };
+};
+
+// Animated Counter Component
+interface AnimatedCounterProps {
+  value: string;
+  duration?: number;
+  className?: string;
+}
+
+const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ value, duration = 2000, className = '' }) => {
+  const counterRef = useRef<HTMLDivElement>(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const [isGlowing, setIsGlowing] = useState(false);
+  
+  // Extract number from string (e.g., "15,000+" -> 15000, "95%" -> 95)
+  const extractNumber = (str: string): number => {
+    const match = str.match(/[\d,]+/);
+    if (match) {
+      return parseInt(match[0].replace(/,/g, ''), 10);
+    }
+    return 0;
+  };
+
+  // Format number back to original format
+  const formatNumber = (num: number, originalValue: string): string => {
+    if (originalValue.includes('%')) {
+      return `${num}%`;
+    }
+    if (originalValue.includes('+')) {
+      return num >= 1000 ? `${(num / 1000).toFixed(0)},${(num % 1000).toString().padStart(3, '0')}+` : `${num}+`;
+    }
+    if (originalValue.includes(',')) {
+      return num.toLocaleString();
+    }
+    return num.toString();
+  };
+
+  const targetNumber = extractNumber(value);
+  const { count, animate } = useAnimatedCounter(targetNumber, duration);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            // Add a small delay for staggered effect
+            setTimeout(() => {
+              animate();
+              setIsGlowing(true);
+              // Remove glow after animation completes
+              setTimeout(() => setIsGlowing(false), duration + 500);
+            }, Math.random() * 500);
+          }
+        });
+      },
+      {
+        threshold: 0.5,
+        rootMargin: '0px 0px -100px 0px'
+      }
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [animate, hasAnimated, duration]);
+
+  return (
+    <div ref={counterRef} className={`${className} ${isGlowing ? 'animate-number-glow' : ''}`}>
+      {formatNumber(count, value)}
+    </div>
+  );
+};
 
 const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
   const content = {
@@ -125,7 +235,11 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
                   <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6 hover:bg-white/20 hover:scale-110 transition-all duration-300 border border-white/20 group-hover:border-white/40">
                     <Icon className="w-8 h-8 text-white" />
                   </div>
-                  <div className="stats-counter mb-3 group-hover:scale-110 transition-transform duration-300">{stat.number}</div>
+                  <AnimatedCounter 
+                    value={stat.number} 
+                    duration={2000}
+                    className="stats-counter mb-3 group-hover:scale-110 transition-transform duration-300"
+                  />
                   <div className="text-white/90 text-lg font-medium">{stat.label}</div>
                 </div>
               );
