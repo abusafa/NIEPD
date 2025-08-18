@@ -1,6 +1,8 @@
 import React from 'react';
 import { BookOpen, Users, Award, TrendingUp, Calendar, ExternalLink, ArrowLeft, ArrowRight } from 'lucide-react';
 import Hero from '../components/Hero';
+import FeaturedPrograms from '../components/FeaturedPrograms';
+import VisionMission from '../components/VisionMission';
 
 interface HomePageProps {
   currentLang: 'ar' | 'en';
@@ -13,17 +15,8 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
       heroSubtitle: 'نطور قدرات المعلمين والقيادات التعليمية لتحقيق التميز في التعليم',
       explorePrograms: 'استكشف البرامج',
       learnMore: 'اعرف المزيد',
-      vision: 'الرؤية',
-      visionText: 'أن يكون المعهد الوطني للتطوير المهني التعليمي مرجعاً وطنياً ودولياً رائداً في تطوير المعلمين والقيادات التعليمية',
-      mission: 'الرسالة',
-      missionText: 'تطوير قدرات المعلمين والقيادات التعليمية مهنياً من خلال تقديم برامج نوعية متقدمة ومبتكرة',
-      featuredPrograms: 'البرامج المميزة',
-      teacherPrep: 'إعداد المعلم الجديد',
-      stemDevelopment: 'تنمية الكفايات في STEM',
-      leadershipProgram: 'برنامج القيادة التعليمية',
-      programDesc1: 'برنامج شامل لإعداد المعلمين الجدد وتأهيلهم للميدان التعليمي',
-      programDesc2: 'تطوير مهارات المعلمين في العلوم والتكنولوجيا والهندسة والرياضيات',
-      programDesc3: 'تأهيل القيادات التعليمية لإدارة المؤسسات التعليمية بكفاءة',
+
+
       latestNews: 'آخر الأخبار',
       newsTitle1: 'إطلاق المرحلة الثانية من البرامج التطويرية',
       newsTitle2: 'شراكة مع جامعة سنغافورة الوطنية',
@@ -42,17 +35,8 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
       heroSubtitle: 'Developing teachers and educational leaders capabilities to achieve excellence in education',
       explorePrograms: 'Explore Programs',
       learnMore: 'Learn More',
-      vision: 'Vision',
-      visionText: 'To be a leading national and international reference in developing teachers and educational leaders',
-      mission: 'Mission', 
-      missionText: 'Developing teachers and educational leaders professionally through advanced and innovative quality programs',
-      featuredPrograms: 'Featured Programs',
-      teacherPrep: 'New Teacher Preparation',
-      stemDevelopment: 'STEM Skills Development',
-      leadershipProgram: 'Educational Leadership Program',
-      programDesc1: 'Comprehensive program to prepare new teachers and qualify them for the educational field',
-      programDesc2: 'Developing teachers skills in Science, Technology, Engineering and Mathematics',
-      programDesc3: 'Qualifying educational leaders to efficiently manage educational institutions',
+
+
       latestNews: 'Latest News',
       newsTitle1: 'Launch of Second Phase of Development Programs',
       newsTitle2: 'Partnership with National University of Singapore',
@@ -71,32 +55,7 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
   const t = content[currentLang];
   const ArrowIcon = currentLang === 'ar' ? ArrowLeft : ArrowRight;
 
-  const featuredPrograms = [
-    {
-      icon: BookOpen,
-      title: t.teacherPrep,
-      description: t.programDesc1,
-      duration: currentLang === 'ar' ? '6 أشهر' : '6 Months',
-      level: currentLang === 'ar' ? 'مبتدئ' : 'Beginner',
-      accentColor: 'primary'
-    },
-    {
-      icon: TrendingUp,
-      title: t.stemDevelopment,
-      description: t.programDesc2,
-      duration: currentLang === 'ar' ? '4 أشهر' : '4 Months',
-      level: currentLang === 'ar' ? 'متوسط' : 'Intermediate',
-      accentColor: 'green'
-    },
-    {
-      icon: Users,
-      title: t.leadershipProgram,
-      description: t.programDesc3,
-      duration: currentLang === 'ar' ? '8 أشهر' : '8 Months',
-      level: currentLang === 'ar' ? 'متقدم' : 'Advanced',
-      accentColor: 'orange'
-    }
-  ];
+
 
   const newsItems = [
     {
@@ -137,105 +96,11 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
         videoSrc="/vidoes/215475_small.mp4"
       />
 
-      {/* Vision & Mission */}
-      <section className="section-spacing bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="section-title">
-              {currentLang === 'ar' ? 'رؤيتنا ورسالتنا' : 'Our Vision & Mission'}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div className="card group">
-              <div className="feature-icon">
-                <Award className="w-8 h-8 text-white group-hover:rotate-12 transition-transform duration-300" />
-              </div>
-              <h3 className="text-2xl font-bold text-secondary-700 mb-6 group-hover:text-primary-600 transition-colors duration-300">{t.vision}</h3>
-              <p className="text-secondary-600 leading-relaxed text-lg">{t.visionText}</p>
-            </div>
-            <div className="card group">
-              <div className="feature-icon">
-                <TrendingUp className="w-8 h-8 text-white group-hover:rotate-12 transition-transform duration-300" />
-              </div>
-              <h3 className="text-2xl font-bold text-secondary-700 mb-6 group-hover:text-primary-600 transition-colors duration-300">{t.mission}</h3>
-              <p className="text-secondary-600 leading-relaxed text-lg">{t.missionText}</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Enhanced Vision & Mission */}
+      <VisionMission currentLang={currentLang} />
 
-      {/* Featured Programs */}
-      <section className="section-spacing bg-secondary-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="section-title text-gradient-animated">
-              {t.featuredPrograms}
-            </h2>
-            <p className="text-xl text-secondary-600 max-w-2xl mx-auto">
-              {currentLang === 'ar' 
-                ? 'برامج متميزة مصممة خصيصاً لتطوير قدراتك المهنية والتعليمية'
-                : 'Distinguished programs specially designed to develop your professional and educational capabilities'
-              }
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredPrograms.map((program, index) => {
-              const Icon = program.icon;
-              const getAccentClasses = (color: string) => {
-                switch (color) {
-                  case 'green':
-                    return {
-                      icon: 'bg-accent-green-500',
-                      badge: 'bg-accent-green-100 text-accent-green-700',
-                      button: 'bg-accent-green-600 hover:bg-accent-green-700'
-                    };
-                  case 'orange':
-                    return {
-                      icon: 'bg-accent-orange-500',
-                      badge: 'bg-accent-orange-100 text-accent-orange-700',
-                      button: 'bg-accent-orange-600 hover:bg-accent-orange-700'
-                    };
-                  case 'purple':
-                    return {
-                      icon: 'bg-accent-purple-500',
-                      badge: 'bg-accent-purple-100 text-accent-purple-700',
-                      button: 'bg-accent-purple-600 hover:bg-accent-purple-700'
-                    };
-                  default:
-                    return {
-                      icon: 'bg-primary-600',
-                      badge: 'bg-primary-100 text-primary-700',
-                      button: 'bg-primary-600 hover:bg-primary-700'
-                    };
-                }
-              };
-              const accentClasses = getAccentClasses(program.accentColor);
-              
-              return (
-                <div key={index} className="card group">
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${accentClasses.icon}`}>
-                    <Icon className="w-7 h-7 text-white group-hover:scale-110 transition-transform duration-300" />
-                  </div>
-                  <h3 className="text-xl font-bold text-secondary-700 mb-4 group-hover:text-primary-600 transition-colors duration-300">{program.title}</h3>
-                  <p className="text-secondary-600 mb-6 leading-relaxed">{program.description}</p>
-                  <div className="flex justify-between items-center text-sm text-secondary-500 mb-6">
-                    <span className={`${accentClasses.badge} px-4 py-2 rounded-full font-medium`}>
-                      {program.duration}
-                    </span>
-                    <span className="bg-secondary-100 text-secondary-700 px-4 py-2 rounded-full font-medium">
-                      {program.level}
-                    </span>
-                  </div>
-                  <button className={`w-full inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-white shadow-sm ${accentClasses.button} focus:outline-none focus:ring-2 focus:ring-primary-300 disabled:opacity-50 disabled:cursor-not-allowed`}>
-                    {t.registerNow}
-                    <ArrowIcon className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Enhanced Featured Programs */}
+      <FeaturedPrograms currentLang={currentLang} />
 
       {/* Statistics */}
       <section className="section-spacing hero-gradient text-white overflow-hidden relative">

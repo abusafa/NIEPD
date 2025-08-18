@@ -10,6 +10,7 @@ import NewsPage from './pages/NewsPage';
 import NewsDetailPage from './pages/NewsDetailPage';
 import EventsPage from './pages/EventsPage';
 import EventDetailPage from './pages/EventDetailPage';
+import EventRegistrationPage from './pages/EventRegistrationPage';
 import PartnersPage from './pages/PartnersPage';
 import ContactPage from './pages/ContactPage';
 import FAQPage from './pages/FAQPage';
@@ -73,24 +74,12 @@ function App() {
     navigate(`/news/${newsId}`);
   };
 
-  const handleEventSelect = (eventId: number) => {
-    navigate(`/events/${eventId}`);
-  };
-
-  const handleEventRegister = (eventId: number) => {
-    navigate(`/events/${eventId}/register`);
-  };
-
   const handleBackToPrograms = () => {
     navigate('/programs');
   };
 
   const handleBackToNews = () => {
     navigate('/news');
-  };
-
-  const handleBackToEvents = () => {
-    navigate('/events');
   };
 
   // Get current page from pathname for header highlighting
@@ -166,18 +155,15 @@ function App() {
           {/* Events Routes */}
           <Route 
             path="/events" 
-            element={<EventsPage currentLang={currentLang} onEventSelect={handleEventSelect} />} 
+            element={<EventsPage currentLang={currentLang} />} 
           />
           <Route 
-            path="/events/:eventId" 
-            element={
-              <EventDetailPage 
-                currentLang={currentLang} 
-                eventId={parseInt(location.pathname.split('/')[2]) || 1}
-                onBack={handleBackToEvents}
-                onRegister={handleEventRegister}
-              />
-            } 
+            path="/events/:id" 
+            element={<EventDetailPage currentLang={currentLang} />} 
+          />
+          <Route 
+            path="/events/:id/register" 
+            element={<EventRegistrationPage currentLang={currentLang} />} 
           />
           
           {/* Partners Route */}

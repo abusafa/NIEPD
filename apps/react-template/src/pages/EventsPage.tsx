@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Calendar, MapPin, Clock, Users, ExternalLink, Search, Filter, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Calendar, MapPin, Clock, Users, Search, Filter, ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface EventsPageProps {
   currentLang: 'ar' | 'en';
-  onEventSelect?: (eventId: number) => void;
 }
 
-const EventsPage: React.FC<EventsPageProps> = ({ currentLang, onEventSelect }) => {
+const EventsPage: React.FC<EventsPageProps> = ({ currentLang }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -378,24 +378,31 @@ const EventsPage: React.FC<EventsPageProps> = ({ currentLang, onEventSelect }) =
 
                       {/* Action Buttons */}
                       <div className="flex gap-3 pt-4">
-                        {event.registrationUrl && event.status === 'upcoming' ? (
-                          <a 
-                            href={event.registrationUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-primary flex-1 text-center"
-                          >
-                            {t.registerNow}
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
+                        {event.status === 'upcoming' ? (
+                          <div className="flex gap-2 w-full">
+                            <Link 
+                              to={`/events/${event.id}`}
+                              className="btn-secondary flex-1 flex items-center justify-center gap-2"
+                            >
+                              {t.learnMore}
+                              <ArrowIcon className="w-4 h-4" />
+                            </Link>
+                            <Link 
+                              to={`/events/${event.id}/register`}
+                              className="btn-primary flex-1 flex items-center justify-center gap-2"
+                            >
+                              {t.registerNow}
+                              <ArrowIcon className="w-4 h-4" />
+                            </Link>
+                          </div>
                         ) : (
-                          <button 
-                            className="btn-secondary flex-1"
-                            onClick={() => onEventSelect && onEventSelect(event.id)}
+                          <Link 
+                            to={`/events/${event.id}`}
+                            className="btn-secondary flex-1 flex items-center justify-center gap-2"
                           >
                             {t.learnMore}
                             <ArrowIcon className="w-4 h-4" />
-                          </button>
+                          </Link>
                         )}
                       </div>
                     </div>
