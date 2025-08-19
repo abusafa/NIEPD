@@ -183,14 +183,16 @@ async function importData() {
         id: item.id.toString(),
         nameAr: item.nameAr,
         nameEn: item.nameEn,
+        organizationAr: item.nameAr, // Use organization name since nameAr contains organization name
+        organizationEn: item.nameEn, // Use organization name since nameEn contains organization name
         descriptionAr: item.descriptionAr,
         descriptionEn: item.descriptionEn,
         slug: item.nameEn?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `partner-${item.id}`,
         logo: item.logo,
         website: item.website,
-        type: item.type,
+        type: item.categoryEn || item.type, // Map categoryEn to type for better organization
         featured: item.featured || false,
-        sortOrder: item.sortOrder || 0,
+        sortOrder: item.sortOrder || item.id || 0,
         status: 'PUBLISHED' as const,
         publishedAt: new Date(),
         createdAt: new Date(),

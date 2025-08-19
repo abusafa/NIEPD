@@ -8,7 +8,7 @@ import LocaleSwitcher from './LocaleSwitcher';
 import { createLocalizedPath } from '@/lib/navigation';
 import { type Locale } from '@/lib/i18n';
 
-type Page = 'home' | 'about' | 'programs' | 'news' | 'events' | 'partners' | 'contact' | 'faq' | 'privacy' | 'terms';
+type Page = 'home' | 'about' | 'programs' | 'news' | 'events' | 'partners' | 'contact' | 'faq' | 'privacy' | 'terms' | 'register';
 
 interface HeaderProps {
   currentLang: Locale;

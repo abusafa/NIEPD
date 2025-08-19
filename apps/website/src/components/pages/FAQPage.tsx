@@ -129,7 +129,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
         <h1 className="text-4xl md:text-5xl font-bold text-secondary-700 mb-6">
           {t.title}
         </h1>
-        <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
+        <p className="text-xl text-neutral-800 max-w-3xl mx-auto">
           {t.subtitle}
         </p>
       </div>
@@ -139,7 +139,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
         <div className="flex flex-col md:flex-row gap-4 items-center max-w-2xl mx-auto">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className={`absolute top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5 ${currentLang === 'ar' ? 'right-3' : 'left-3'}`} />
+            <Search className={`absolute top-1/2 transform -translate-y-1/2 text-neutral-600 w-5 h-5 ${currentLang === 'ar' ? 'right-3' : 'left-3'}`} />
             <input
               type="text"
               placeholder={t.search}
@@ -186,9 +186,9 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
                   </h3>
                   <div className="flex-shrink-0">
                     {isExpanded ? (
-                      <ChevronUp className="w-5 h-5 text-neutral-400" />
+                      <ChevronUp className="w-5 h-5 text-neutral-600" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-neutral-400" />
+                      <ChevronDown className="w-5 h-5 text-neutral-600" />
                     )}
                   </div>
                 </button>
@@ -196,7 +196,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
                 {isExpanded && (
                   <div className="px-6 pb-6 animate-fadeIn" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
                     <div className="border-t border-neutral-100 pt-4">
-                      <p className={`text-neutral-600 leading-relaxed whitespace-pre-wrap ${currentLang === 'ar' ? 'text-right' : 'text-left'}`}>
+                      <p className={`text-neutral-800 leading-relaxed whitespace-pre-wrap ${currentLang === 'ar' ? 'text-right' : 'text-left'}`}>
                         {currentLang === 'ar' ? faq.answerAr : faq.answerEn}
                       </p>
                     </div>

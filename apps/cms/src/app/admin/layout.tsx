@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { ToastProvider } from '@/components/ui/toast';
 import { 
   Settings, 
   FileText, 
@@ -22,7 +23,8 @@ import {
   Folder,
   BarChart3,
   Contact,
-  Globe
+  Globe,
+  MessageSquare
 } from 'lucide-react';
 
 interface AuthUser {
@@ -85,6 +87,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { icon: Tag, label: 'Tags', href: '/admin/tags', roles: ['SUPER_ADMIN', 'ADMIN', 'EDITOR'] },
     { icon: Navigation, label: 'Navigation', href: '/admin/navigation', roles: ['SUPER_ADMIN', 'ADMIN'] },
     { icon: Contact, label: 'Contact Info', href: '/admin/contact-info', roles: ['SUPER_ADMIN', 'ADMIN', 'EDITOR'] },
+    { icon: MessageSquare, label: 'Contact Messages', href: '/admin/contact-messages', roles: ['SUPER_ADMIN', 'ADMIN', 'EDITOR'] },
     
     // System Management
     { icon: Users, label: 'Users', href: '/admin/users', roles: ['SUPER_ADMIN', 'ADMIN'] },
@@ -112,8 +115,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex items-center justify-between p-4 border-b">
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}>
+        <div className="flex items-center justify-between p-4 border-b flex-shrink-0">
           <h1 className="text-xl font-bold text-gray-900">NIEPD CMS</h1>
           <Button
             variant="ghost"
@@ -125,7 +128,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </Button>
         </div>
         
-        <nav className="mt-4">
+        <nav className="flex-1 overflow-y-auto py-4">
           {filteredMenuItems.map((item) => {
             const isActive = item.exact 
               ? pathname === item.href 
@@ -147,7 +150,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </nav>
         
         {/* User info and logout */}
-        <div className="absolute bottom-0 w-full p-4 border-t bg-gray-50">
+        <div className="flex-shrink-0 p-4 border-t bg-gray-50">
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <span className="text-sm font-medium text-gray-900">
@@ -191,7 +194,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
         {/* Page content */}
         <main className="p-6">
-          {children}
+          <ToastProvider>
+            {children}
+          </ToastProvider>
         </main>
       </div>
 

@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { NextRequest } from 'next/server';
 import { prisma } from './prisma';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret';
@@ -42,9 +43,17 @@ export function verifyToken(token: string): any {
   }
 }
 
-export async function getUserFromToken(token: string): Promise<AuthUser | null> {
+export async function getUserFromToken(request: NextRequest): Promise<AuthUser | null> {
   try {
+    // Extract token from Authorization header
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return null;
+    }
+    
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
     const decoded = verifyToken(token);
+    
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: {

@@ -207,16 +207,7 @@ const VisionMission: React.FC<VisionMissionProps> = ({ currentLang }) => {
           </div>
         </div>
 
-        {/* Bottom Decorative Element */}
-        <div className="flex justify-center mt-20">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-primary-500"></div>
-            <div className="w-3 h-3 bg-primary-500 rounded-full animate-pulse"></div>
-            <div className="w-24 h-0.5 bg-gradient-to-r from-primary-500 via-secondary-500 to-primary-500"></div>
-            <div className="w-3 h-3 bg-secondary-500 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-            <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-secondary-500"></div>
-          </div>
-        </div>
+   
       </div>
     </section>
   );
