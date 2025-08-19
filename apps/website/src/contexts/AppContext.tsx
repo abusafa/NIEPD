@@ -226,9 +226,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         dispatch({ type: 'SET_LANGUAGE', payload: savedLang });
       }
       
-      if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-        dispatch({ type: 'SET_THEME', payload: savedTheme });
-      }
+      // Always force light theme
+      dispatch({ type: 'SET_THEME', payload: 'light' });
     }
   }, []);
 
@@ -241,13 +240,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }, [state.currentLang]);
 
-  // Save theme preference
+  // Force light theme always
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('niepd-theme', state.theme);
-      document.documentElement.classList.toggle('dark', state.theme === 'dark');
+      localStorage.setItem('niepd-theme', 'light');
+      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
     }
-  }, [state.theme]);
+  }, []);
 
   // Online/Offline detection
   useEffect(() => {
@@ -347,11 +347,13 @@ export const useTheme = () => {
   const { state, dispatch } = useApp();
   
   const setTheme = (theme: 'light' | 'dark') => {
-    dispatch({ type: 'SET_THEME', payload: theme });
+    // Always force light theme
+    dispatch({ type: 'SET_THEME', payload: 'light' });
   };
   
   const toggleTheme = () => {
-    setTheme(state.theme === 'light' ? 'dark' : 'light');
+    // Always stay light - no toggle
+    dispatch({ type: 'SET_THEME', payload: 'light' });
   };
   
   return {

@@ -159,12 +159,11 @@ const AppProvider = (param)=>{
                         payload: savedLang
                     });
                 }
-                if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-                    dispatch({
-                        type: 'SET_THEME',
-                        payload: savedTheme
-                    });
-                }
+                // Always force light theme
+                dispatch({
+                    type: 'SET_THEME',
+                    payload: 'light'
+                });
             }
         }
     }["AppProvider.useEffect"], []);
@@ -180,17 +179,16 @@ const AppProvider = (param)=>{
     }["AppProvider.useEffect"], [
         state.currentLang
     ]);
-    // Save theme preference
+    // Force light theme always
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "AppProvider.useEffect": ()=>{
             if ("TURBOPACK compile-time truthy", 1) {
-                localStorage.setItem('niepd-theme', state.theme);
-                document.documentElement.classList.toggle('dark', state.theme === 'dark');
+                localStorage.setItem('niepd-theme', 'light');
+                document.documentElement.classList.remove('dark');
+                document.documentElement.setAttribute('data-theme', 'light');
             }
         }
-    }["AppProvider.useEffect"], [
-        state.theme
-    ]);
+    }["AppProvider.useEffect"], []);
     // Online/Offline detection
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "AppProvider.useEffect": ()=>{
@@ -335,13 +333,18 @@ const useTheme = ()=>{
     _s4();
     const { state, dispatch } = useApp();
     const setTheme = (theme)=>{
+        // Always force light theme
         dispatch({
             type: 'SET_THEME',
-            payload: theme
+            payload: 'light'
         });
     };
     const toggleTheme = ()=>{
-        setTheme(state.theme === 'light' ? 'dark' : 'light');
+        // Always stay light - no toggle
+        dispatch({
+            type: 'SET_THEME',
+            payload: 'light'
+        });
     };
     return {
         theme: state.theme,
