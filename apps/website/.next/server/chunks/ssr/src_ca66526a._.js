@@ -85,7 +85,7 @@ const Header = ({ currentLang, setCurrentLang, currentPage })=>{
         {
             key: 'home',
             label: t.home,
-            path: '/home'
+            path: '/'
         },
         {
             key: 'about',

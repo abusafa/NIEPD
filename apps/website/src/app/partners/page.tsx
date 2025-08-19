@@ -4,8 +4,9 @@ import { useLanguage } from '@/contexts/AppContext'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ErrorBoundary from '@/components/ErrorBoundary'
+import PartnersPage from '@/components/pages/PartnersPage'
 
-export default function PartnersPage() {
+export default function Partners() {
   const { currentLang, setLanguage } = useLanguage()
 
   return (
@@ -17,17 +18,7 @@ export default function PartnersPage() {
       />
       
       <main id="main-content" tabIndex={-1} className="flex-1" role="main">
-        <div className="container mx-auto px-4 py-16">
-          <h1 className="text-4xl font-bold text-center mb-8">
-            {currentLang === 'ar' ? 'الشركاء' : 'Partners'}
-          </h1>
-          <p className="text-lg text-center text-neutral-600">
-            {currentLang === 'ar' 
-              ? 'شركاؤنا الاستراتيجيون في التطوير'
-              : 'Our strategic partners in development'
-            }
-          </p>
-        </div>
+        <PartnersPage currentLang={currentLang} />
       </main>
       
       <Footer currentLang={currentLang} />
