@@ -32,6 +32,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
       featured: 'مميز',
       months: 'أشهر',
       weeks: 'أسابيع',
+      days: 'أيام',
       hours: 'ساعات',
       beginner: 'مبتدئ',
       intermediate: 'متوسط',
@@ -61,6 +62,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
       featured: 'Featured',
       months: 'Months',
       weeks: 'Weeks',
+      days: 'Days',
       hours: 'Hours',
       beginner: 'Beginner',
       intermediate: 'Intermediate',
@@ -140,29 +142,34 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
     return labels[level] || level;
   };
 
-  const getDurationLabel = (duration: string) => {
-    // Handle different duration formats from the API
-    if (duration.includes('شهر') || duration.includes('month')) {
-      return duration;
+  const getDurationLabel = (duration: number, durationType: string) => {
+    // Handle duration with type from the API
+    const typeMap: { [key: string]: string } = {
+      'HOURS': t.hours,
+      'DAYS': t.days,
+      'WEEKS': t.weeks,
+      'MONTHS': t.months,
+      'hours': t.hours,
+      'days': t.days,
+      'weeks': t.weeks,
+      'months': t.months
+    };
+    
+    // If we have a durationType, use it
+    if (durationType && typeMap[durationType]) {
+      return `${duration} ${typeMap[durationType]}`;
     }
-    if (duration.includes('أسبوع') || duration.includes('week')) {
-      return duration;
-    }
-    if (duration.includes('ساعة') || duration.includes('hour')) {
-      return duration;
-    }
-    // Fallback for numeric values
-    const hours = parseInt(duration);
-    if (!isNaN(hours)) {
-    if (hours >= 40) {
-      const months = Math.ceil(hours / 40);
+    
+    // Fallback logic for numeric values without type
+    if (duration >= 168) { // More than 168 hours = months
+      const months = Math.ceil(duration / 168);
       return `${months} ${t.months}`;
-    } else {
-      const weeks = Math.ceil(hours / 10);
+    } else if (duration >= 40) { // 40+ hours = weeks
+      const weeks = Math.ceil(duration / 40);
       return `${weeks} ${t.weeks}`;
+    } else {
+      return `${duration} ${t.hours}`;
     }
-    }
-    return duration;
   };
 
   return (
@@ -202,7 +209,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
               <div className="flex flex-wrap gap-6 mb-8">
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-primary-300" />
-                  <span>{getDurationLabel(program.duration)}</span>
+                  <span>{getDurationLabel(program.duration, program.durationType)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <User className="w-5 h-5 text-primary-300" />
@@ -275,7 +282,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
                 <div className="space-y-4">
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <span className="text-secondary-600">{t.duration}:</span>
-                    <span className="font-medium text-secondary-700">{getDurationLabel(program.duration.toString())}</span>
+                    <span className="font-medium text-secondary-700">{getDurationLabel(program.duration, program.durationType)}</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <span className="text-secondary-600">{t.level}:</span>
