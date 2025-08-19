@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+'use client'
+
+import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 
 // Types
 export type Language = 'ar' | 'en';
@@ -84,7 +86,7 @@ const initialState: AppState = {
   programs: [],
   news: [],
   events: [],
-  isOnline: navigator.onLine,
+  isOnline: typeof window !== 'undefined' ? navigator.onLine : true,
   lastSync: null,
 };
 
@@ -215,43 +217,52 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   // Load saved preferences on mount
   useEffect(() => {
-    const savedLang = localStorage.getItem('niepd-language') as Language;
-    const savedTheme = localStorage.getItem('niepd-theme') as 'light' | 'dark';
-    
-    if (savedLang && (savedLang === 'ar' || savedLang === 'en')) {
-      dispatch({ type: 'SET_LANGUAGE', payload: savedLang });
-    }
-    
-    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-      dispatch({ type: 'SET_THEME', payload: savedTheme });
+    // Only run on client side
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem('niepd-language') as Language;
+      const savedTheme = localStorage.getItem('niepd-theme') as 'light' | 'dark';
+      
+      if (savedLang && (savedLang === 'ar' || savedLang === 'en')) {
+        dispatch({ type: 'SET_LANGUAGE', payload: savedLang });
+      }
+      
+      if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
+        dispatch({ type: 'SET_THEME', payload: savedTheme });
+      }
     }
   }, []);
 
   // Save language preference
   useEffect(() => {
-    localStorage.setItem('niepd-language', state.currentLang);
-    document.documentElement.lang = state.currentLang;
-    document.documentElement.dir = state.currentLang === 'ar' ? 'rtl' : 'ltr';
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('niepd-language', state.currentLang);
+      document.documentElement.lang = state.currentLang;
+      document.documentElement.dir = state.currentLang === 'ar' ? 'rtl' : 'ltr';
+    }
   }, [state.currentLang]);
 
   // Save theme preference
   useEffect(() => {
-    localStorage.setItem('niepd-theme', state.theme);
-    document.documentElement.classList.toggle('dark', state.theme === 'dark');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('niepd-theme', state.theme);
+      document.documentElement.classList.toggle('dark', state.theme === 'dark');
+    }
   }, [state.theme]);
 
   // Online/Offline detection
   useEffect(() => {
-    const handleOnline = () => dispatch({ type: 'SET_ONLINE_STATUS', payload: true });
-    const handleOffline = () => dispatch({ type: 'SET_ONLINE_STATUS', payload: false });
+    if (typeof window !== 'undefined') {
+      const handleOnline = () => dispatch({ type: 'SET_ONLINE_STATUS', payload: true });
+      const handleOffline = () => dispatch({ type: 'SET_ONLINE_STATUS', payload: false });
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
 
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
+      return () => {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+      };
+    }
   }, []);
 
   // Auto-hide notifications
@@ -356,12 +367,16 @@ export const useAuth = () => {
   
   const login = (user: User) => {
     dispatch({ type: 'SET_USER', payload: user });
-    localStorage.setItem('niepd-user', JSON.stringify(user));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('niepd-user', JSON.stringify(user));
+    }
   };
   
   const logout = () => {
     dispatch({ type: 'SET_USER', payload: null });
-    localStorage.removeItem('niepd-user');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('niepd-user');
+    }
   };
   
   return {

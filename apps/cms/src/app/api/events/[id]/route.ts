@@ -8,15 +8,16 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const event = await prisma.event.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         category: {
           select: {
             id: true,
             nameAr: true,
             nameEn: true,
-            color: true,
+
           }
         },
         author: {
@@ -63,6 +64,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const user = await getUserFromToken(request);
     if (!user) {
       return NextResponse.json(
@@ -101,13 +103,16 @@ export async function PUT(
       tagIds,
     } = body;
 
+    // Handle categoryId - convert empty string to null
+    const validCategoryId = categoryId && categoryId !== '' ? categoryId : null;
+
     // First, delete existing tag relationships
     await prisma.eventTag.deleteMany({
-      where: { eventId: params.id }
+      where: { eventId: id }
     });
 
     const event = await prisma.event.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         titleAr,
         titleEn,
@@ -133,7 +138,7 @@ export async function PUT(
         featured: Boolean(featured),
         eventStatus,
         status,
-        categoryId,
+        categoryId: validCategoryId,
         tags: tagIds ? {
           create: tagIds.map((tagId: string) => ({
             tagId,
@@ -146,7 +151,7 @@ export async function PUT(
             id: true,
             nameAr: true,
             nameEn: true,
-            color: true,
+
           }
         },
         author: {
@@ -186,6 +191,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const user = await getUserFromToken(request);
     if (!user) {
       return NextResponse.json(
@@ -196,12 +202,12 @@ export async function DELETE(
 
     // Delete tag relationships first
     await prisma.eventTag.deleteMany({
-      where: { eventId: params.id }
+      where: { eventId: id }
     });
 
     // Then delete the event
     await prisma.event.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     return NextResponse.json({ message: 'Event deleted successfully' });

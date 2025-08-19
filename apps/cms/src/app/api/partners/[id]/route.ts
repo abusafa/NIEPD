@@ -9,8 +9,9 @@ interface RouteParams {
 // GET /api/partners/[id] - Get single partner (public access)
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params;
     const partner = await prisma.partner.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!partner) {
@@ -27,6 +28,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PUT /api/partners/[id]
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
@@ -39,7 +41,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     const body = await request.json();
     const updatedPartner = await prisma.partner.update({
-      where: { id: params.id },
+      where: { id },
       data: body,
     });
 
@@ -53,6 +55,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // DELETE /api/partners/[id]
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
@@ -64,7 +67,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
 
     await prisma.partner.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Partner deleted successfully' });

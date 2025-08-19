@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import { 
   WifiOff, 
@@ -10,7 +12,7 @@ import {
   Clock,
   Shield
 } from 'lucide-react';
-import { useLanguage, useNetworkStatus } from '../contexts/AppContext';
+import { useLanguage, useNetworkStatus } from '@/contexts/AppContext';
 
 // Network Error Component
 export const NetworkError: React.FC<{

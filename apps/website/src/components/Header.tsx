@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Menu, X, Globe } from 'lucide-react';
 import Logo from './Logo';
 
@@ -80,7 +80,7 @@ const Header: React.FC<HeaderProps> = ({
             {navigation.map((item) => (
               <Link
                 key={item.key}
-                to={item.path}
+                href={item.path}
                 aria-current={currentPage === item.key ? 'page' : undefined}
                 className={`nav-link font-medium transition-all duration-300 relative px-2 py-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 ${
                   currentPage === item.key 
@@ -110,7 +110,7 @@ const Header: React.FC<HeaderProps> = ({
             </button>
 
             <Link 
-              to="/programs"
+              href="/programs"
               className="btn-primary hidden md:flex transform hover:scale-105"
             >
               {t.register}
@@ -139,7 +139,7 @@ const Header: React.FC<HeaderProps> = ({
               {navigation.map((item, index) => (
                 <Link
                   key={item.key}
-                  to={item.path}
+                  href={item.path}
                   onClick={() => setIsMenuOpen(false)}
                   aria-current={currentPage === item.key ? 'page' : undefined}
                   className={`text-right py-3 px-6 rounded-xl font-medium transition-all duration-300 hover:scale-105 animate-fade-in-up focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 ${
@@ -153,7 +153,7 @@ const Header: React.FC<HeaderProps> = ({
                 </Link>
               ))}
               <Link 
-                to="/programs"
+                href="/programs"
                 onClick={() => setIsMenuOpen(false)}
                 className="btn-primary mt-4 animate-fade-in-up animate-delay-500 transform hover:scale-105"
               >

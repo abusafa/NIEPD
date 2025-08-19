@@ -2,30 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { 
-  Plus, 
-  Search, 
   Edit, 
   Trash2, 
   Eye,
-  Filter,
   Calendar,
   User,
   BookOpen,
   Clock
 } from 'lucide-react';
+import DataTable from '@/components/shared/DataTable';
+import { useCRUD } from '@/hooks/useCRUD';
 
 interface ProgramItem {
   id: string;
@@ -57,139 +45,21 @@ interface ProgramItem {
 
 export default function ProgramsPage() {
   const router = useRouter();
-  const [programs, setPrograms] = useState<ProgramItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [state, actions] = useCRUD<ProgramItem>({
+    endpoint: '/api/programs',
+    resourceName: 'Program',
+  });
 
-  useEffect(() => {
-    fetchPrograms();
-  }, [statusFilter]);
-
-  const fetchPrograms = async () => {
-    try {
-      const url = new URL('/api/programs', window.location.origin);
-      if (statusFilter !== 'all') url.searchParams.set('status', statusFilter);
-
-      const response = await fetch(url.toString());
-      
-      if (response.ok) {
-        const data = await response.json();
-        setPrograms(data.programs || []);
-      } else {
-        console.error('Failed to fetch programs');
-        setPrograms([]);
-      }
-    } catch (error) {
-      console.error('Error fetching programs:', error);
-      setPrograms([]);
-      // Fallback to mock data for demonstration
-      const mockPrograms: ProgramItem[] = [
-        {
-          id: '1',
-          titleAr: 'برنامج إعداد المعلم',
-          titleEn: 'Teacher Preparation Program',
-          descriptionAr: 'برنامج استراتيجي شامل لإعداد المعلمين الجدد وتأهيلهم للعمل في الميدان التعليمي',
-          descriptionEn: 'Comprehensive strategic program for preparing new teachers',
-          duration: 120,
-          durationType: 'HOURS',
-          level: 'INTERMEDIATE',
-          participants: 890,
-          rating: 4.8,
-          status: 'PUBLISHED',
-          featured: true,
-          isFree: true,
-          isCertified: true,
-          createdAt: '2024-01-15T10:00:00Z',
-          updatedAt: '2024-01-15T10:30:00Z',
-          category: {
-            nameAr: 'التعليم العام',
-            nameEn: 'General Education'
-          },
-          author: {
-            firstName: 'Admin',
-            lastName: 'User',
-            username: 'admin'
-          }
-        },
-        {
-          id: '2',
-          titleAr: 'مسار المعلم الفاعل',
-          titleEn: 'Effective Teacher Track',
-          descriptionAr: 'مسار تطويري متدرج يزود المعلمين بالمهارات الأساسية في التعليم والتقنية',
-          descriptionEn: 'Progressive development track that provides teachers with essential skills',
-          duration: 40,
-          durationType: 'HOURS',
-          level: 'BEGINNER',
-          participants: 1250,
-          rating: 4.8,
-          status: 'PUBLISHED',
-          featured: true,
-          isFree: true,
-          isCertified: true,
-          createdAt: '2024-01-10T15:20:00Z',
-          updatedAt: '2024-01-12T09:15:00Z',
-          category: {
-            nameAr: 'التعليم العام',
-            nameEn: 'General Education'
-          },
-          author: {
-            firstName: 'Content',
-            lastName: 'Editor',
-            username: 'editor'
-          }
-        },
-        {
-          id: '3',
-          titleAr: 'برنامج القيادة التعليمية',
-          titleEn: 'Educational Leadership Program',
-          descriptionAr: 'برنامج متخصص لتطوير قدرات القيادات المدرسية والإدارية',
-          descriptionEn: 'Specialized program for developing school and administrative leaders capabilities',
-          duration: 60,
-          durationType: 'HOURS',
-          level: 'ADVANCED',
-          participants: 450,
-          rating: 4.7,
-          status: 'REVIEW',
-          featured: true,
-          isFree: true,
-          isCertified: true,
-          createdAt: '2024-01-05T08:45:00Z',
-          updatedAt: '2024-01-08T14:22:00Z',
-          category: {
-            nameAr: 'القيادة',
-            nameEn: 'Leadership'
-          },
-          author: {
-            username: 'author1'
-          }
-        }
-      ];
-
-      setPrograms(mockPrograms);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateNew = () => {
+  const handleCreate = () => {
     router.push('/admin/programs/create');
   };
 
-  const handleEdit = (id: string) => {
-    router.push(`/admin/programs/${id}/edit`);
+  const handleEdit = (program: ProgramItem) => {
+    router.push(`/admin/programs/${program.id}/edit`);
   };
 
-  const handleView = (id: string) => {
-    router.push(`/admin/programs/${id}`);
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this program?')) {
-      return;
-    }
-    // Delete logic here
-    console.log('Deleting program:', id);
+  const handleView = (program: ProgramItem) => {
+    router.push(`/admin/programs/${program.id}`);
   };
 
   const getStatusColor = (status: string) => {
@@ -220,207 +90,161 @@ export default function ProgramsPage() {
     }
   };
 
-  const filteredPrograms = programs.filter(item => {
-    const matchesSearch = 
-      item.titleAr.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.titleEn.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
-    
-    return matchesSearch && matchesStatus;
-  });
+  const columns = [
+    {
+      key: 'title',
+      label: 'Program',
+      render: (_, program: ProgramItem) => (
+        <div className="space-y-1">
+          <div className="font-medium text-sm">{program.titleEn}</div>
+          <div className="text-sm text-gray-600" dir="rtl">{program.titleAr}</div>
+          <div className="flex gap-2">
+            {program.featured && (
+              <Badge variant="outline" className="text-xs">
+                Featured
+              </Badge>
+            )}
+            {program.isFree && (
+              <Badge variant="outline" className="text-xs text-green-600">
+                Free
+              </Badge>
+            )}
+            {program.isCertified && (
+              <Badge variant="outline" className="text-xs text-blue-600">
+                Certified
+              </Badge>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'level',
+      label: 'Level',
+      render: (level: string) => (
+        <Badge className={getLevelColor(level)}>
+          {level}
+        </Badge>
+      ),
+    },
+    {
+      key: 'duration',
+      label: 'Duration',
+      render: (_, program: ProgramItem) => (
+        <div className="flex items-center gap-2">
+          <Clock className="h-4 w-4 text-gray-400" />
+          <span className="text-sm">
+            {program.duration} {program.durationType.toLowerCase()}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'participants',
+      label: 'Participants',
+      render: (participants: number) => (
+        <div className="flex items-center gap-2">
+          <User className="h-4 w-4 text-gray-400" />
+          <span className="text-sm">{participants.toLocaleString()}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (status: string) => (
+        <Badge className={getStatusColor(status)}>
+          {status}
+        </Badge>
+      ),
+    },
+    {
+      key: 'updatedAt',
+      label: 'Updated',
+      render: (date: string) => (
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-gray-400" />
+          <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+        </div>
+      ),
+    },
+  ];
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
+  const tableActions = [
+    {
+      label: 'View',
+      icon: <Eye className="mr-2 h-4 w-4" />,
+      onClick: handleView,
+    },
+    {
+      label: 'Edit',
+      icon: <Edit className="mr-2 h-4 w-4" />,
+      onClick: handleEdit,
+    },
+    {
+      label: 'Delete',
+      icon: <Trash2 className="mr-2 h-4 w-4" />,
+      onClick: actions.deleteItem,
+      variant: 'destructive' as const,
+    },
+  ];
+
+  const filterOptions = [
+    {
+      key: 'status',
+      label: 'Status',
+      options: [
+        { value: 'PUBLISHED', label: 'Published' },
+        { value: 'REVIEW', label: 'Under Review' },
+        { value: 'DRAFT', label: 'Draft' },
+      ],
+    },
+    {
+      key: 'level',
+      label: 'Level',
+      options: [
+        { value: 'BEGINNER', label: 'Beginner' },
+        { value: 'INTERMEDIATE', label: 'Intermediate' },
+        { value: 'ADVANCED', label: 'Advanced' },
+        { value: 'EXPERT', label: 'Expert' },
+      ],
+    },
+  ];
+
+  const stats = [
+    {
+      label: 'Total Programs',
+      value: state.items?.length ?? 0,
+    },
+    {
+      label: 'Published',
+      value: (state.items ?? []).filter(p => p.status === 'PUBLISHED').length,
+    },
+    {
+      label: 'Featured',
+      value: (state.items ?? []).filter(p => p.featured).length,
+    },
+    {
+      label: 'Total Participants',
+      value: (state.items ?? []).reduce((sum, p) => sum + p.participants, 0),
+    },
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Programs Management</h1>
-          <p className="text-gray-600">Manage training programs and courses</p>
-        </div>
-        <Button onClick={handleCreateNew}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Program
-        </Button>
-      </div>
-
-      {/* Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search programs..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border rounded-md text-sm"
-              >
-                <option value="all">All Status</option>
-                <option value="PUBLISHED">Published</option>
-                <option value="REVIEW">Under Review</option>
-                <option value="DRAFT">Draft</option>
-              </select>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                More Filters
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{programs.filter(p => p.status === 'PUBLISHED').length}</div>
-            <p className="text-xs text-muted-foreground">Published</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{programs.filter(p => p.status === 'REVIEW').length}</div>
-            <p className="text-xs text-muted-foreground">Under Review</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{programs.filter(p => p.featured).length}</div>
-            <p className="text-xs text-muted-foreground">Featured</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{programs.reduce((sum, p) => sum + p.participants, 0)}</div>
-            <p className="text-xs text-muted-foreground">Total Participants</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Programs ({filteredPrograms.length})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Program</TableHead>
-                  <TableHead>Level</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>Participants</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Updated</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredPrograms.map((program) => (
-                  <TableRow key={program.id}>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium text-sm">
-                          {program.titleEn}
-                        </div>
-                        <div className="text-sm text-gray-600" dir="rtl">
-                          {program.titleAr}
-                        </div>
-                        <div className="flex gap-2">
-                          {program.featured && (
-                            <Badge variant="outline" className="text-xs">
-                              Featured
-                            </Badge>
-                          )}
-                          {program.isFree && (
-                            <Badge variant="outline" className="text-xs text-green-600">
-                              Free
-                            </Badge>
-                          )}
-                          {program.isCertified && (
-                            <Badge variant="outline" className="text-xs text-blue-600">
-                              Certified
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getLevelColor(program.level)}>
-                        {program.level}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm">
-                          {program.duration} {program.durationType.toLowerCase()}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm">{program.participants.toLocaleString()}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(program.status)}>
-                        {program.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm">
-                          {new Date(program.updatedAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button variant="ghost" size="sm" onClick={() => handleView(program.id)}>
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleEdit(program.id)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="text-red-600 hover:text-red-700"
-                          onClick={() => handleDelete(program.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <DataTable
+      title="Programs Management"
+      description="Manage training programs and courses"
+      data={state.items}
+      columns={columns}
+      actions={tableActions}
+      loading={state.loading}
+      onCreate={handleCreate}
+      createButtonText="New Program"
+      searchPlaceholder="Search programs..."
+      emptyMessage="No programs found"
+      emptyDescription="Create your first training program"
+      filters={filterOptions}
+      stats={stats}
+    />
   );
 }

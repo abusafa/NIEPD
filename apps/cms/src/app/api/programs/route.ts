@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
+// CORS headers for cross-origin requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 // GET /api/programs - List all programs
 export async function GET(request: NextRequest) {
   try {
@@ -81,12 +93,12 @@ export async function GET(request: NextRequest) {
       totalPages: Math.ceil(total / limit),
       currentPage: page,
       total,
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error('Error fetching programs:', error);
     return NextResponse.json(
       { error: 'Failed to fetch programs' },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

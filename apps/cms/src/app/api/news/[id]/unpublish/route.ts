@@ -12,6 +12,7 @@ export async function POST(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
@@ -37,7 +38,7 @@ export async function POST(
     }
 
     const news = await prisma.news.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!news) {
@@ -48,7 +49,7 @@ export async function POST(
     }
 
     const updatedNews = await prisma.news.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: 'DRAFT',
         // Keep publishedAt for history

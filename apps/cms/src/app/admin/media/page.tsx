@@ -11,7 +11,6 @@ import {
   Trash2, 
   Download,
   Copy,
-  Filter,
   Upload,
   Image,
   File,
@@ -23,6 +22,8 @@ import {
   Eye,
   Edit2
 } from 'lucide-react';
+import DataTable from '@/components/shared/DataTable';
+import { useCRUD } from '@/hooks/useCRUD';
 import { toast } from 'sonner';
 
 interface MediaItem {
@@ -39,42 +40,13 @@ interface MediaItem {
 }
 
 export default function MediaPage() {
-  const [media, setMedia] = useState<MediaItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [state, actions] = useCRUD<MediaItem>({
+    endpoint: '/api/media',
+    resourceName: 'Media File',
+  });
   const [uploading, setUploading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    fetchMedia();
-  }, [typeFilter]);
-
-  const fetchMedia = async () => {
-    try {
-      const params = new URLSearchParams();
-      if (typeFilter !== 'all') params.set('type', typeFilter);
-      
-      const response = await fetch(`/api/media?${params}`);
-
-      if (response.ok) {
-        const data = await response.json();
-        setMedia(data.media || []);
-      } else {
-        console.error('Failed to fetch media:', response.statusText);
-        // Fallback to empty array
-        setMedia([]);
-      }
-    } catch (error) {
-      console.error('Error fetching media:', error);
-      // Use empty array as fallback
-      setMedia([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
 
   const handleFileUpload = async (files: FileList) => {
     if (!files || files.length === 0) return;
@@ -97,9 +69,8 @@ export default function MediaPage() {
 
       if (response.ok) {
         const data = await response.json();
-        setMedia(prev => [...data.files, ...prev]);
         toast.success(data.message);
-        fetchMedia(); // Refresh the list
+        actions.refresh?.(); // Refresh the list
       } else {
         const error = await response.json();
         toast.error(error.error || 'Failed to upload files');
@@ -128,35 +99,13 @@ export default function MediaPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this file?')) {
-      return;
-    }
-    
-    try {
-      const response = await fetch(`/api/media/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (response.ok) {
-        setMedia(prev => prev.filter(item => item.id !== id));
-        toast.success('File deleted successfully');
-      } else {
-        const error = await response.json();
-        toast.error(error.error || 'Failed to delete file');
-      }
-    } catch (error) {
-      console.error('Delete error:', error);
-      toast.error('Failed to delete file');
-    }
+  const handleCopyUrl = (item: MediaItem) => {
+    navigator.clipboard.writeText(window.location.origin + item.path);
+    toast.success('URL copied to clipboard');
   };
 
-  const handleCopyUrl = (path: string) => {
-    navigator.clipboard.writeText(window.location.origin + path);
-    toast.success('URL copied to clipboard');
+  const handleView = (item: MediaItem) => {
+    window.open(item.path, '_blank');
   };
 
   const getFileIcon = (mimeType: string) => {
@@ -183,54 +132,134 @@ export default function MediaPage() {
     return 'other';
   };
 
-  const filteredMedia = media.filter(item => {
-    const matchesSearch = 
-      item.originalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesType = typeFilter === 'all' || getFileTypeFromMimeType(item.mimeType) === typeFilter;
-    
-    return matchesSearch && matchesType;
-  });
+  const columns = [
+    {
+      key: 'file',
+      label: 'File',
+      render: (_, item: MediaItem) => (
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+            {item.mimeType.startsWith('image/') ? (
+              <img
+                src={item.path}
+                alt={item.alt || item.originalName}
+                className="w-full h-full object-cover rounded-lg"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  target.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+            ) : (
+              getFileIcon(item.mimeType)
+            )}
+          </div>
+          <div>
+            <div className="font-medium text-sm">{item.originalName}</div>
+            <div className="text-xs text-gray-500">
+              {formatFileSize(item.size)} • {item.mimeType.split('/')[1].toUpperCase()}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      render: (description: string) => (
+        <div className="text-sm text-gray-600 max-w-xs truncate">
+          {description || '-'}
+        </div>
+      ),
+    },
+    {
+      key: 'mimeType',
+      label: 'Type',
+      render: (mimeType: string) => (
+        <Badge variant="outline" className="text-xs">
+          {getFileTypeFromMimeType(mimeType)}
+        </Badge>
+      ),
+    },
+    {
+      key: 'size',
+      label: 'Size',
+      render: (size: number) => (
+        <span className="text-sm">{formatFileSize(size)}</span>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Uploaded',
+      render: (date: string) => (
+        <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+      ),
+    },
+  ];
 
-  const groupedStats = {
-    total: media.length,
-    images: media.filter(m => m.mimeType.startsWith('image/')).length,
-    videos: media.filter(m => m.mimeType.startsWith('video/')).length,
-    documents: media.filter(m => m.mimeType === 'application/pdf' || m.mimeType.startsWith('text/')).length,
-    totalSize: media.reduce((sum, m) => sum + m.size, 0),
-  };
+  const tableActions = [
+    {
+      label: 'View',
+      icon: <Eye className="mr-2 h-4 w-4" />,
+      onClick: handleView,
+    },
+    {
+      label: 'Copy URL',
+      icon: <Copy className="mr-2 h-4 w-4" />,
+      onClick: handleCopyUrl,
+    },
+    {
+      label: 'Download',
+      icon: <Download className="mr-2 h-4 w-4" />,
+      onClick: handleView,
+    },
+    {
+      label: 'Delete',
+      icon: <Trash2 className="mr-2 h-4 w-4" />,
+      onClick: actions.deleteItem,
+      variant: 'destructive' as const,
+    },
+  ];
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
+  const filterOptions = [
+    {
+      key: 'mimeType',
+      label: 'Type',
+      options: [
+        { value: 'image', label: 'Images' },
+        { value: 'video', label: 'Videos' },
+        { value: 'audio', label: 'Audio' },
+        { value: 'document', label: 'Documents' },
+        { value: 'other', label: 'Other' },
+      ],
+    },
+  ];
+
+  const stats = [
+    {
+      label: 'Total Files',
+      value: state.items?.length ?? 0,
+    },
+    {
+      label: 'Images',
+      value: (state.items ?? []).filter(m => m.mimeType.startsWith('image/')).length,
+    },
+    {
+      label: 'Videos',
+      value: (state.items ?? []).filter(m => m.mimeType.startsWith('video/')).length,
+    },
+    {
+      label: 'Documents',
+      value: (state.items ?? []).filter(m => m.mimeType === 'application/pdf' || m.mimeType.startsWith('text/')).length,
+    },
+    {
+      label: 'Total Size',
+      value: formatFileSize((state.items ?? []).reduce((sum, m) => sum + m.size, 0)),
+    },
+  ];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Media Library</h1>
-          <p className="text-gray-600">Upload and manage your media files</p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-          >
-            {viewMode === 'grid' ? <List className="h-4 w-4" /> : <Grid3X3 className="h-4 w-4" />}
-          </Button>
-          <Button onClick={() => fileInputRef.current?.click()}>
-            <Plus className="h-4 w-4 mr-2" />
-            Upload Files
-          </Button>
-        </div>
-      </div>
-
       {/* Upload Area */}
       <Card>
         <CardContent className="pt-6">
@@ -264,205 +293,23 @@ export default function MediaPage() {
         </CardContent>
       </Card>
 
-      {/* Filters and Search */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search media files..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <select
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-                className="px-3 py-2 border rounded-md text-sm"
-              >
-                <option value="all">All Types</option>
-                <option value="image">Images</option>
-                <option value="video">Videos</option>
-                <option value="audio">Audio</option>
-                <option value="document">Documents</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{groupedStats.total}</div>
-            <p className="text-xs text-muted-foreground">Total Files</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{groupedStats.images}</div>
-            <p className="text-xs text-muted-foreground">Images</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{groupedStats.videos}</div>
-            <p className="text-xs text-muted-foreground">Videos</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{groupedStats.documents}</div>
-            <p className="text-xs text-muted-foreground">Documents</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{formatFileSize(groupedStats.totalSize)}</div>
-            <p className="text-xs text-muted-foreground">Total Size</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Media Grid/List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Media Files ({filteredMedia.length})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {filteredMedia.map((item) => (
-                <div key={item.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
-                    {item.mimeType.startsWith('image/') ? (
-                      <img
-                        src={item.path}
-                        alt={item.alt || item.originalName}
-                        className="w-full h-full object-cover rounded-lg"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          target.nextElementSibling?.classList.remove('hidden');
-                        }}
-                      />
-                    ) : (
-                      <div className="text-gray-400">
-                        {getFileIcon(item.mimeType)}
-                      </div>
-                    )}
-                    <div className="hidden text-gray-400 text-4xl">
-                      {getFileIcon(item.mimeType)}
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <h3 className="font-medium text-sm truncate" title={item.originalName}>
-                      {item.originalName}
-                    </h3>
-                    
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>{formatFileSize(item.size)}</span>
-                      <Badge variant="outline" className="text-xs">
-                        {item.mimeType.split('/')[1].toUpperCase()}
-                      </Badge>
-                    </div>
-                    
-                    {item.description && (
-                      <p className="text-xs text-gray-600 line-clamp-2" title={item.description}>
-                        {item.description}
-                      </p>
-                    )}
-                    
-                    <div className="flex gap-1">
-                      <Button variant="ghost" size="sm" onClick={() => handleCopyUrl(item.path)}>
-                        <Copy className="h-3 w-3" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => window.open(item.path, '_blank')}>
-                        <Eye className="h-3 w-3" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit2 className="h-3 w-3" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={() => handleDelete(item.id)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {filteredMedia.map((item) => (
-                <div key={item.id} className="flex items-center gap-4 p-3 border rounded-lg hover:bg-gray-50">
-                  <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                    {getFileIcon(item.mimeType)}
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-sm truncate">{item.originalName}</h3>
-                    <p className="text-xs text-gray-500">
-                      {formatFileSize(item.size)} • {new Date(item.createdAt).toLocaleDateString()}
-                    </p>
-                    {item.description && (
-                      <p className="text-xs text-gray-600 truncate">{item.description}</p>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">
-                      {item.mimeType.split('/')[1].toUpperCase()}
-                    </Badge>
-                    
-                    <div className="flex gap-1">
-                      <Button variant="ghost" size="sm" onClick={() => handleCopyUrl(item.path)}>
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => window.open(item.path, '_blank')}>
-                        <Download className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={() => handleDelete(item.id)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          
-          {filteredMedia.length === 0 && (
-            <div className="text-center py-12">
-              <Image className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No media files found</h3>
-              <p className="text-gray-600">
-                {searchTerm || typeFilter !== 'all' 
-                  ? 'Try adjusting your search or filters'
-                  : 'Upload some files to get started'
-                }
-              </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* Media DataTable */}
+      <DataTable
+        title="Media Library"
+        description="Upload and manage your media files"
+        data={state.items}
+        columns={columns}
+        actions={tableActions}
+        loading={state.loading}
+        searchPlaceholder="Search media files..."
+        emptyMessage="No media files found"
+        emptyDescription="Upload some files to get started"
+        filters={filterOptions}
+        stats={stats}
+        showSearch={true}
+        showFilters={true}
+        showStats={true}
+      />
     </div>
   );
 }

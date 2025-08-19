@@ -149,12 +149,12 @@ export default function PublicationSettings({
       {showCategory && categories.length > 0 && (
         <div>
           <Label htmlFor="category">Category</Label>
-          <Select value={categoryId || ''} onValueChange={onCategoryChange}>
+          <Select value={categoryId || 'none'} onValueChange={(value) => onCategoryChange(value === 'none' ? '' : value)}>
             <SelectTrigger>
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">
+              <SelectItem value="none">
                 <span className="text-gray-500">No category</span>
               </SelectItem>
               {categories.map(category => (

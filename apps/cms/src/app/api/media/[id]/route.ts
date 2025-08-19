@@ -14,8 +14,9 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
     const media = await prisma.media.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!media) {
@@ -41,6 +42,7 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
@@ -61,7 +63,7 @@ export async function PUT(
     const { alt, description } = body;
 
     const media = await prisma.media.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!media) {
@@ -72,7 +74,7 @@ export async function PUT(
     }
 
     const updatedMedia = await prisma.media.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         alt,
         description,
@@ -95,6 +97,7 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
@@ -120,7 +123,7 @@ export async function DELETE(
     }
 
     const media = await prisma.media.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!media) {
@@ -141,7 +144,7 @@ export async function DELETE(
 
     // Delete from database
     await prisma.media.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Media file deleted successfully' });

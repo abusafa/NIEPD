@@ -1,38 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { 
-  Plus, 
-  Search, 
   Edit, 
   Trash2, 
   Shield,
   ShieldCheck,
   User,
   Mail,
-  Calendar,
-  MoreHorizontal
+  Calendar
 } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import DataTable from '@/components/shared/DataTable';
+import { useCRUD } from '@/hooks/useCRUD';
 
 interface UserItem {
   id: string;
@@ -47,68 +28,23 @@ interface UserItem {
 }
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<UserItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState<string>('all');
+  const router = useRouter();
+  const [state, actions] = useCRUD<UserItem>({
+    endpoint: '/api/users',
+    resourceName: 'User',
+  });
 
-  useEffect(() => {
-    fetchUsers();
-  }, [roleFilter]);
-
-  const fetchUsers = async () => {
-    try {
-      const url = new URL('/api/users', window.location.origin);
-      if (roleFilter !== 'all') url.searchParams.set('role', roleFilter);
-      if (statusFilter !== 'all') url.searchParams.set('isActive', statusFilter);
-
-      const response = await fetch(url.toString(), {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users || []);
-      } else {
-        console.error('Failed to fetch users');
-        setUsers([]);
-      }
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      setUsers([]);
-    } finally {
-      setLoading(false);
-    }
+  const handleCreate = () => {
+    router.push('/admin/users/create');
   };
 
-  const handleCreateNew = () => {
-    // Open create user modal or navigate to create page
-    console.log('Create new user');
+  const handleEdit = (user: UserItem) => {
+    router.push(`/admin/users/${user.id}/edit`);
   };
 
-  const handleEdit = (id: string) => {
-    // Open edit user modal or navigate to edit page
-    console.log('Edit user:', id);
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this user?')) {
-      return;
-    }
-    // Delete logic here
-    console.log('Deleting user:', id);
-  };
-
-  const handleToggleActive = async (id: string) => {
+  const handleToggleActive = async (user: UserItem) => {
     // Toggle user active status
-    console.log('Toggle active status for user:', id);
-  };
-
-  const handleChangeRole = async (id: string, newRole: string) => {
-    // Change user role
-    console.log('Change role for user:', id, 'to:', newRole);
+    console.log('Toggle active status for user:', user.id);
   };
 
   const getRoleColor = (role: string) => {
@@ -143,202 +79,146 @@ export default function UsersPage() {
     }
   };
 
-  const filteredUsers = users.filter(item => {
-    const matchesSearch = 
-      item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      `${item.firstName} ${item.lastName}`.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesRole = roleFilter === 'all' || item.role === roleFilter;
-    
-    return matchesSearch && matchesRole;
-  });
+  const columns = [
+    {
+      key: 'user',
+      label: 'User',
+      render: (_, user: UserItem) => (
+        <div className="space-y-1">
+          <div className="font-medium text-sm">
+            {user.firstName && user.lastName 
+              ? `${user.firstName} ${user.lastName}`
+              : user.username
+            }
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Mail className="h-3 w-3" />
+            {user.email}
+          </div>
+          <div className="text-xs text-gray-500">
+            @{user.username}
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'role',
+      label: 'Role',
+      render: (role: string) => (
+        <Badge className={getRoleColor(role)}>
+          <div className="flex items-center gap-1">
+            {getRoleIcon(role)}
+            {role.replace('_', ' ')}
+          </div>
+        </Badge>
+      ),
+    },
+    {
+      key: 'isActive',
+      label: 'Status',
+      render: (isActive: boolean) => (
+        <Badge variant={isActive ? "default" : "secondary"}>
+          {isActive ? 'Active' : 'Inactive'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created',
+      render: (date: string) => (
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-gray-400" />
+          <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'updatedAt',
+      label: 'Last Updated',
+      render: (date: string) => (
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-gray-400" />
+          <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+        </div>
+      ),
+    },
+  ];
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
+  const tableActions = [
+    {
+      label: 'Edit',
+      icon: <Edit className="mr-2 h-4 w-4" />,
+      onClick: handleEdit,
+    },
+    {
+      label: 'Toggle Status',
+      icon: <Shield className="mr-2 h-4 w-4" />,
+      onClick: handleToggleActive,
+    },
+    {
+      label: 'Delete',
+      icon: <Trash2 className="mr-2 h-4 w-4" />,
+      onClick: actions.deleteItem,
+      variant: 'destructive' as const,
+    },
+  ];
+
+  const filterOptions = [
+    {
+      key: 'role',
+      label: 'Role',
+      options: [
+        { value: 'SUPER_ADMIN', label: 'Super Admin' },
+        { value: 'ADMIN', label: 'Admin' },
+        { value: 'EDITOR', label: 'Editor' },
+        { value: 'AUTHOR', label: 'Author' },
+        { value: 'VIEWER', label: 'Viewer' },
+      ],
+    },
+    {
+      key: 'isActive',
+      label: 'Status',
+      options: [
+        { value: 'true', label: 'Active' },
+        { value: 'false', label: 'Inactive' },
+      ],
+    },
+  ];
+
+  const stats = [
+    {
+      label: 'Total Users',
+      value: state.items?.length ?? 0,
+    },
+    {
+      label: 'Active Users',
+      value: (state.items ?? []).filter(u => u.isActive).length,
+    },
+    {
+      label: 'Administrators',
+      value: (state.items ?? []).filter(u => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN').length,
+    },
+    {
+      label: 'Content Creators',
+      value: (state.items ?? []).filter(u => u.role === 'AUTHOR' || u.role === 'EDITOR').length,
+    },
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600">Manage system users and their permissions</p>
-        </div>
-        <Button onClick={handleCreateNew}>
-          <Plus className="h-4 w-4 mr-2" />
-          New User
-        </Button>
-      </div>
-
-      {/* Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search users..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <select
-                value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value)}
-                className="px-3 py-2 border rounded-md text-sm"
-              >
-                <option value="all">All Roles</option>
-                <option value="SUPER_ADMIN">Super Admin</option>
-                <option value="ADMIN">Admin</option>
-                <option value="EDITOR">Editor</option>
-                <option value="AUTHOR">Author</option>
-                <option value="VIEWER">Viewer</option>
-              </select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{users.length}</div>
-            <p className="text-xs text-muted-foreground">Total Users</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{users.filter(u => u.isActive).length}</div>
-            <p className="text-xs text-muted-foreground">Active Users</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{users.filter(u => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN').length}</div>
-            <p className="text-xs text-muted-foreground">Administrators</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{users.filter(u => u.role === 'AUTHOR' || u.role === 'EDITOR').length}</div>
-            <p className="text-xs text-muted-foreground">Content Creators</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Users ({filteredUsers.length})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Last Updated</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium text-sm">
-                          {user.firstName && user.lastName 
-                            ? `${user.firstName} ${user.lastName}`
-                            : user.username
-                          }
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Mail className="h-3 w-3" />
-                          {user.email}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          @{user.username}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getRoleColor(user.role)}>
-                        <div className="flex items-center gap-1">
-                          {getRoleIcon(user.role)}
-                          {user.role.replace('_', ' ')}
-                        </div>
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={user.isActive ? "default" : "secondary"}>
-                        {user.isActive ? 'Active' : 'Inactive'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm">
-                          {new Date(user.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm">
-                          {new Date(user.updatedAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => handleEdit(user.id)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleToggleActive(user.id)}>
-                            <Shield className="mr-2 h-4 w-4" />
-                            {user.isActive ? 'Deactivate' : 'Activate'}
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem 
-                            onClick={() => handleDelete(user.id)}
-                            className="text-red-600"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <DataTable
+      title="User Management"
+      description="Manage system users and their permissions"
+      data={state.items}
+      columns={columns}
+      actions={tableActions}
+      loading={state.loading}
+      onCreate={handleCreate}
+      createButtonText="New User"
+      searchPlaceholder="Search users..."
+      emptyMessage="No users found"
+      emptyDescription="Create your first user account"
+      filters={filterOptions}
+      stats={stats}
+    />
   );
 }

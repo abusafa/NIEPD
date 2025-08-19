@@ -9,6 +9,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const user = await getUserFromToken(request);
     if (!user || user.role !== 'SUPER_ADMIN') {
       return NextResponse.json(
@@ -18,7 +19,7 @@ export async function GET(
     }
 
     const targetUser = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: {
         id: true,
         email: true,
@@ -56,6 +57,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const adminUser = await getUserFromToken(request);
     if (!adminUser || adminUser.role !== 'SUPER_ADMIN') {
       return NextResponse.json(
@@ -80,7 +82,7 @@ export async function PUT(
       const existingUser = await prisma.user.findFirst({
         where: {
           AND: [
-            { id: { not: params.id } },
+            { id: { not: id } },
             {
               OR: [
                 email ? { email } : {},
@@ -114,7 +116,7 @@ export async function PUT(
     }
 
     const user = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -145,6 +147,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const adminUser = await getUserFromToken(request);
     if (!adminUser || adminUser.role !== 'SUPER_ADMIN') {
       return NextResponse.json(
@@ -154,7 +157,7 @@ export async function DELETE(
     }
 
     // Don't allow deleting yourself
-    if (adminUser.id === params.id) {
+    if (adminUser.id === id) {
       return NextResponse.json(
         { error: 'Cannot delete your own account' },
         { status: 400 }
@@ -162,7 +165,7 @@ export async function DELETE(
     }
 
     await prisma.user.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     return NextResponse.json({ message: 'User deleted successfully' });

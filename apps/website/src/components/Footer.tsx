@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Mail, Phone, MapPin, Twitter, Youtube, Linkedin, ExternalLink } from 'lucide-react';
 import Logo from './Logo';
 
@@ -156,13 +156,13 @@ const Footer: React.FC<FooterProps> = ({ currentLang }) => {
             </p>
             <div className="flex gap-6 text-sm">
               <Link 
-                to="/privacy"
+                href="/privacy"
                 className="text-white/60 hover:text-primary-400 transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 rounded-md"
               >
                 {t.privacy}
               </Link>
               <Link 
-                to="/terms"
+                href="/terms"
                 className="text-white/60 hover:text-primary-400 transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 rounded-md"
               >
                 {t.terms}

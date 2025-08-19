@@ -2,11 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
@@ -18,7 +16,10 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Save, Eye, ArrowLeft, Loader2 } from 'lucide-react';
+import FormLayout from '@/components/shared/FormLayout';
+import BilingualTextFields from '@/components/forms/BilingualTextFields';
+import MediaSelector from '@/components/forms/MediaSelector';
+import PublicationSettings from '@/components/forms/PublicationSettings';
 import LexicalRichTextEditor from './LexicalRichTextEditor';
 
 interface Category {
@@ -158,266 +159,114 @@ export default function NewsForm({ initialData, isEditing = false, newsId }: New
     }
   };
 
+  const handleSave = () => {
+    handleSubmit('DRAFT');
+  };
+
   const handlePreview = () => {
     // Open preview in new tab
     const previewData = encodeURIComponent(JSON.stringify(formData));
     window.open(`/admin/news/preview?data=${previewData}`, '_blank');
   };
 
+  const handleBack = () => {
+    router.push('/admin/news');
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
+    <FormLayout
+      title={isEditing ? 'Edit News Article' : 'Create News Article'}
+      description={isEditing ? 'Update the news article information' : 'Create a new news article for publication'}
+      onBack={handleBack}
+      onSave={handleSave}
+      onPreview={handlePreview}
+      loading={loading}
+      isEditing={isEditing}
+      showPreview={true}
+    >
+      <div className="space-y-6">
+        {/* Bilingual Content Fields */}
+        <BilingualTextFields
+          titleAr={formData.titleAr}
+          titleEn={formData.titleEn}
+          summaryAr={formData.summaryAr}
+          summaryEn={formData.summaryEn}
+          contentAr={formData.contentAr}
+          contentEn={formData.contentEn}
+          onTitleArChange={(value) => handleInputChange('titleAr', value)}
+          onTitleEnChange={(value) => handleInputChange('titleEn', value)}
+          onSummaryArChange={(value) => handleInputChange('summaryAr', value)}
+          onSummaryEnChange={(value) => handleInputChange('summaryEn', value)}
+          onContentArChange={(value) => handleInputChange('contentAr', value)}
+          onContentEnChange={(value) => handleInputChange('contentEn', value)}
+          titleLabel="Article Title"
+          summaryLabel="Article Summary"
+          contentLabel="Article Content"
+          contentRows={8}
+        />
+
+        {/* Author Information */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {isEditing ? 'Edit News Article' : 'Create News Article'}
-            </h1>
-            <p className="text-gray-600">
-              {isEditing ? 'Update the news article information' : 'Create a new news article for publication'}
-            </p>
+            <Label htmlFor="authorEn">Author (English)</Label>
+            <Input
+              id="authorEn"
+              value={formData.authorEn}
+              onChange={(e) => handleInputChange('authorEn', e.target.value)}
+              placeholder="Author name in English"
+            />
+          </div>
+          <div>
+            <Label htmlFor="authorAr">Author (Arabic)</Label>
+            <Input
+              id="authorAr"
+              value={formData.authorAr}
+              onChange={(e) => handleInputChange('authorAr', e.target.value)}
+              placeholder="اسم الكاتب بالعربية"
+              dir="rtl"
+            />
           </div>
         </div>
-        
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handlePreview}>
-            <Eye className="h-4 w-4 mr-2" />
-            Preview
-          </Button>
-          <Button 
-            onClick={() => handleSubmit('DRAFT')} 
-            variant="outline"
-            disabled={loading}
-          >
-            {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-            Save Draft
-          </Button>
-          <Button 
-            onClick={() => handleSubmit('PUBLISHED')} 
-            disabled={loading}
-          >
-            {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-            Publish
-          </Button>
+
+        {/* Featured Image */}
+        <MediaSelector
+          selectedImage={formData.image}
+          onImageSelect={(url) => handleInputChange('image', url)}
+          onImageRemove={() => handleInputChange('image', '')}
+          label="Featured Image"
+        />
+
+        {/* URL Slug */}
+        <div>
+          <Label htmlFor="slug">URL Slug</Label>
+          <Input
+            id="slug"
+            value={formData.slug}
+            onChange={(e) => handleInputChange('slug', e.target.value)}
+            placeholder="article-url-slug"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Used in URLs. Use lowercase letters, numbers, and hyphens only.
+          </p>
         </div>
+
+        {/* Publication Settings */}
+        <PublicationSettings
+          status={formData.status}
+          onStatusChange={(status) => handleInputChange('status', status)}
+          featured={formData.featured}
+          onFeaturedChange={(featured) => handleInputChange('featured', featured)}
+          slug={formData.slug}
+          onSlugChange={(slug) => handleInputChange('slug', slug)}
+          categoryId={formData.categoryId}
+          onCategoryChange={(categoryId) => handleInputChange('categoryId', categoryId)}
+          selectedTags={formData.tagIds}
+          onTagsChange={(tags) => handleInputChange('tagIds', tags)}
+          categories={categories.map(c => ({ id: c.id, nameEn: c.nameEn, nameAr: c.nameAr }))}
+          availableTags={availableTags.map(t => ({ id: t.id, nameEn: t.nameEn, nameAr: t.nameAr }))}
+          showSlug={false} // Already handled above
+        />
       </div>
-
-      {/* Form */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Content</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="english">
-                <TabsList className="mb-4">
-                  <TabsTrigger value="english">English</TabsTrigger>
-                  <TabsTrigger value="arabic">العربية</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="english" className="space-y-4">
-                  <div>
-                    <Label htmlFor="titleEn">Title (English) *</Label>
-                    <Input
-                      id="titleEn"
-                      value={formData.titleEn}
-                      onChange={(e) => handleInputChange('titleEn', e.target.value)}
-                      placeholder="Enter English title"
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="summaryEn">Summary (English)</Label>
-                    <Textarea
-                      id="summaryEn"
-                      value={formData.summaryEn}
-                      onChange={(e) => handleInputChange('summaryEn', e.target.value)}
-                      placeholder="Brief summary in English"
-                      rows={3}
-                    />
-                  </div>
-                  
-                  <div>
-                    <LexicalRichTextEditor
-                      label="Content (English)"
-                      value={formData.contentEn}
-                      onChange={(value) => handleInputChange('contentEn', value)}
-                      placeholder="Full article content in English"
-                      dir="ltr"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="authorEn">Author (English)</Label>
-                    <Input
-                      id="authorEn"
-                      value={formData.authorEn}
-                      onChange={(e) => handleInputChange('authorEn', e.target.value)}
-                      placeholder="Author name in English"
-                    />
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="arabic" className="space-y-4">
-                  <div>
-                    <Label htmlFor="titleAr">العنوان (العربية) *</Label>
-                    <Input
-                      id="titleAr"
-                      value={formData.titleAr}
-                      onChange={(e) => handleInputChange('titleAr', e.target.value)}
-                      placeholder="أدخل العنوان بالعربية"
-                      dir="rtl"
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="summaryAr">الملخص (العربية)</Label>
-                    <Textarea
-                      id="summaryAr"
-                      value={formData.summaryAr}
-                      onChange={(e) => handleInputChange('summaryAr', e.target.value)}
-                      placeholder="ملخص مختصر بالعربية"
-                      rows={3}
-                      dir="rtl"
-                    />
-                  </div>
-                  
-                  <div>
-                    <LexicalRichTextEditor
-                      label="المحتوى (العربية)"
-                      value={formData.contentAr}
-                      onChange={(value) => handleInputChange('contentAr', value)}
-                      placeholder="المحتوى الكامل للمقال بالعربية"
-                      dir="rtl"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="authorAr">الكاتب (العربية)</Label>
-                    <Input
-                      id="authorAr"
-                      value={formData.authorAr}
-                      onChange={(e) => handleInputChange('authorAr', e.target.value)}
-                      placeholder="اسم الكاتب بالعربية"
-                      dir="rtl"
-                    />
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Status */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Publication</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="status">Status</Label>
-                <Select value={formData.status} onValueChange={(value: any) => handleInputChange('status', value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="DRAFT">Draft</SelectItem>
-                    <SelectItem value="REVIEW">Under Review</SelectItem>
-                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="featured"
-                  checked={formData.featured}
-                  onCheckedChange={(checked) => handleInputChange('featured', checked)}
-                />
-                <Label htmlFor="featured">Featured Article</Label>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* SEO & Meta */}
-          <Card>
-            <CardHeader>
-              <CardTitle>SEO & Meta</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="slug">URL Slug</Label>
-                <Input
-                  id="slug"
-                  value={formData.slug}
-                  onChange={(e) => handleInputChange('slug', e.target.value)}
-                  placeholder="url-slug-here"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="image">Featured Image URL</Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Categories & Tags */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Categories & Tags</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="category">Category</Label>
-                <Select value={formData.categoryId} onValueChange={(value) => handleInputChange('categoryId', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map(category => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.nameEn} - {category.nameAr}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label>Tags</Label>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {availableTags.map(tag => (
-                    <Badge
-                      key={tag.id}
-                      variant={formData.tagIds.includes(tag.id) ? "default" : "outline"}
-                      className="cursor-pointer"
-                      onClick={() => handleTagToggle(tag.id)}
-                    >
-                      {tag.nameEn}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
+    </FormLayout>
   );
 }

@@ -25,8 +25,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const faq = await prisma.fAQ.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!faq) {
@@ -52,6 +53,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const user = verifyToken(request);
     if (!user || !['SUPER_ADMIN', 'ADMIN', 'EDITOR'].includes(user.role)) {
       return NextResponse.json(
@@ -64,7 +66,7 @@ export async function PUT(
 
     // Check if FAQ exists
     const existingFaq = await prisma.fAQ.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingFaq) {
@@ -90,7 +92,7 @@ export async function PUT(
     }
 
     const updatedFaq = await prisma.fAQ.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         categorySlug: body.categorySlug || existingFaq.categorySlug,
         questionAr: body.questionAr.trim(),
@@ -120,6 +122,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const user = verifyToken(request);
     if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
       return NextResponse.json(
@@ -130,7 +133,7 @@ export async function DELETE(
 
     // Check if FAQ exists
     const existingFaq = await prisma.fAQ.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingFaq) {
@@ -141,7 +144,7 @@ export async function DELETE(
     }
 
     await prisma.fAQ.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'FAQ deleted successfully' });

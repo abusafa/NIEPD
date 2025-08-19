@@ -12,8 +12,9 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
     const category = await prisma.category.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         parent: true,
         children: true,
@@ -89,7 +90,7 @@ export async function PUT(
 
     // Check if category exists
     const existingCategory = await prisma.category.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingCategory) {
@@ -104,7 +105,7 @@ export async function PUT(
       const slugExists = await prisma.category.findFirst({
         where: { 
           slug,
-          id: { not: params.id },
+          id: { not: id },
         },
       });
 
@@ -117,7 +118,7 @@ export async function PUT(
     }
 
     // Prevent setting parent as self or child
-    if (parentId && parentId === params.id) {
+    if (parentId && parentId === id) {
       return NextResponse.json(
         { error: 'Category cannot be parent of itself' },
         { status: 400 }
@@ -125,7 +126,7 @@ export async function PUT(
     }
 
     const updatedCategory = await prisma.category.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         nameAr,
         nameEn,
@@ -192,7 +193,7 @@ export async function DELETE(
 
     // Check if category exists
     const category = await prisma.category.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         children: true,
         _count: {
@@ -231,7 +232,7 @@ export async function DELETE(
     }
 
     await prisma.category.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ 

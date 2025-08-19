@@ -1,4 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+// CORS headers for cross-origin requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -59,12 +71,12 @@ export async function GET(request: NextRequest) {
       total,
       pages: Math.ceil(total / limit),
       currentPage: page,
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error('Error fetching news:', error);
     return NextResponse.json(
       { error: 'Failed to fetch news' },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

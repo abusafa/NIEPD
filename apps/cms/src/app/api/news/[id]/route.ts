@@ -12,8 +12,9 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
     const news = await prisma.news.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         category: true,
         author: {
@@ -59,6 +60,7 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
@@ -76,11 +78,11 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { tagIds, ...newsData } = body;
+    const { tagIds, categoryId, ...newsData } = body;
 
     // Check if news exists
     const existingNews = await prisma.news.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingNews) {
@@ -90,15 +92,19 @@ export async function PUT(
       );
     }
 
+    // Handle categoryId - convert empty string to null
+    const validCategoryId = categoryId && categoryId !== '' ? categoryId : null;
+
     // Delete existing tags
     await prisma.newsTag.deleteMany({
-      where: { newsId: params.id },
+      where: { newsId: id },
     });
 
     const news = await prisma.news.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...newsData,
+        categoryId: validCategoryId,
         publishedAt: newsData.status === 'PUBLISHED' && !existingNews.publishedAt 
           ? new Date() 
           : existingNews.publishedAt,
@@ -143,6 +149,7 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
@@ -168,7 +175,7 @@ export async function DELETE(
     }
 
     const news = await prisma.news.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!news) {
@@ -179,7 +186,7 @@ export async function DELETE(
     }
 
     await prisma.news.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'News deleted successfully' });

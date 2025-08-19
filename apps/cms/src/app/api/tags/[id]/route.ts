@@ -12,8 +12,9 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
     const tag = await prisma.tag.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         _count: {
           select: {
@@ -86,7 +87,7 @@ export async function PUT(
 
     // Check if tag exists
     const existingTag = await prisma.tag.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingTag) {
@@ -101,7 +102,7 @@ export async function PUT(
       const slugExists = await prisma.tag.findFirst({
         where: { 
           slug,
-          id: { not: params.id },
+          id: { not: id },
         },
       });
 
@@ -114,7 +115,7 @@ export async function PUT(
     }
 
     const updatedTag = await prisma.tag.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         nameAr,
         nameEn,
@@ -178,7 +179,7 @@ export async function DELETE(
 
     // Check if tag exists
     const tag = await prisma.tag.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         _count: {
           select: {
@@ -208,7 +209,7 @@ export async function DELETE(
     }
 
     await prisma.tag.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ 

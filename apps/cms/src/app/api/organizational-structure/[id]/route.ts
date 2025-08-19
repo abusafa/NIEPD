@@ -25,8 +25,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const member = await prisma.organizationalStructure.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!member) {
@@ -52,6 +53,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const user = verifyToken(request);
     if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
       return NextResponse.json(
@@ -64,7 +66,7 @@ export async function PUT(
 
     // Check if member exists
     const existingMember = await prisma.organizationalStructure.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingMember) {
@@ -98,7 +100,7 @@ export async function PUT(
     }
 
     const updatedMember = await prisma.organizationalStructure.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         nameAr: body.nameAr.trim(),
         nameEn: body.nameEn.trim(),
@@ -135,6 +137,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const user = verifyToken(request);
     if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
       return NextResponse.json(
@@ -145,7 +148,7 @@ export async function DELETE(
 
     // Check if member exists
     const existingMember = await prisma.organizationalStructure.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingMember) {
@@ -156,7 +159,7 @@ export async function DELETE(
     }
 
     await prisma.organizationalStructure.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Member deleted successfully' });

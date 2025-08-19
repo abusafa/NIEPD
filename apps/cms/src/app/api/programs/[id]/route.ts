@@ -8,8 +8,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const program = await prisma.program.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         category: {
           select: {
@@ -62,6 +63,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const user = await getUserFromToken(request);
     if (!user) {
       return NextResponse.json(
@@ -91,13 +93,16 @@ export async function PUT(
       tagIds,
     } = body;
 
+    // Handle categoryId - convert empty string to null
+    const validCategoryId = categoryId && categoryId !== '' ? categoryId : null;
+
     // First, delete existing tag relationships
     await prisma.programTag.deleteMany({
-      where: { programId: params.id }
+      where: { programId: id }
     });
 
     const program = await prisma.program.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         titleAr,
         titleEn,
@@ -114,7 +119,7 @@ export async function PUT(
         isFree: Boolean(isFree),
         isCertified: Boolean(isCertified),
         status,
-        categoryId,
+        categoryId: validCategoryId,
         tags: tagIds ? {
           create: tagIds.map((tagId: string) => ({
             tagId,
@@ -166,6 +171,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
     const user = await getUserFromToken(request);
     if (!user) {
       return NextResponse.json(
@@ -176,12 +182,12 @@ export async function DELETE(
 
     // Delete tag relationships first
     await prisma.programTag.deleteMany({
-      where: { programId: params.id }
+      where: { programId: id }
     });
 
     // Then delete the program
     await prisma.program.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     return NextResponse.json({ message: 'Program deleted successfully' });
