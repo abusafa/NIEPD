@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
+import '../index.css'
 import { AppProvider } from '@/contexts/AppContext'
 import { NetworkStatusBanner } from '@/components/ErrorHandling'
 
