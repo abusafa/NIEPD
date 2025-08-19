@@ -3,6 +3,9 @@
     "[project]/src/app/[locale]/about/page": [
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
     ],
+    "[project]/src/app/[locale]/contact/page": [
+      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
+    ],
     "[project]/src/app/[locale]/events/[id]/page": [
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
     ],
@@ -19,6 +22,9 @@
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
     ],
     "[project]/src/app/[locale]/page": [
+      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
+    ],
+    "[project]/src/app/[locale]/partners/page": [
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
     ],
     "[project]/src/app/[locale]/programs/page": [

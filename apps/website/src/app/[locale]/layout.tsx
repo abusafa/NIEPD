@@ -70,10 +70,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             {/* Network Status Banner */}
             <NetworkStatusBanner />
             
-            {/* Skip to content for keyboard and screen readers */}
-            <a href="#main-content" className="skip-link">
-              {config.dir === 'rtl' ? 'تخطي إلى المحتوى' : 'Skip to content'}
-            </a>
+
             
             {children}
           </div>

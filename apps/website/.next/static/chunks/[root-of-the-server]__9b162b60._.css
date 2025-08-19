@@ -815,6 +815,10 @@ img, video {
   right: 2.5rem;
 }
 
+.right-3 {
+  right: .75rem;
+}
+
 .right-4 {
   right: 1rem;
 }
@@ -2078,6 +2082,14 @@ img, video {
   padding-left: 2.5rem;
 }
 
+.pl-4 {
+  padding-left: 1rem;
+}
+
+.pr-10 {
+  padding-right: 2.5rem;
+}
+
 .pr-4 {
   padding-right: 1rem;
 }
@@ -2562,23 +2574,6 @@ html {
   background-color: #fbfcfc;
 }
 
-.skip-link {
-  z-index: 100;
-  color: #162952;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, .1);
-  border-radius: 8px;
-  padding: 8px 12px;
-  position: absolute;
-  top: -40px;
-  left: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
-}
-
-.skip-link:focus {
-  top: 1rem;
-}
-
 html[lang="ar"] {
   direction: rtl;
 }
@@ -3032,28 +3027,6 @@ body:not(.keyboard-navigation) :focus {
   }
 }
 
-.skip-link {
-  z-index: 100;
-  color: #162952;
-  background: #fff;
-  border: 2px solid #00808a;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: top .2s;
-  position: absolute;
-  top: -40px;
-  left: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
-}
-
-.skip-link:focus {
-  outline-offset: 2px;
-  outline: 2px solid #00808a;
-  top: 1rem;
-}
-
 input:focus, textarea:focus, select:focus {
   outline-offset: 2px;
   border-color: #00808a;
@@ -3228,6 +3201,46 @@ th[aria-sort="descending"]:after {
 
 [role="tabpanel"]:focus {
   outline: none;
+}
+
+[dir="rtl"] .faq-content {
+  text-align: right;
+}
+
+[dir="rtl"] .search-input {
+  text-align: right;
+  padding-left: 1rem;
+  padding-right: 2.5rem;
+}
+
+[dir="rtl"] .search-icon {
+  left: auto;
+  right: .75rem;
+}
+
+[dir="ltr"] .search-input {
+  text-align: left;
+  padding-left: 2.5rem;
+  padding-right: 1rem;
+}
+
+[dir="ltr"] .search-icon {
+  left: .75rem;
+  right: auto;
+}
+
+[dir="rtl"] .faq-button {
+  text-align: right;
+}
+
+[dir="rtl"] .faq-question {
+  padding-left: 1rem;
+  padding-right: 0;
+}
+
+[dir="ltr"] .faq-question {
+  padding-left: 0;
+  padding-right: 1rem;
 }
 
 .hover\:-translate-y-0\.5:hover {

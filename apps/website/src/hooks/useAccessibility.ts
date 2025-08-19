@@ -164,27 +164,7 @@ export const useKeyboardNavigation = () => {
   return { handleKeyDown };
 };
 
-// Skip links hook
-export const useSkipLinks = () => {
-  const { currentLang } = useLanguage();
 
-  const skipLinks = [
-    {
-      href: '#main-content',
-      label: currentLang === 'ar' ? 'تخطي إلى المحتوى الرئيسي' : 'Skip to main content'
-    },
-    {
-      href: '#primary-navigation',
-      label: currentLang === 'ar' ? 'تخطي إلى التنقل الرئيسي' : 'Skip to main navigation'
-    },
-    {
-      href: '#footer',
-      label: currentLang === 'ar' ? 'تخطي إلى التذييل' : 'Skip to footer'
-    }
-  ];
-
-  return { skipLinks };
-};
 
 // ARIA attributes helper
 export const useAriaAttributes = () => {

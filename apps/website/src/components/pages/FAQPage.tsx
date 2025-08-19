@@ -123,7 +123,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 py-16" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold text-secondary-700 mb-6">
@@ -139,13 +139,14 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
         <div className="flex flex-col md:flex-row gap-4 items-center max-w-2xl mx-auto">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5" />
+            <Search className={`absolute top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5 ${currentLang === 'ar' ? 'right-3' : 'left-3'}`} />
             <input
               type="text"
               placeholder={t.search}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className={`w-full py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${currentLang === 'ar' ? 'pr-10 pl-4 text-right' : 'pl-10 pr-4 text-left'}`}
+              dir={currentLang === 'ar' ? 'rtl' : 'ltr'}
             />
           </div>
           
@@ -176,10 +177,11 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
               <div key={faq.id} className="bg-white rounded-lg shadow-sm border overflow-hidden">
                 <button
                   onClick={() => toggleItem(faq.id.toString())}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
+                  className={`w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 transition-colors ${currentLang === 'ar' ? 'text-right' : 'text-left'}`}
                   aria-expanded={isExpanded}
+                  dir={currentLang === 'ar' ? 'rtl' : 'ltr'}
                 >
-                  <h3 className="text-lg font-semibold text-secondary-700 flex-1 pr-4">
+                  <h3 className={`text-lg font-semibold text-secondary-700 flex-1 ${currentLang === 'ar' ? 'pl-4' : 'pr-4'}`}>
                     {currentLang === 'ar' ? faq.questionAr : faq.questionEn}
                   </h3>
                   <div className="flex-shrink-0">
@@ -192,9 +194,9 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
                 </button>
                 
                 {isExpanded && (
-                  <div className="px-6 pb-6 animate-fadeIn">
+                  <div className="px-6 pb-6 animate-fadeIn" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
                     <div className="border-t border-neutral-100 pt-4">
-                      <p className="text-neutral-600 leading-relaxed whitespace-pre-wrap">
+                      <p className={`text-neutral-600 leading-relaxed whitespace-pre-wrap ${currentLang === 'ar' ? 'text-right' : 'text-left'}`}>
                         {currentLang === 'ar' ? faq.answerAr : faq.answerEn}
                       </p>
                     </div>

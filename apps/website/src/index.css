@@ -86,22 +86,7 @@ html {
   background-color: #fbfcfc;
 }
 
-/* Skip link utility */
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 1rem;
-  z-index: 100;
-  padding: 8px 12px;
-  background: #ffffff;
-  color: #162952;
-  border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-}
-.skip-link:focus {
-  top: 1rem;
-}
+
 
 /* Arabic pages toggle RTL */
 html[lang="ar"] { 
@@ -792,28 +777,7 @@ body:not(.keyboard-navigation) *:focus {
   }
 }
 
-/* Improved skip link */
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 1rem;
-  z-index: 100;
-  padding: 8px 12px;
-  background: #ffffff;
-  color: #162952;
-  border: 2px solid #00808A;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  font-weight: 600;
-  text-decoration: none;
-  transition: top 0.2s ease;
-}
 
-.skip-link:focus {
-  top: 1rem;
-  outline: 2px solid #00808A;
-  outline-offset: 2px;
-}
 
 /* Accessible form elements */
 input:focus,
@@ -1003,4 +967,46 @@ th[aria-sort="descending"]::after {
 
 [role="tabpanel"]:focus {
   outline: none;
+}
+
+/* RTL-specific FAQ improvements */
+[dir="rtl"] .faq-content {
+  text-align: right;
+}
+
+[dir="rtl"] .search-input {
+  padding-right: 2.5rem;
+  padding-left: 1rem;
+  text-align: right;
+}
+
+[dir="rtl"] .search-icon {
+  right: 0.75rem;
+  left: auto;
+}
+
+[dir="ltr"] .search-input {
+  padding-left: 2.5rem;
+  padding-right: 1rem;
+  text-align: left;
+}
+
+[dir="ltr"] .search-icon {
+  left: 0.75rem;
+  right: auto;
+}
+
+/* RTL button improvements */
+[dir="rtl"] .faq-button {
+  text-align: right;
+}
+
+[dir="rtl"] .faq-question {
+  padding-left: 1rem;
+  padding-right: 0;
+}
+
+[dir="ltr"] .faq-question {
+  padding-right: 1rem;
+  padding-left: 0;
 }
