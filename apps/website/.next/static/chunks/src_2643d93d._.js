@@ -227,7 +227,7 @@ const Header = (param)=>{
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                    href: "/programs",
+                                    href: "/register",
                                     className: "btn-primary hidden md:flex transform hover:scale-105",
                                     children: t.register
                                 }, void 0, false, {
@@ -293,7 +293,7 @@ const Header = (param)=>{
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0))),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                href: "/programs",
+                                href: "/register",
                                 onClick: ()=>setIsMenuOpen(false),
                                 className: "btn-primary mt-4 animate-fade-in-up animate-delay-500 transform hover:scale-105",
                                 children: t.register
@@ -1551,6 +1551,7 @@ __turbopack_context__.s({
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Calendar$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/calendar.js [app-client] (ecmascript) <export default as Calendar>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/clock.js [app-client] (ecmascript) <export default as Clock>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$map$2d$pin$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MapPin$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/map-pin.js [app-client] (ecmascript) <export default as MapPin>");
@@ -1566,6 +1567,7 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 const EventsPage = (param)=>{
     let { currentLang } = param;
     _s();
@@ -1575,6 +1577,7 @@ const EventsPage = (param)=>{
     const [searchTerm, setSearchTerm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [filterStatus, setFilterStatus] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('all');
     const [showFilters, setShowFilters] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const content = {
         ar: {
             title: 'الفعاليات والأنشطة',
@@ -1680,14 +1683,14 @@ const EventsPage = (param)=>{
                         className: "h-12 bg-neutral-200 rounded mb-4 w-1/2 mx-auto"
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 130,
+                        lineNumber: 132,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "h-6 bg-neutral-200 rounded mb-8 w-1/3 mx-auto"
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 131,
+                        lineNumber: 133,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1701,50 +1704,50 @@ const EventsPage = (param)=>{
                                         className: "h-40 bg-neutral-200 rounded mb-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 135,
+                                        lineNumber: 137,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-6 bg-neutral-200 rounded mb-2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 136,
+                                        lineNumber: 138,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-4 bg-neutral-200 rounded mb-4 w-2/3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 137,
+                                        lineNumber: 139,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-4 bg-neutral-200 rounded w-1/2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 138,
+                                        lineNumber: 140,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, i, true, {
                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                lineNumber: 134,
+                                lineNumber: 136,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)))
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 132,
+                        lineNumber: 134,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                lineNumber: 129,
+                lineNumber: 131,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/src/components/pages/EventsPage.tsx",
-            lineNumber: 128,
+            lineNumber: 130,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0));
     }
@@ -1759,7 +1762,7 @@ const EventsPage = (param)=>{
                         children: error
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 151,
+                        lineNumber: 153,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1768,18 +1771,18 @@ const EventsPage = (param)=>{
                         children: currentLang === 'ar' ? 'إعادة المحاولة' : 'Try Again'
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 152,
+                        lineNumber: 154,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                lineNumber: 150,
+                lineNumber: 152,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/src/components/pages/EventsPage.tsx",
-            lineNumber: 149,
+            lineNumber: 151,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0));
     }
@@ -1794,7 +1797,7 @@ const EventsPage = (param)=>{
                         children: t.title
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 167,
+                        lineNumber: 169,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1802,13 +1805,13 @@ const EventsPage = (param)=>{
                         children: t.subtitle
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 170,
+                        lineNumber: 172,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                lineNumber: 166,
+                lineNumber: 168,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1824,7 +1827,7 @@ const EventsPage = (param)=>{
                                         className: "absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 180,
+                                        lineNumber: 182,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1835,13 +1838,13 @@ const EventsPage = (param)=>{
                                         className: "w-full pl-10 pr-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 181,
+                                        lineNumber: 183,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                lineNumber: 179,
+                                lineNumber: 181,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1852,7 +1855,7 @@ const EventsPage = (param)=>{
                                         className: "w-5 h-5"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 195,
+                                        lineNumber: 197,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     t.filters,
@@ -1860,25 +1863,25 @@ const EventsPage = (param)=>{
                                         className: "w-4 h-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 197,
+                                        lineNumber: 199,
                                         columnNumber: 28
                                     }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                         className: "w-4 h-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 197,
+                                        lineNumber: 199,
                                         columnNumber: 64
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                lineNumber: 191,
+                                lineNumber: 193,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 177,
+                        lineNumber: 179,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     showFilters && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1897,23 +1900,23 @@ const EventsPage = (param)=>{
                                     children: t[status]
                                 }, status, false, {
                                     fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                    lineNumber: 206,
+                                    lineNumber: 208,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0)))
                         }, void 0, false, {
                             fileName: "[project]/src/components/pages/EventsPage.tsx",
-                            lineNumber: 204,
+                            lineNumber: 206,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 203,
+                        lineNumber: 205,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                lineNumber: 176,
+                lineNumber: 178,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             filteredEvents.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1923,7 +1926,7 @@ const EventsPage = (param)=>{
                         className: "w-16 h-16 text-neutral-300 mx-auto mb-4"
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 226,
+                        lineNumber: 228,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1931,13 +1934,13 @@ const EventsPage = (param)=>{
                         children: t.noEvents
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 227,
+                        lineNumber: 229,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                lineNumber: 225,
+                lineNumber: 227,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
@@ -1952,12 +1955,12 @@ const EventsPage = (param)=>{
                                     className: "w-full h-48 object-cover"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                    lineNumber: 236,
+                                    lineNumber: 238,
                                     columnNumber: 19
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                lineNumber: 235,
+                                lineNumber: 237,
                                 columnNumber: 17
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1968,7 +1971,7 @@ const EventsPage = (param)=>{
                                         children: t.featured
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 248,
+                                        lineNumber: 250,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1976,7 +1979,7 @@ const EventsPage = (param)=>{
                                         children: currentLang === 'ar' ? event.titleAr : event.titleEn
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 254,
+                                        lineNumber: 256,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1984,7 +1987,7 @@ const EventsPage = (param)=>{
                                         children: currentLang === 'ar' ? event.summaryAr : event.summaryEn
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 259,
+                                        lineNumber: 261,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1997,14 +2000,14 @@ const EventsPage = (param)=>{
                                                         className: "w-4 h-4 mr-2 text-primary-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 267,
+                                                        lineNumber: 269,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: formatDate(event.startDate)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 268,
+                                                        lineNumber: 270,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     event.endDate && event.endDate !== event.startDate && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2016,13 +2019,13 @@ const EventsPage = (param)=>{
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 270,
+                                                        lineNumber: 272,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                lineNumber: 266,
+                                                lineNumber: 268,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             event.startTime && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2032,7 +2035,7 @@ const EventsPage = (param)=>{
                                                         className: "w-4 h-4 mr-2 text-primary-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 277,
+                                                        lineNumber: 279,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2042,13 +2045,13 @@ const EventsPage = (param)=>{
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 278,
+                                                        lineNumber: 280,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                lineNumber: 276,
+                                                lineNumber: 278,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             (event.locationAr || event.locationEn) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2058,20 +2061,20 @@ const EventsPage = (param)=>{
                                                         className: "w-4 h-4 mr-2 text-primary-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 288,
+                                                        lineNumber: 290,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: currentLang === 'ar' ? event.locationAr : event.locationEn
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 289,
+                                                        lineNumber: 291,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                lineNumber: 287,
+                                                lineNumber: 289,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             event.capacity && event.capacity > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2081,7 +2084,7 @@ const EventsPage = (param)=>{
                                                         className: "w-4 h-4 mr-2 text-primary-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 296,
+                                                        lineNumber: 298,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2092,25 +2095,25 @@ const EventsPage = (param)=>{
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 297,
+                                                        lineNumber: 299,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                lineNumber: 295,
+                                                lineNumber: 297,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 264,
+                                        lineNumber: 266,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "flex gap-2",
                                         children: [
-                                            event.registrationUrl && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                            event.registrationUrl ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
                                                 href: event.registrationUrl,
                                                 target: "_blank",
                                                 rel: "noopener noreferrer",
@@ -2120,55 +2123,77 @@ const EventsPage = (param)=>{
                                                         className: "w-4 h-4 mr-2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                        lineNumber: 311,
+                                                        lineNumber: 313,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     t.register
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                lineNumber: 305,
+                                                lineNumber: 307,
+                                                columnNumber: 21
+                                            }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>router.push("/register?event=".concat(event.id)),
+                                                className: "flex-1 btn-primary",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$external$2d$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ExternalLink$3e$__["ExternalLink"], {
+                                                        className: "w-4 h-4 mr-2"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/pages/EventsPage.tsx",
+                                                        lineNumber: 321,
+                                                        columnNumber: 23
+                                                    }, ("TURBOPACK compile-time value", void 0)),
+                                                    t.register
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/pages/EventsPage.tsx",
+                                                lineNumber: 317,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>router.push("/events/".concat(event.id)),
                                                 className: "flex-1 btn-secondary",
                                                 children: t.learnMore
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                                lineNumber: 315,
+                                                lineNumber: 325,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                        lineNumber: 303,
+                                        lineNumber: 305,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                                lineNumber: 245,
+                                lineNumber: 247,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, event.id, true, {
                         fileName: "[project]/src/components/pages/EventsPage.tsx",
-                        lineNumber: 232,
+                        lineNumber: 234,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0)))
             }, void 0, false, {
                 fileName: "[project]/src/components/pages/EventsPage.tsx",
-                lineNumber: 230,
+                lineNumber: 232,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/pages/EventsPage.tsx",
-        lineNumber: 164,
+        lineNumber: 166,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s(EventsPage, "XOCk9EepSNr+yZ4b08bX/tG/VT8=");
+_s(EventsPage, "n4qbDfKOdFosCrgULttgP+hjKmA=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
+    ];
+});
 _c = EventsPage;
 const __TURBOPACK__default__export__ = EventsPage;
 var _c;
@@ -2203,7 +2228,7 @@ function Events() {
     _s();
     const { currentLang, setLanguage } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$contexts$2f$AppContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useLanguage"])();
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ErrorBoundary$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-        level: "page",
+        level: "component",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 currentLang: currentLang,

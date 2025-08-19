@@ -9,7 +9,7 @@ export default function ContactPage() {
   const { currentLang, setLanguage } = useLanguage()
 
   return (
-    <ErrorBoundary level="page">
+    <ErrorBoundary level="component">
       <Header 
         currentLang={currentLang}
         setCurrentLang={setLanguage}

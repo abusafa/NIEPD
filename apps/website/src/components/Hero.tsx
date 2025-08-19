@@ -26,7 +26,7 @@ const Hero: React.FC<HeroProps> = ({
   onSecondaryClick,
   showLogo = true,
   backgroundVariant = 'default',
-  videoSrc = '/vidoes/215475_small.mp4',
+  videoSrc = '/videos/215475_small.mp4',
   className = ''
 }) => {
   const heroRef = useRef<HTMLElement>(null);

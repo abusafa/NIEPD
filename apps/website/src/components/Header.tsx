@@ -110,7 +110,7 @@ const Header: React.FC<HeaderProps> = ({
             </button>
 
             <Link 
-              href="/programs"
+              href="/register"
               className="btn-primary hidden md:flex transform hover:scale-105"
             >
               {t.register}
@@ -153,7 +153,7 @@ const Header: React.FC<HeaderProps> = ({
                 </Link>
               ))}
               <Link 
-                href="/programs"
+                href="/register"
                 onClick={() => setIsMenuOpen(false)}
                 className="btn-primary mt-4 animate-fade-in-up animate-delay-500 transform hover:scale-105"
               >

@@ -267,7 +267,7 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
         onPrimaryClick={handlePrimaryClick}
         secondaryButtonText={t.learnMore}
         onSecondaryClick={handleSecondaryClick}
-        backgroundVariant="gradient"
+        backgroundVariant="video"
         currentLang={currentLang}
       />
 

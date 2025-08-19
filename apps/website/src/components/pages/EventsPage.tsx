@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Calendar, Clock, MapPin, Users, ExternalLink, Search, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyEvent as Event } from '@/types';
@@ -14,6 +15,7 @@ const EventsPage: React.FC<EventsPageProps> = ({ currentLang }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+  const router = useRouter();
 
   const content = {
     ar: {
@@ -301,7 +303,7 @@ const EventsPage: React.FC<EventsPageProps> = ({ currentLang }) => {
                 
                 {/* Action Buttons */}
                 <div className="flex gap-2">
-                  {event.registrationUrl && (
+                  {event.registrationUrl ? (
                     <a
                       href={event.registrationUrl}
                       target="_blank"
@@ -311,8 +313,19 @@ const EventsPage: React.FC<EventsPageProps> = ({ currentLang }) => {
                       <ExternalLink className="w-4 h-4 mr-2" />
                       {t.register}
                     </a>
+                  ) : (
+                    <button 
+                      onClick={() => router.push(`/register?event=${event.id}`)}
+                      className="flex-1 btn-primary"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      {t.register}
+                    </button>
                   )}
-                  <button className="flex-1 btn-secondary">
+                  <button 
+                    onClick={() => router.push(`/events/${event.id}`)}
+                    className="flex-1 btn-secondary"
+                  >
                     {t.learnMore}
                   </button>
                 </div>

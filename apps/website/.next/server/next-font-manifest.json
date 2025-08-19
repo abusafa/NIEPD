@@ -6,6 +6,9 @@
     "[project]/src/app/about/page": [
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
     ],
+    "[project]/src/app/contact/page": [
+      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
+    ],
     "[project]/src/app/events/page": [
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
     ],
@@ -13,9 +16,6 @@
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
     ],
     "[project]/src/app/news/page": [
-      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
-    ],
-    "[project]/src/app/page": [
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2"
     ],
     "[project]/src/app/partners/page": [

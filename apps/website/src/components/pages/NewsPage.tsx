@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Calendar, User, Eye, Share2, Search, Filter, ChevronDown, ChevronUp, Tag } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyNewsItem as NewsItem } from '@/types';
@@ -14,6 +15,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+  const router = useRouter();
 
   const content = {
     ar: {
@@ -284,7 +286,10 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
                   </div>
                   
                   {/* Action Button */}
-                  <button className="btn-primary self-start">
+                  <button 
+                    onClick={() => router.push(`/news/${item.id}`)}
+                    className="btn-primary self-start"
+                  >
                     {t.readMore}
                   </button>
                 </div>
@@ -353,7 +358,10 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
                     
                     {/* Action Buttons */}
                     <div className="flex gap-2">
-                      <button className="flex-1 btn-primary">
+                      <button 
+                        onClick={() => router.push(`/news/${item.id}`)}
+                        className="flex-1 btn-primary"
+                      >
                         {t.viewDetails}
                       </button>
                       <button className="btn-secondary px-3">

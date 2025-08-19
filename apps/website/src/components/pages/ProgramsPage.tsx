@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { BookOpen, Clock, Users, Award, Star, Search, Filter, ChevronDown, ChevronUp, Tag } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyProgram as Program } from '@/types';
@@ -15,6 +16,7 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang }) => {
   const [filterLevel, setFilterLevel] = useState('all');
   const [filterType, setFilterType] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+  const router = useRouter();
 
   const content = {
     ar: {
@@ -360,11 +362,17 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang }) => {
                 
                 {/* Action Buttons */}
                 <div className="flex gap-2">
-                  <button className="flex-1 btn-primary">
+                  <button 
+                    onClick={() => router.push(`/register?program=${program.id}`)}
+                    className="flex-1 btn-primary"
+                  >
                     <BookOpen className="w-4 h-4 mr-2" />
                     {t.startLearning}
                   </button>
-                  <button className="flex-1 btn-secondary">
+                  <button 
+                    onClick={() => router.push(`/programs/${program.id}`)}
+                    className="flex-1 btn-secondary"
+                  >
                     {t.learnMore}
                   </button>
                 </div>

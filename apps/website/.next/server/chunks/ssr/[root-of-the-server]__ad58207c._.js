@@ -213,7 +213,7 @@ const Header = ({ currentLang, setCurrentLang, currentPage })=>{
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                    href: "/programs",
+                                    href: "/register",
                                     className: "btn-primary hidden md:flex transform hover:scale-105",
                                     children: t.register
                                 }, void 0, false, {
@@ -279,7 +279,7 @@ const Header = ({ currentLang, setCurrentLang, currentPage })=>{
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0))),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                href: "/programs",
+                                href: "/register",
                                 onClick: ()=>setIsMenuOpen(false),
                                 className: "btn-primary mt-4 animate-fade-in-up animate-delay-500 transform hover:scale-105",
                                 children: t.register
@@ -1583,6 +1583,7 @@ __turbopack_context__.s({
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Calendar$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/calendar.js [app-ssr] (ecmascript) <export default as Calendar>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/user.js [app-ssr] (ecmascript) <export default as User>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/eye.js [app-ssr] (ecmascript) <export default as Eye>");
@@ -1597,6 +1598,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b
 ;
 ;
 ;
+;
 const NewsPage = ({ currentLang })=>{
     const [newsItems, setNewsItems] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
@@ -1604,6 +1606,7 @@ const NewsPage = ({ currentLang })=>{
     const [searchTerm, setSearchTerm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [filterCategory, setFilterCategory] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('all');
     const [showFilters, setShowFilters] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
     const content = {
         ar: {
             title: 'الأخبار والمستجدات',
@@ -1700,14 +1703,14 @@ const NewsPage = ({ currentLang })=>{
                         className: "h-12 bg-neutral-200 rounded mb-4 w-1/2 mx-auto"
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 126,
+                        lineNumber: 128,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "h-6 bg-neutral-200 rounded mb-8 w-1/3 mx-auto"
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 127,
+                        lineNumber: 129,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1721,50 +1724,50 @@ const NewsPage = ({ currentLang })=>{
                                         className: "h-40 bg-neutral-200 rounded mb-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 131,
+                                        lineNumber: 133,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-6 bg-neutral-200 rounded mb-2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 132,
+                                        lineNumber: 134,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-4 bg-neutral-200 rounded mb-4 w-2/3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 133,
+                                        lineNumber: 135,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-4 bg-neutral-200 rounded w-1/2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 134,
+                                        lineNumber: 136,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, i, true, {
                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                lineNumber: 130,
+                                lineNumber: 132,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)))
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 128,
+                        lineNumber: 130,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                lineNumber: 125,
+                lineNumber: 127,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/src/components/pages/NewsPage.tsx",
-            lineNumber: 124,
+            lineNumber: 126,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0));
     }
@@ -1779,7 +1782,7 @@ const NewsPage = ({ currentLang })=>{
                         children: error
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 147,
+                        lineNumber: 149,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1788,18 +1791,18 @@ const NewsPage = ({ currentLang })=>{
                         children: currentLang === 'ar' ? 'إعادة المحاولة' : 'Try Again'
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 148,
+                        lineNumber: 150,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                lineNumber: 146,
+                lineNumber: 148,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/src/components/pages/NewsPage.tsx",
-            lineNumber: 145,
+            lineNumber: 147,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0));
     }
@@ -1814,7 +1817,7 @@ const NewsPage = ({ currentLang })=>{
                         children: t.title
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 163,
+                        lineNumber: 165,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1822,13 +1825,13 @@ const NewsPage = ({ currentLang })=>{
                         children: t.subtitle
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 166,
+                        lineNumber: 168,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                lineNumber: 162,
+                lineNumber: 164,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1844,7 +1847,7 @@ const NewsPage = ({ currentLang })=>{
                                         className: "absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 176,
+                                        lineNumber: 178,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1855,13 +1858,13 @@ const NewsPage = ({ currentLang })=>{
                                         className: "w-full pl-10 pr-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 177,
+                                        lineNumber: 179,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                lineNumber: 175,
+                                lineNumber: 177,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1872,7 +1875,7 @@ const NewsPage = ({ currentLang })=>{
                                         className: "w-5 h-5"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 191,
+                                        lineNumber: 193,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     t.filters,
@@ -1880,25 +1883,25 @@ const NewsPage = ({ currentLang })=>{
                                         className: "w-4 h-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 193,
+                                        lineNumber: 195,
                                         columnNumber: 28
                                     }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                         className: "w-4 h-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 193,
+                                        lineNumber: 195,
                                         columnNumber: 64
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                lineNumber: 187,
+                                lineNumber: 189,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 173,
+                        lineNumber: 175,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     showFilters && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1912,7 +1915,7 @@ const NewsPage = ({ currentLang })=>{
                                     children: t.all
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                    lineNumber: 201,
+                                    lineNumber: 203,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1921,7 +1924,7 @@ const NewsPage = ({ currentLang })=>{
                                     children: t.featured
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                    lineNumber: 211,
+                                    lineNumber: 213,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 categories.map((category)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1930,24 +1933,24 @@ const NewsPage = ({ currentLang })=>{
                                         children: category
                                     }, category, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 222,
+                                        lineNumber: 224,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                            lineNumber: 200,
+                            lineNumber: 202,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 199,
+                        lineNumber: 201,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                lineNumber: 172,
+                lineNumber: 174,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             filteredNews.filter((item)=>item.featured).length > 0 && filterCategory === 'all' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1958,7 +1961,7 @@ const NewsPage = ({ currentLang })=>{
                         children: t.featured
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 242,
+                        lineNumber: 244,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1974,12 +1977,12 @@ const NewsPage = ({ currentLang })=>{
                                             className: "w-full h-48 lg:h-full object-cover"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                            lineNumber: 249,
+                                            lineNumber: 251,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 248,
+                                        lineNumber: 250,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1990,7 +1993,7 @@ const NewsPage = ({ currentLang })=>{
                                                 children: t.featured
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                lineNumber: 260,
+                                                lineNumber: 262,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1998,7 +2001,7 @@ const NewsPage = ({ currentLang })=>{
                                                 children: currentLang === 'ar' ? item.titleAr : item.titleEn
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                lineNumber: 265,
+                                                lineNumber: 267,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2006,7 +2009,7 @@ const NewsPage = ({ currentLang })=>{
                                                 children: truncateText(currentLang === 'ar' ? item.summaryAr : item.summaryEn, 120)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                lineNumber: 270,
+                                                lineNumber: 272,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2019,20 +2022,20 @@ const NewsPage = ({ currentLang })=>{
                                                                 className: "w-4 h-4 mr-1"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                                lineNumber: 277,
+                                                                lineNumber: 279,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 children: currentLang === 'ar' ? item.authorAr : item.authorEn
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                                lineNumber: 278,
+                                                                lineNumber: 280,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                        lineNumber: 276,
+                                                        lineNumber: 278,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2042,57 +2045,58 @@ const NewsPage = ({ currentLang })=>{
                                                                 className: "w-4 h-4 mr-1"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                                lineNumber: 281,
+                                                                lineNumber: 283,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 children: formatDate(currentLang === 'ar' ? item.dateAr : item.dateEn)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                                lineNumber: 282,
+                                                                lineNumber: 284,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                        lineNumber: 280,
+                                                        lineNumber: 282,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                lineNumber: 275,
+                                                lineNumber: 277,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>router.push(`/news/${item.id}`),
                                                 className: "btn-primary self-start",
                                                 children: t.readMore
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                lineNumber: 287,
+                                                lineNumber: 289,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 258,
+                                        lineNumber: 260,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, item.id, true, {
                                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                lineNumber: 245,
+                                lineNumber: 247,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)))
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 243,
+                        lineNumber: 245,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                lineNumber: 241,
+                lineNumber: 243,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             filteredNews.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2102,7 +2106,7 @@ const NewsPage = ({ currentLang })=>{
                         className: "w-16 h-16 text-neutral-300 mx-auto mb-4"
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 300,
+                        lineNumber: 305,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2110,13 +2114,13 @@ const NewsPage = ({ currentLang })=>{
                         children: t.noNews
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                        lineNumber: 301,
+                        lineNumber: 306,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                lineNumber: 299,
+                lineNumber: 304,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 children: filterCategory !== 'featured' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2132,12 +2136,12 @@ const NewsPage = ({ currentLang })=>{
                                         className: "w-full h-48 object-cover"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                        lineNumber: 314,
+                                        lineNumber: 319,
                                         columnNumber: 23
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                    lineNumber: 313,
+                                    lineNumber: 318,
                                     columnNumber: 21
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2150,14 +2154,14 @@ const NewsPage = ({ currentLang })=>{
                                                     className: "w-3 h-3 mr-1 inline"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                    lineNumber: 327,
+                                                    lineNumber: 332,
                                                     columnNumber: 25
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 item.category
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                            lineNumber: 326,
+                                            lineNumber: 331,
                                             columnNumber: 23
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -2165,7 +2169,7 @@ const NewsPage = ({ currentLang })=>{
                                             children: currentLang === 'ar' ? item.titleAr : item.titleEn
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                            lineNumber: 333,
+                                            lineNumber: 338,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2173,7 +2177,7 @@ const NewsPage = ({ currentLang })=>{
                                             children: truncateText(currentLang === 'ar' ? item.summaryAr : item.summaryEn)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                            lineNumber: 338,
+                                            lineNumber: 343,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2186,20 +2190,20 @@ const NewsPage = ({ currentLang })=>{
                                                             className: "w-4 h-4 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                            lineNumber: 345,
+                                                            lineNumber: 350,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: currentLang === 'ar' ? item.authorAr : item.authorEn
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                            lineNumber: 346,
+                                                            lineNumber: 351,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                    lineNumber: 344,
+                                                    lineNumber: 349,
                                                     columnNumber: 23
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2209,37 +2213,38 @@ const NewsPage = ({ currentLang })=>{
                                                             className: "w-4 h-4 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                            lineNumber: 349,
+                                                            lineNumber: 354,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: formatDate(currentLang === 'ar' ? item.dateAr : item.dateEn)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                            lineNumber: 350,
+                                                            lineNumber: 355,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                    lineNumber: 348,
+                                                    lineNumber: 353,
                                                     columnNumber: 23
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                            lineNumber: 343,
+                                            lineNumber: 348,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "flex gap-2",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    onClick: ()=>router.push(`/news/${item.id}`),
                                                     className: "flex-1 btn-primary",
                                                     children: t.viewDetails
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                    lineNumber: 356,
+                                                    lineNumber: 361,
                                                     columnNumber: 23
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2248,46 +2253,46 @@ const NewsPage = ({ currentLang })=>{
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                        lineNumber: 360,
+                                                        lineNumber: 368,
                                                         columnNumber: 25
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                                    lineNumber: 359,
+                                                    lineNumber: 367,
                                                     columnNumber: 23
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                            lineNumber: 355,
+                                            lineNumber: 360,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                                    lineNumber: 323,
+                                    lineNumber: 328,
                                     columnNumber: 19
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, item.id, true, {
                             fileName: "[project]/src/components/pages/NewsPage.tsx",
-                            lineNumber: 310,
+                            lineNumber: 315,
                             columnNumber: 17
                         }, ("TURBOPACK compile-time value", void 0)))
                 }, void 0, false, {
                     fileName: "[project]/src/components/pages/NewsPage.tsx",
-                    lineNumber: 306,
+                    lineNumber: 311,
                     columnNumber: 13
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/components/pages/NewsPage.tsx",
-                lineNumber: 304,
+                lineNumber: 309,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/pages/NewsPage.tsx",
-        lineNumber: 160,
+        lineNumber: 162,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -2315,7 +2320,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$pages$2
 function News() {
     const { currentLang, setLanguage } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$contexts$2f$AppContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useLanguage"])();
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ErrorBoundary$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-        level: "page",
+        level: "component",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Header$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                 currentLang: currentLang,
