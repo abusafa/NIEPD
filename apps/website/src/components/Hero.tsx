@@ -34,11 +34,27 @@ const Hero: React.FC<HeroProps> = ({
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
+    // Simple timeout to show content immediately
+    const timer = setTimeout(() => {
+      if (contentRef.current) {
+        const elements = contentRef.current.querySelectorAll('.scroll-animate');
+        elements.forEach((element, index) => {
+          setTimeout(() => {
+            element.classList.remove('opacity-0', 'translate-y-8', 'translate-y-6', 'translate-y-4');
+            element.classList.add('opacity-100', 'translate-y-0');
+          }, index * 200);
+        });
+      }
+    }, 500);
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('animate-on-scroll');
+            // Also trigger immediate animation
+            entry.target.classList.remove('opacity-0', 'translate-y-8', 'translate-y-6', 'translate-y-4');
+            entry.target.classList.add('opacity-100', 'translate-y-0');
           }
         });
       },
@@ -76,6 +92,7 @@ const Hero: React.FC<HeroProps> = ({
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
+      clearTimeout(timer);
       observer.disconnect();
       window.removeEventListener('scroll', handleScroll);
     };

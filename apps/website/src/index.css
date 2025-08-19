@@ -499,7 +499,19 @@ html[lang="en"] {
   }
   
   .section-spacing {
-    @apply py-16 md:py-24;
+    @apply py-12 sm:py-16 md:py-20 lg:py-24;
+  }
+  
+  .section-spacing-sm {
+    @apply py-8 sm:py-12 md:py-16;
+  }
+
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-width {
+    @apply max-w-7xl mx-auto;
   }
   
   .hero-gradient {

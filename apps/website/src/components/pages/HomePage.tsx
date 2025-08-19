@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BookOpen, Users, Award, TrendingUp, Calendar, ExternalLink, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import Hero from '../Hero';
 import FeaturedPrograms from '../FeaturedPrograms';
 import VisionMission from '../VisionMission';
-import { dataService } from '@/lib/api';
+import { dataService, SiteSettings } from '@/lib/api';
 import { Statistics, LegacyNewsItem as NewsItem } from '@/types';
 
 interface HomePageProps {
@@ -121,99 +122,153 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ value, duration = 200
 };
 
 const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
+  const router = useRouter();
   const [statistics, setStatistics] = useState<Statistics | null>(null);
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const content = {
     ar: {
       heroTitle: 'المعهد الوطني للتطوير المهني التعليمي',
       heroSubtitle: 'نطور قدرات المعلمين والقيادات التعليمية لتحقيق التميز في التعليم',
       explorePrograms: 'استكشف البرامج',
       learnMore: 'اعرف المزيد',
-
-
       latestNews: 'آخر الأخبار',
-      newsTitle1: 'إطلاق المرحلة الثانية من البرامج التطويرية',
-      newsTitle2: 'شراكة مع جامعة سنغافورة الوطنية',
-      newsTitle3: 'مؤتمر التطوير المهني للمعلمين 2024',
-      readMore: 'اقرأ المزيد',
-      stats: 'إحصائيات المعهد',
       trainedTeachers: 'معلم مدرب',
       programs: 'برنامج',
       partners: 'شريك',
       satisfactionRate: 'معدل الرضا',
-      registerNow: 'سجل الآن',
-      contactUs: 'اتصل بنا'
     },
     en: {
       heroTitle: 'National Institute for Professional Educational Development',
-      heroSubtitle: 'Developing teachers and educational leaders capabilities to achieve excellence in education',
+      heroSubtitle: 'Developing the capabilities of teachers and educational leaders to achieve excellence in education',
       explorePrograms: 'Explore Programs',
       learnMore: 'Learn More',
-
-
       latestNews: 'Latest News',
-      newsTitle1: 'Launch of Second Phase of Development Programs',
-      newsTitle2: 'Partnership with National University of Singapore',
-      newsTitle3: 'Teachers Professional Development Conference 2024',
-      readMore: 'Read More',
-      stats: 'Institute Statistics',
       trainedTeachers: 'Trained Teachers',
       programs: 'Programs',
       partners: 'Partners',
       satisfactionRate: 'Satisfaction Rate',
-      registerNow: 'Register Now',
-      contactUs: 'Contact Us'
     }
   };
 
   const t = content[currentLang];
-  const ArrowIcon = currentLang === 'ar' ? ArrowLeft : ArrowRight;
 
-  // Fetch data
+  // Fetch data on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statsData, newsData] = await Promise.all([
+        setLoading(true);
+        setError(null);
+        // console.log('Starting data fetch...');
+
+        const [statsData, newsData, settingsData] = await Promise.all([
           dataService.getStatistics(),
-          dataService.getNews()
+          dataService.getNews(),
+          dataService.getSiteSettings()
         ]);
+
+        // console.log('Data fetching completed:', { statsData, newsData, settingsData });
+
         setStatistics(statsData);
-        setNewsItems(newsData.slice(0, 3)); // Get first 3 news items
-      } catch (error) {
-        console.error('Error fetching data:', error);
+        setNewsItems(newsData || []);
+        setSiteSettings(settingsData);
+      } catch (err) {
+        console.error('Error fetching homepage data:', err);
+        setError('Failed to load homepage data');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  // Transform news items for display
-  const displayNewsItems = newsItems.map(item => ({
-    title: currentLang === 'ar' ? item.titleAr : item.titleEn,
-    date: currentLang === 'ar' ? item.dateAr : item.dateEn,
-    image: item.image
-  }));
+  // Get hero content from site settings or use fallback
+  const getHeroContent = () => {
+    // console.log('Getting hero content, siteSettings:', siteSettings);
+    
+    if (siteSettings) {
+      const siteName = siteSettings.site_name;
+      const tagline = siteSettings.site_tagline;
+      
+      if (siteName && tagline) {
+        const title = currentLang === 'ar' ? siteName.valueAr : siteName.valueEn;
+        const subtitle = currentLang === 'ar' ? tagline.valueAr : tagline.valueEn;
+        
+        // console.log('Using CMS content - Title:', title, 'Subtitle:', subtitle);
+        return {
+          title: title || t.heroTitle,
+          subtitle: subtitle || t.heroSubtitle
+        };
+      }
+    }
+    
+    // console.log('Using fallback content');
+    return {
+      title: t.heroTitle,
+      subtitle: t.heroSubtitle
+    };
+  };
 
-  // Create stats array from fetched data
-  const stats = statistics ? [
-    { number: statistics.trainedTeachers, label: t.trainedTeachers, icon: Users },
-    { number: statistics.programs, label: t.programs, icon: BookOpen },
-    { number: statistics.partners, label: t.partners, icon: Award },
-    { number: statistics.satisfactionRate, label: t.satisfactionRate, icon: TrendingUp }
-  ] : [];
+  const heroContent = getHeroContent();
+
+  // Navigation functions for Hero component
+  const handlePrimaryClick = () => {
+    router.push('/programs');
+  };
+
+  const handleSecondaryClick = () => {
+    router.push('/about');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">خطأ في التحميل</h1>
+          <p className="text-gray-600">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+          >
+            إعادة المحاولة
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Create stats array from fetched data or use fallback
+  const stats = [
+    { number: statistics?.trainedTeachers || '15,000+', label: t.trainedTeachers, icon: Users },
+    { number: statistics?.programs || '50+', label: t.programs, icon: BookOpen },
+    { number: statistics?.partners || '25+', label: t.partners, icon: Award },
+    { number: statistics?.satisfactionRate || '95%', label: t.satisfactionRate, icon: TrendingUp }
+  ];
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <Hero
-        currentLang={currentLang}
-        title={t.heroTitle}
-        subtitle={t.heroSubtitle}
+      {/* Enhanced Hero Section */}
+      <Hero 
+        title={heroContent.title}
+        subtitle={heroContent.subtitle}
         primaryButtonText={t.explorePrograms}
+        onPrimaryClick={handlePrimaryClick}
         secondaryButtonText={t.learnMore}
-        showLogo={true}
-        backgroundVariant="video"
-        videoSrc="/vidoes/215475_small.mp4"
+        onSecondaryClick={handleSecondaryClick}
+        backgroundVariant="gradient"
+        currentLang={currentLang}
       />
 
       {/* Enhanced Vision & Mission */}
@@ -224,7 +279,6 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
 
       {/* Statistics */}
       <section className="section-spacing hero-gradient text-white overflow-hidden relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-secondary-700/20"></div>
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -248,7 +302,7 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
                   <AnimatedCounter 
                     value={stat.number} 
                     duration={2000}
-                    className="stats-counter mb-3 group-hover:scale-110 transition-transform duration-300"
+                    className="text-4xl md:text-5xl font-bold text-white mb-3 group-hover:scale-110 transition-transform duration-300 stats-counter"
                   />
                   <div className="text-white/90 text-lg font-medium">{stat.label}</div>
                 </div>
@@ -268,67 +322,60 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
             <p className="text-xl text-secondary-600 max-w-2xl mx-auto">
               {currentLang === 'ar' 
                 ? 'تابع آخر أخبارنا وفعالياتنا ومستجداتنا في عالم التطوير المهني'
-                : 'Follow our latest news, events, and updates in the world of professional development'
+                : 'Follow our latest news, events, and updates in professional development'
               }
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayNewsItems.map((item, index) => (
-              <article key={index} className="card group">
-                <div className="relative mb-4 overflow-hidden rounded-lg image-hover-zoom">
-                  <img 
-                    src={item.image} 
-                    alt={item.title}
-                    className="w-full h-48 object-cover transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-primary-700">
-                    {currentLang === 'ar' ? 'جديد' : 'New'}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-primary-600 mb-4 group-hover:text-primary-700 transition-colors duration-300">
-                  <Calendar className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                  <time>{item.date}</time>
-                </div>
-                <h3 className="text-xl font-bold text-secondary-700 mb-4 leading-snug group-hover:text-primary-600 transition-colors duration-300">
-                  {item.title}
-                </h3>
-                <button className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium group-hover:gap-3 transition-all duration-300">
-                  {t.readMore}
-                  <ArrowIcon className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="section-spacing bg-gradient-to-br from-primary-50 via-white to-secondary-50 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-primary-100/50 to-transparent rounded-full -translate-y-48 translate-x-48"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-secondary-100/50 to-transparent rounded-full translate-y-48 -translate-x-48"></div>
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center relative">
-            <h2 className="text-4xl md:text-5xl font-bold text-secondary-700 mb-8 text-gradient-animated">
-              {currentLang === 'ar' ? 'انضم إلى رحلة التطوير المهني' : 'Join the Professional Development Journey'}
-            </h2>
-            <p className="text-xl text-secondary-600 mb-12 leading-relaxed max-w-3xl mx-auto">
-              {currentLang === 'ar' 
-                ? 'ابدأ رحلتك في التطوير المهني واكتشف برامجنا المتنوعة المصممة لتطوير قدراتك التعليمية'
-                : 'Start your professional development journey and discover our diverse programs designed to enhance your educational capabilities'
-              }
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button className="btn-primary text-lg px-10 py-4 animate-pulse-subtle transform hover:scale-105">
-                {t.explorePrograms}
-                <ArrowIcon className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
-              <button className="btn-secondary text-lg px-10 py-4 transform hover:scale-105">
-                {t.contactUs}
-                <ExternalLink className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-              </button>
+          {newsItems.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {newsItems.slice(0, 3).map((item, index) => (
+                <article key={item.id || index} className="card group hover:shadow-lg transition-all duration-300">
+                  <div className="relative overflow-hidden rounded-lg mb-6">
+                    <img 
+                      src={item.image || '/images/news-placeholder.jpg'} 
+                      alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-4 right-4 bg-primary-600 text-white px-3 py-1 rounded-full text-sm">
+                      {item.category || 'أخبار'}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 text-sm text-secondary-500">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>{currentLang === 'ar' ? item.dateAr : item.dateEn}</span>
+                      </div>
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-secondary-700 group-hover:text-primary-600 transition-colors duration-300">
+                      {currentLang === 'ar' ? item.titleAr : item.titleEn}
+                    </h3>
+                    
+                    <p className="text-secondary-600 line-clamp-2">
+                      {currentLang === 'ar' ? item.summaryAr : item.summaryEn}
+                    </p>
+                    
+                    <div className="flex items-center justify-between pt-4">
+                      <button className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-2 group-hover:gap-3 transition-all duration-300">
+                        {currentLang === 'ar' ? 'اقرأ المزيد' : 'Read More'}
+                        {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+                      </button>
+                      <ExternalLink className="w-4 h-4 text-secondary-400" />
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
-          </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-secondary-500">
+                {currentLang === 'ar' ? 'لا توجد أخبار متاحة حالياً' : 'No news available at the moment'}
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </div>

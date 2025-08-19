@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({
   const t = content[currentLang];
 
   const navigation = [
-    { key: 'home' as Page, label: t.home, path: '/home' },
+    { key: 'home' as Page, label: t.home, path: '/' },
     { key: 'about' as Page, label: t.about, path: '/about' },
     { key: 'programs' as Page, label: t.programs, path: '/programs' },
     { key: 'news' as Page, label: t.news, path: '/news' },

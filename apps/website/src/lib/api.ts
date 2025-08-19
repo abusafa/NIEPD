@@ -280,6 +280,19 @@ export const cmsApi = {
 }
 
 // Legacy API compatibility layer - transforms CMS data to legacy format
+// Site Settings Interface
+export interface SiteSettings {
+  site_name: {
+    valueAr: string;
+    valueEn: string;
+  };
+  site_tagline: {
+    valueAr: string;
+    valueEn: string;
+  };
+  [key: string]: any;
+}
+
 export const dataService = {
   // Events
   async getEvents(): Promise<LegacyEvent[]> {
@@ -410,15 +423,60 @@ export const dataService = {
     }
   },
 
-  // Statistics - Mock data for now
+  // Site settings
+  async getSiteSettings(): Promise<SiteSettings | null> {
+    try {
+      const response = await api.get('/site-settings');
+      const settings = response.data.rawSettings;
+      
+      if (settings && Array.isArray(settings)) {
+        const settingsMap: any = {};
+        settings.forEach((setting: any) => {
+          settingsMap[setting.key] = {
+            valueAr: setting.valueAr,
+            valueEn: setting.valueEn,
+            type: setting.type
+          };
+        });
+        return settingsMap;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching site settings:', error);
+      return null;
+    }
+  },
+
+  // Statistics from CMS
   async getStatistics(): Promise<any> {
+    try {
+      const response = await api.get('/site-settings');
+      const stats = response.data.rawSettings?.find(
+        (setting: any) => setting.key === 'institute_statistics'
+      );
+      
+      if (stats) {
+        const statsData = JSON.parse(stats.valueEn);
+        return {
+          trainedTeachers: statsData.trainedTeachers || '0',
+          programs: statsData.programs || '0',
+          partners: statsData.partners || '0',
+          satisfactionRate: statsData.satisfactionRate || '0%',
+          lastUpdated: statsData.lastUpdated || new Date().toISOString()
+        };
+      }
+    } catch (error) {
+      console.error('Failed to fetch statistics from API:', error);
+    }
+
+    // Fallback to default values
     return {
-      trainedTeachers: '10,000+',
-      programs: '150+',
-      partners: '50+',
+      trainedTeachers: '15,000+',
+      programs: '50+',
+      partners: '25+',
       satisfactionRate: '95%',
       lastUpdated: new Date().toISOString(),
-    }
+    };
   },
 
   // Brand Colors - Mock data for now

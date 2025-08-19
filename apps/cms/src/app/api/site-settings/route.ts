@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
+// CORS headers for cross-origin requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 // GET /api/site-settings - Get all site settings
 export async function GET(request: NextRequest) {
   try {
@@ -25,10 +37,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ 
       settings: settingsObject,
       rawSettings: settings 
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error('Error fetching site settings:', error);
-    return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500, headers: corsHeaders });
   }
 }
 
@@ -84,7 +96,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ 
       message: 'Settings updated successfully',
       settings: updatedSettings 
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error('Error updating site settings:', error);
     return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });
