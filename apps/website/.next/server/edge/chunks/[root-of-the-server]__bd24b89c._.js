@@ -70,23 +70,8 @@ function getLocale(request) {
     if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$i18n$2e$ts__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["isValidLocale"])(pathnameLocale)) {
         return pathnameLocale;
     }
-    // Check Accept-Language header
-    const acceptLanguage = request.headers.get('accept-language');
-    if (acceptLanguage) {
-        const languages = acceptLanguage.split(',').map((lang)=>{
-            const parts = lang.trim().split(';');
-            return parts[0].toLowerCase();
-        });
-        for (const lang of languages){
-            const primaryLang = lang.split('-')[0];
-            if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$i18n$2e$ts__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["isValidLocale"])(primaryLang)) {
-                return primaryLang;
-            }
-            if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$i18n$2e$ts__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["isValidLocale"])(lang)) {
-                return lang;
-            }
-        }
-    }
+    // Return default locale instead of checking Accept-Language header
+    // This ensures first visits always go to the configured default locale
     return __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$i18n$2e$ts__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["i18n"].defaultLocale;
 }
 function middleware(request) {

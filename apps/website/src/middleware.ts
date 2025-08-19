@@ -11,25 +11,8 @@ function getLocale(request: NextRequest): string {
     return pathnameLocale
   }
 
-  // Check Accept-Language header
-  const acceptLanguage = request.headers.get('accept-language')
-  if (acceptLanguage) {
-    const languages = acceptLanguage.split(',').map(lang => {
-      const parts = lang.trim().split(';')
-      return parts[0].toLowerCase()
-    })
-    
-    for (const lang of languages) {
-      const primaryLang = lang.split('-')[0]
-      if (isValidLocale(primaryLang)) {
-        return primaryLang
-      }
-      if (isValidLocale(lang)) {
-        return lang
-      }
-    }
-  }
-
+  // Return default locale instead of checking Accept-Language header
+  // This ensures first visits always go to the configured default locale
   return i18n.defaultLocale
 }
 
