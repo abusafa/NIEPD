@@ -43,15 +43,25 @@ export function verifyToken(token: string): any {
   }
 }
 
-export async function getUserFromToken(request: NextRequest): Promise<AuthUser | null> {
+// Overloaded function to handle both NextRequest and token string
+export async function getUserFromToken(request: NextRequest): Promise<AuthUser | null>;
+export async function getUserFromToken(token: string): Promise<AuthUser | null>;
+export async function getUserFromToken(requestOrToken: NextRequest | string): Promise<AuthUser | null> {
   try {
-    // Extract token from Authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return null;
+    let token: string;
+    
+    if (typeof requestOrToken === 'string') {
+      // Direct token string passed
+      token = requestOrToken;
+    } else {
+      // NextRequest object passed - extract token from Authorization header
+      const authHeader = requestOrToken.headers.get('authorization');
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return null;
+      }
+      token = authHeader.substring(7); // Remove 'Bearer ' prefix
     }
     
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
     const decoded = verifyToken(token);
     
     const user = await prisma.user.findUnique({

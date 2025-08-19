@@ -7,8 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Save, Settings, Globe, Mail, Phone, MapPin, Image, Loader2 } from 'lucide-react';
+import { Save, Settings, Globe, Mail, Phone, MapPin, Image, Loader2, Palette, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SettingsData {
   // General
@@ -53,6 +54,7 @@ interface SettingsData {
 }
 
 export default function SettingsPage() {
+  const { currentLang, t, isRTL } = useLanguage();
   const [settings, setSettings] = useState<SettingsData>({
     // General
     'site.name.ar': '',
@@ -123,7 +125,7 @@ export default function SettingsPage() {
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
-      toast.error('Failed to load settings');
+      toast.error(t('messages.error'));
     } finally {
       setLoading(false);
     }
@@ -149,14 +151,14 @@ export default function SettingsPage() {
       });
 
       if (response.ok) {
-        toast.success('Settings saved successfully');
+        toast.success(t('messages.saveSuccess'));
       } else {
         const error = await response.json();
-        toast.error(error.error || 'Failed to save settings');
+        toast.error(error.error || t('messages.error'));
       }
     } catch (error) {
       console.error('Error saving settings:', error);
-      toast.error('Failed to save settings');
+      toast.error(t('messages.error'));
     } finally {
       setSaving(false);
     }
@@ -165,83 +167,89 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-64">
-        <Loader2 className="h-12 w-12 animate-spin" />
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-12 w-12 animate-spin text-[#00808A]" />
+          <p className="text-sm text-gray-600 font-readex">{t('loading')}</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Site Settings</h1>
-          <p className="text-gray-600">Configure your website settings and preferences</p>
+          <h1 className="text-2xl font-bold text-[#00234E] font-readex">{currentLang === 'ar' ? 'إعدادات الموقع' : 'Site Settings'}</h1>
+          <p className="text-gray-600 font-readex">{currentLang === 'ar' ? 'تكوين إعدادات الموقع والتفضيلات' : 'Configure your website settings and preferences'}</p>
         </div>
-        <Button onClick={handleSave} disabled={saving}>
+        <Button onClick={handleSave} disabled={saving} className="bg-gradient-to-r from-[#00808A] to-[#006b74] hover:from-[#006b74] hover:to-[#00808A] font-readex">
           {saving ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <Loader2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'} animate-spin`} />
           ) : (
-            <Save className="h-4 w-4 mr-2" />
+            <Save className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
           )}
-          Save Changes
+          {t('save')}
         </Button>
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="contact">Contact</TabsTrigger>
-          <TabsTrigger value="social">Social</TabsTrigger>
-          <TabsTrigger value="branding">Branding</TabsTrigger>
-          <TabsTrigger value="seo">SEO</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5 font-readex">
+          <TabsTrigger value="general" className="font-readex">{currentLang === 'ar' ? 'عام' : 'General'}</TabsTrigger>
+          <TabsTrigger value="contact" className="font-readex">{currentLang === 'ar' ? 'التواصل' : 'Contact'}</TabsTrigger>
+          <TabsTrigger value="social" className="font-readex">{currentLang === 'ar' ? 'وسائل التواصل' : 'Social'}</TabsTrigger>
+          <TabsTrigger value="branding" className="font-readex">{currentLang === 'ar' ? 'العلامة التجارية' : 'Branding'}</TabsTrigger>
+          <TabsTrigger value="seo" className="font-readex">SEO</TabsTrigger>
         </TabsList>
 
         {/* General Settings */}
         <TabsContent value="general">
-          <Card>
+          <Card className="border-2 border-[#00808A]/10">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings className="h-5 w-5" />
-                General Settings
+              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Settings className="h-5 w-5 text-[#00808A]" />
+                {currentLang === 'ar' ? 'الإعدادات العامة' : 'General Settings'}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="site.name.en">Site Name (English)</Label>
+                  <Label htmlFor="site.name.en" className="font-readex">{currentLang === 'ar' ? 'اسم الموقع (إنجليزي)' : 'Site Name (English)'}</Label>
                   <Input
                     id="site.name.en"
                     value={settings['site.name.en']}
                     onChange={(e) => handleInputChange('site.name.en', e.target.value)}
                     placeholder="National Institute for Educational Professional Development"
+                    className="font-readex"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="site.name.ar">Site Name (Arabic)</Label>
+                  <Label htmlFor="site.name.ar" className="font-readex">{currentLang === 'ar' ? 'اسم الموقع (عربي)' : 'Site Name (Arabic)'}</Label>
                   <Input
                     id="site.name.ar"
                     value={settings['site.name.ar']}
                     onChange={(e) => handleInputChange('site.name.ar', e.target.value)}
                     placeholder="المعهد الوطني للتطوير المهني التعليمي"
                     dir="rtl"
+                    className="font-readex text-right"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="site.description.en">Description (English)</Label>
+                  <Label htmlFor="site.description.en" className="font-readex">{currentLang === 'ar' ? 'الوصف (إنجليزي)' : 'Description (English)'}</Label>
                   <Textarea
                     id="site.description.en"
                     value={settings['site.description.en']}
                     onChange={(e) => handleInputChange('site.description.en', e.target.value)}
                     placeholder="Brief description of your organization"
                     rows={3}
+                    className="font-readex"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="site.description.ar">Description (Arabic)</Label>
+                  <Label htmlFor="site.description.ar" className="font-readex">{currentLang === 'ar' ? 'الوصف (عربي)' : 'Description (Arabic)'}</Label>
                   <Textarea
                     id="site.description.ar"
                     value={settings['site.description.ar']}
@@ -249,28 +257,31 @@ export default function SettingsPage() {
                     placeholder="وصف مختصر للمؤسسة"
                     rows={3}
                     dir="rtl"
+                    className="font-readex text-right"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="site.keywords.en">Keywords (English)</Label>
+                  <Label htmlFor="site.keywords.en" className="font-readex">{currentLang === 'ar' ? 'الكلمات المفتاحية (إنجليزي)' : 'Keywords (English)'}</Label>
                   <Input
                     id="site.keywords.en"
                     value={settings['site.keywords.en']}
                     onChange={(e) => handleInputChange('site.keywords.en', e.target.value)}
                     placeholder="education, professional development, training"
+                    className="font-readex"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="site.keywords.ar">Keywords (Arabic)</Label>
+                  <Label htmlFor="site.keywords.ar" className="font-readex">{currentLang === 'ar' ? 'الكلمات المفتاحية (عربي)' : 'Keywords (Arabic)'}</Label>
                   <Input
                     id="site.keywords.ar"
                     value={settings['site.keywords.ar']}
                     onChange={(e) => handleInputChange('site.keywords.ar', e.target.value)}
                     placeholder="تعليم، تطوير مهني، تدريب"
                     dir="rtl"
+                    className="font-readex text-right"
                   />
                 </div>
               </div>
@@ -280,59 +291,63 @@ export default function SettingsPage() {
 
         {/* Contact Settings */}
         <TabsContent value="contact">
-          <Card>
+          <Card className="border-2 border-[#00808A]/10">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Phone className="h-5 w-5" />
-                Contact Information
+              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Phone className="h-5 w-5 text-[#00808A]" />
+                {currentLang === 'ar' ? 'معلومات التواصل' : 'Contact Information'}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="contact.email">Email Address</Label>
+                  <Label htmlFor="contact.email" className="font-readex">{currentLang === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}</Label>
                   <Input
                     id="contact.email"
                     type="email"
                     value={settings['contact.email']}
                     onChange={(e) => handleInputChange('contact.email', e.target.value)}
                     placeholder="info@niepd.sa"
+                    className="font-readex"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="contact.phone">Phone Number</Label>
+                  <Label htmlFor="contact.phone" className="font-readex">{currentLang === 'ar' ? 'رقم الهاتف' : 'Phone Number'}</Label>
                   <Input
                     id="contact.phone"
                     value={settings['contact.phone']}
                     onChange={(e) => handleInputChange('contact.phone', e.target.value)}
                     placeholder="+966 11 123 4567"
+                    className="font-readex"
                   />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="contact.fax">Fax Number</Label>
+                <Label htmlFor="contact.fax" className="font-readex">{currentLang === 'ar' ? 'رقم الفاكس' : 'Fax Number'}</Label>
                 <Input
                   id="contact.fax"
                   value={settings['contact.fax']}
                   onChange={(e) => handleInputChange('contact.fax', e.target.value)}
                   placeholder="+966 11 123 4568"
+                  className="font-readex"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="contact.address.en">Address (English)</Label>
+                  <Label htmlFor="contact.address.en" className="font-readex">{currentLang === 'ar' ? 'العنوان (إنجليزي)' : 'Address (English)'}</Label>
                   <Textarea
                     id="contact.address.en"
                     value={settings['contact.address.en']}
                     onChange={(e) => handleInputChange('contact.address.en', e.target.value)}
                     placeholder="Street address, city, postal code"
                     rows={3}
+                    className="font-readex"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="contact.address.ar">Address (Arabic)</Label>
+                  <Label htmlFor="contact.address.ar" className="font-readex">{currentLang === 'ar' ? 'العنوان (عربي)' : 'Address (Arabic)'}</Label>
                   <Textarea
                     id="contact.address.ar"
                     value={settings['contact.address.ar']}
@@ -340,6 +355,7 @@ export default function SettingsPage() {
                     placeholder="العنوان، المدينة، الرمز البريدي"
                     rows={3}
                     dir="rtl"
+                    className="font-readex text-right"
                   />
                 </div>
               </div>
@@ -349,29 +365,30 @@ export default function SettingsPage() {
 
         {/* Social Media */}
         <TabsContent value="social">
-          <Card>
+          <Card className="border-2 border-[#00808A]/10">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Globe className="h-5 w-5" />
-                Social Media Links
+              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Globe className="h-5 w-5 text-[#00808A]" />
+                {currentLang === 'ar' ? 'روابط وسائل التواصل الاجتماعي' : 'Social Media Links'}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {[
-                { key: 'social.twitter', label: 'Twitter', placeholder: 'https://twitter.com/niepd' },
-                { key: 'social.linkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/company/niepd' },
-                { key: 'social.facebook', label: 'Facebook', placeholder: 'https://facebook.com/niepd' },
-                { key: 'social.instagram', label: 'Instagram', placeholder: 'https://instagram.com/niepd' },
-                { key: 'social.youtube', label: 'YouTube', placeholder: 'https://youtube.com/c/niepd' },
+                { key: 'social.twitter', label: 'Twitter', labelAr: 'تويتر', placeholder: 'https://twitter.com/niepd' },
+                { key: 'social.linkedin', label: 'LinkedIn', labelAr: 'لينكد إن', placeholder: 'https://linkedin.com/company/niepd' },
+                { key: 'social.facebook', label: 'Facebook', labelAr: 'فيسبوك', placeholder: 'https://facebook.com/niepd' },
+                { key: 'social.instagram', label: 'Instagram', labelAr: 'إنستغرام', placeholder: 'https://instagram.com/niepd' },
+                { key: 'social.youtube', label: 'YouTube', labelAr: 'يوتيوب', placeholder: 'https://youtube.com/c/niepd' },
               ].map(social => (
                 <div key={social.key}>
-                  <Label htmlFor={social.key}>{social.label}</Label>
+                  <Label htmlFor={social.key} className="font-readex">{currentLang === 'ar' ? social.labelAr : social.label}</Label>
                   <Input
                     id={social.key}
                     type="url"
                     value={settings[social.key as keyof SettingsData]}
                     onChange={(e) => handleInputChange(social.key as keyof SettingsData, e.target.value)}
                     placeholder={social.placeholder}
+                    className="font-readex"
                   />
                 </div>
               ))}
@@ -381,41 +398,43 @@ export default function SettingsPage() {
 
         {/* Branding */}
         <TabsContent value="branding">
-          <Card>
+          <Card className="border-2 border-[#00808A]/10">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Image className="h-5 w-5" />
-                Branding & Design
+              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Palette className="h-5 w-5 text-[#00808A]" />
+                {currentLang === 'ar' ? 'العلامة التجارية والتصميم' : 'Branding & Design'}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="branding.logo">Logo URL</Label>
+                  <Label htmlFor="branding.logo" className="font-readex">{currentLang === 'ar' ? 'رابط الشعار' : 'Logo URL'}</Label>
                   <Input
                     id="branding.logo"
                     type="url"
                     value={settings['branding.logo']}
                     onChange={(e) => handleInputChange('branding.logo', e.target.value)}
                     placeholder="/logos/logo.png"
+                    className="font-readex"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="branding.favicon">Favicon URL</Label>
+                  <Label htmlFor="branding.favicon" className="font-readex">{currentLang === 'ar' ? 'رابط الأيقونة المفضلة' : 'Favicon URL'}</Label>
                   <Input
                     id="branding.favicon"
                     type="url"
                     value={settings['branding.favicon']}
                     onChange={(e) => handleInputChange('branding.favicon', e.target.value)}
                     placeholder="/favicon.ico"
+                    className="font-readex"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="branding.colors.primary">Primary Color</Label>
-                  <div className="flex gap-2">
+                  <Label htmlFor="branding.colors.primary" className="font-readex">{currentLang === 'ar' ? 'اللون الأساسي' : 'Primary Color'}</Label>
+                  <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Input
                       id="branding.colors.primary"
                       type="color"
@@ -426,13 +445,14 @@ export default function SettingsPage() {
                     <Input
                       value={settings['branding.colors.primary']}
                       onChange={(e) => handleInputChange('branding.colors.primary', e.target.value)}
-                      placeholder="#1e40af"
+                      placeholder="#00808A"
+                      className="font-readex"
                     />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="branding.colors.secondary">Secondary Color</Label>
-                  <div className="flex gap-2">
+                  <Label htmlFor="branding.colors.secondary" className="font-readex">{currentLang === 'ar' ? 'اللون الثانوي' : 'Secondary Color'}</Label>
+                  <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Input
                       id="branding.colors.secondary"
                       type="color"
@@ -443,7 +463,8 @@ export default function SettingsPage() {
                     <Input
                       value={settings['branding.colors.secondary']}
                       onChange={(e) => handleInputChange('branding.colors.secondary', e.target.value)}
-                      placeholder="#64748b"
+                      placeholder="#00234E"
+                      className="font-readex"
                     />
                   </div>
                 </div>
@@ -454,46 +475,52 @@ export default function SettingsPage() {
 
         {/* SEO */}
         <TabsContent value="seo">
-          <Card>
+          <Card className="border-2 border-[#00808A]/10">
             <CardHeader>
-              <CardTitle>SEO & Meta Tags</CardTitle>
+              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Search className="h-5 w-5 text-[#00808A]" />
+                {currentLang === 'ar' ? 'تحسين محركات البحث والعلامات الوصفية' : 'SEO & Meta Tags'}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="seo.default_meta_title.en">Default Meta Title (English)</Label>
+                  <Label htmlFor="seo.default_meta_title.en" className="font-readex">{currentLang === 'ar' ? 'العنوان الافتراضي (إنجليزي)' : 'Default Meta Title (English)'}</Label>
                   <Input
                     id="seo.default_meta_title.en"
                     value={settings['seo.default_meta_title.en']}
                     onChange={(e) => handleInputChange('seo.default_meta_title.en', e.target.value)}
                     placeholder="NIEPD - National Institute for Educational Professional Development"
+                    className="font-readex"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="seo.default_meta_title.ar">Default Meta Title (Arabic)</Label>
+                  <Label htmlFor="seo.default_meta_title.ar" className="font-readex">{currentLang === 'ar' ? 'العنوان الافتراضي (عربي)' : 'Default Meta Title (Arabic)'}</Label>
                   <Input
                     id="seo.default_meta_title.ar"
                     value={settings['seo.default_meta_title.ar']}
                     onChange={(e) => handleInputChange('seo.default_meta_title.ar', e.target.value)}
                     placeholder="المعهد الوطني للتطوير المهني التعليمي"
                     dir="rtl"
+                    className="font-readex text-right"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="seo.default_meta_description.en">Default Meta Description (English)</Label>
+                  <Label htmlFor="seo.default_meta_description.en" className="font-readex">{currentLang === 'ar' ? 'الوصف الافتراضي (إنجليزي)' : 'Default Meta Description (English)'}</Label>
                   <Textarea
                     id="seo.default_meta_description.en"
                     value={settings['seo.default_meta_description.en']}
                     onChange={(e) => handleInputChange('seo.default_meta_description.en', e.target.value)}
                     placeholder="Professional development and training for educators"
                     rows={3}
+                    className="font-readex"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="seo.default_meta_description.ar">Default Meta Description (Arabic)</Label>
+                  <Label htmlFor="seo.default_meta_description.ar" className="font-readex">{currentLang === 'ar' ? 'الوصف الافتراضي (عربي)' : 'Default Meta Description (Arabic)'}</Label>
                   <Textarea
                     id="seo.default_meta_description.ar"
                     value={settings['seo.default_meta_description.ar']}
@@ -501,6 +528,7 @@ export default function SettingsPage() {
                     placeholder="التطوير المهني والتدريب للمعلمين"
                     rows={3}
                     dir="rtl"
+                    className="font-readex text-right"
                   />
                 </div>
               </div>

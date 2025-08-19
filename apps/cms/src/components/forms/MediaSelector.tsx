@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Dialog,
   DialogContent,
@@ -138,7 +139,8 @@ export default function MediaSelector({
               </div>
 
               {/* Media Grid */}
-              <div className="grid grid-cols-4 gap-4 max-h-96 overflow-y-auto">
+              <ScrollArea className="h-96">
+                <div className="grid grid-cols-4 gap-4">
                 {loading ? (
                   <div className="col-span-4 text-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
@@ -179,7 +181,8 @@ export default function MediaSelector({
                     </div>
                   ))
                 )}
-              </div>
+                </div>
+              </ScrollArea>
             </div>
           </DialogContent>
         </Dialog>

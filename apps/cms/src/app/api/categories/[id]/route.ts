@@ -12,7 +12,7 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const category = await prisma.category.findUnique({
       where: { id },
       include: {
@@ -23,7 +23,6 @@ export async function GET(
             news: true,
             programs: true,
             events: true,
-            pages: true,
           },
         },
       },
@@ -76,6 +75,7 @@ export async function PUT(
       );
     }
 
+    const { id } = params;
     const body = await request.json();
     const { 
       nameAr, 
@@ -83,8 +83,7 @@ export async function PUT(
       descriptionAr, 
       descriptionEn, 
       slug, 
-      type, 
-      color,
+      type,
       parentId 
     } = body;
 
@@ -134,7 +133,6 @@ export async function PUT(
         descriptionEn,
         slug,
         type,
-        color,
         parentId: parentId || null,
       },
       include: {
@@ -145,7 +143,6 @@ export async function PUT(
             news: true,
             programs: true,
             events: true,
-            pages: true,
           },
         },
       },
@@ -191,53 +188,63 @@ export async function DELETE(
       );
     }
 
+    const { id } = params;
+    
     // Check if category exists
-    const category = await prisma.category.findUnique({
+    const existingCategory = await prisma.category.findUnique({
       where: { id },
-      include: {
-        children: true,
-        _count: {
-          select: {
-            news: true,
-            programs: true,
-            events: true,
-            pages: true,
-          },
-        },
-      },
     });
 
-    if (!category) {
+    if (!existingCategory) {
       return NextResponse.json(
         { error: 'Category not found' },
         { status: 404 }
       );
     }
 
-    // Check if category has children
-    if (category.children.length > 0) {
+    // Check if category has content - prevent deletion if it does
+    const categoryUsage = await prisma.category.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            news: true,
+            programs: true,
+            events: true,
+            children: true,
+          },
+        },
+      },
+    });
+
+    if (!categoryUsage) {
       return NextResponse.json(
-        { error: 'Cannot delete category with subcategories. Delete subcategories first.' },
-        { status: 400 }
+        { error: 'Category not found' },
+        { status: 404 }
       );
     }
 
-    // Check if category is being used
-    const totalUsage = category._count.news + category._count.programs + category._count.events + category._count.pages;
+    const totalUsage = (categoryUsage._count.news || 0) + 
+                      (categoryUsage._count.programs || 0) + 
+                      (categoryUsage._count.events || 0) +
+                      (categoryUsage._count.children || 0);
+
     if (totalUsage > 0) {
       return NextResponse.json(
-        { error: `Cannot delete category. It is being used by ${totalUsage} items.` },
+        { error: 'Cannot delete category that contains content or has subcategories' },
         { status: 400 }
       );
     }
 
+    // Delete the category
     await prisma.category.delete({
       where: { id },
     });
 
-    return NextResponse.json({ 
-      message: 'Category deleted successfully' 
-    });
+    return NextResponse.json(
+      { message: 'Category deleted successfully' },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Error deleting category:', error);
     return NextResponse.json(

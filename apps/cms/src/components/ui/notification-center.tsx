@@ -5,6 +5,7 @@ import { Bell, X, CheckCircle2, AlertCircle, Info, Calendar, MessageSquare, File
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export interface Notification {
   id: string;
@@ -237,13 +238,14 @@ export function NotificationCenter({ className = '' }: NotificationCenterProps) 
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="space-y-1 max-h-80 overflow-y-auto p-0">
-              {notifications.length === 0 ? (
-                <div className="p-4 text-center text-muted-foreground">
-                  No notifications
-                </div>
-              ) : (
-                notifications.map((notification) => (
+            <ScrollArea className="h-80">
+              <CardContent className="space-y-1 p-0">
+                {notifications.length === 0 ? (
+                  <div className="p-4 text-center text-muted-foreground">
+                    No notifications
+                  </div>
+                ) : (
+                  notifications.map((notification) => (
                   <div
                     key={notification.id}
                     className={`p-4 border-b hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer ${
@@ -290,7 +292,8 @@ export function NotificationCenter({ className = '' }: NotificationCenterProps) 
                   </div>
                 ))
               )}
-            </CardContent>
+              </CardContent>
+            </ScrollArea>
           </Card>
         </>
       )}

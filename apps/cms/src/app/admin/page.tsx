@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { 
   FileText, 
   Calendar, 
@@ -127,6 +129,7 @@ export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { currentLang, t, isRTL } = useLanguage();
 
   useEffect(() => {
     fetchDashboardData();
@@ -245,6 +248,23 @@ export default function AdminDashboard() {
     }
   };
 
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'PUBLISHED':
+        return t('content.published');
+      case 'DRAFT':
+        return t('content.draft');
+      case 'REVIEW':
+        return 'Under Review'; // Add to translations if needed
+      case 'UNREAD':
+        return 'Unread'; // Add to translations if needed
+      case 'READ':
+        return 'Read'; // Add to translations if needed
+      default:
+        return status;
+    }
+  };
+
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'news':
@@ -303,24 +323,27 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100"></div>
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100"></div>
+          <p className="text-sm text-gray-600 font-readex">{t('loading')}</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with Welcome and Quick Stats */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-lg p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+      <div className="bg-gradient-to-r from-[#00808A]/10 to-[#00234E]/10 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-lg p-6">
+        <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
-            <p className="text-gray-600 dark:text-gray-400">Welcome to the NIEPD Content Management System</p>
+            <h1 className="text-2xl font-bold text-[#00234E] dark:text-gray-100 font-readex">{t('dashboard_page.title')}</h1>
+            <p className="text-gray-600 dark:text-gray-400 font-readex">{t('dashboard_page.welcome')}</p>
           </div>
           <div className="mt-4 sm:mt-0">
-            <Button onClick={() => handleQuickAction('preview-site')} className="inline-flex items-center gap-2">
+            <Button onClick={() => handleQuickAction('preview-site')} className="inline-flex items-center gap-2 font-readex">
               <ExternalLink className="h-4 w-4" />
-              Preview Website
+              {currentLang === 'ar' ? 'عرض الموقع' : 'Preview Website'}
             </Button>
           </div>
         </div>
@@ -330,19 +353,19 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">News Articles</CardTitle>
+            <CardTitle className="text-sm font-medium font-readex">{t('stats.totalNews')}</CardTitle>
             <div className="flex items-center gap-1">
               {getGrowthIndicator(stats?.news.total || 0, stats?.news.growth30d || 0)}
               <FileText className="h-4 w-4 text-muted-foreground" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.news.total}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              <span className="text-green-600">{stats?.news.published} published</span> • 
-              <span className="text-yellow-600 ml-1">{stats?.news.draft} draft</span>
+            <div className="text-2xl font-bold font-readex">{stats?.news.total}</div>
+            <div className="text-xs text-muted-foreground mt-1 font-readex">
+              <span className="text-green-600">{stats?.news.published} {t('content.published')}</span> • 
+              <span className={`text-yellow-600 ${isRTL ? 'mr-1' : 'ml-1'}`}>{stats?.news.draft} {t('content.draft')}</span>
               {stats?.news.growth30d ? (
-                <div className="mt-1 text-xs text-green-600">+{stats.news.growth30d} this month</div>
+                <div className="mt-1 text-xs text-green-600">+{stats.news.growth30d} {currentLang === 'ar' ? 'هذا الشهر' : 'this month'}</div>
               ) : null}
             </div>
           </CardContent>
@@ -350,19 +373,19 @@ export default function AdminDashboard() {
 
         <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Programs</CardTitle>
+            <CardTitle className="text-sm font-medium font-readex">{t('stats.totalPrograms')}</CardTitle>
             <div className="flex items-center gap-1">
               {getGrowthIndicator(stats?.programs.total || 0, stats?.programs.growth30d || 0)}
               <BookOpen className="h-4 w-4 text-muted-foreground" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.programs.total}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              <span className="text-green-600">{stats?.programs.published} published</span> • 
-              <span className="text-yellow-600 ml-1">{stats?.programs.draft} draft</span>
+            <div className="text-2xl font-bold font-readex">{stats?.programs.total}</div>
+            <div className="text-xs text-muted-foreground mt-1 font-readex">
+              <span className="text-green-600">{stats?.programs.published} {t('content.published')}</span> • 
+              <span className={`text-yellow-600 ${isRTL ? 'mr-1' : 'ml-1'}`}>{stats?.programs.draft} {t('content.draft')}</span>
               {stats?.programs.totalParticipants ? (
-                <div className="mt-1 text-xs text-blue-600">{stats.programs.totalParticipants} participants</div>
+                <div className="mt-1 text-xs text-blue-600">{stats.programs.totalParticipants} {currentLang === 'ar' ? 'مشارك' : 'participants'}</div>
               ) : null}
             </div>
           </CardContent>
@@ -370,36 +393,36 @@ export default function AdminDashboard() {
 
         <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Events</CardTitle>
+            <CardTitle className="text-sm font-medium font-readex">{t('stats.totalEvents')}</CardTitle>
             <div className="flex items-center gap-1">
               {getGrowthIndicator(stats?.events.total || 0, stats?.events.growth30d || 0)}
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.events.total}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              <span className="text-blue-600">{stats?.events.upcoming} upcoming</span> • 
-              <span className="text-green-600 ml-1">{stats?.events.published} published</span>
+            <div className="text-2xl font-bold font-readex">{stats?.events.total}</div>
+            <div className="text-xs text-muted-foreground mt-1 font-readex">
+              <span className="text-blue-600">{stats?.events.upcoming} {currentLang === 'ar' ? 'قادمة' : 'upcoming'}</span> • 
+              <span className={`text-green-600 ${isRTL ? 'mr-1' : 'ml-1'}`}>{stats?.events.published} {t('content.published')}</span>
             </div>
           </CardContent>
         </Card>
 
         <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Contact Messages</CardTitle>
+            <CardTitle className="text-sm font-medium font-readex">{currentLang === 'ar' ? 'رسائل التواصل' : 'Contact Messages'}</CardTitle>
             <div className="flex items-center gap-1">
               {stats?.contacts.unread ? <AlertCircle className="h-4 w-4 text-red-500" /> : <CheckCircle2 className="h-4 w-4 text-green-500" />}
               <MessageSquare className="h-4 w-4 text-muted-foreground" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.contacts.total}</div>
-            <div className="text-xs text-muted-foreground mt-1">
+            <div className="text-2xl font-bold font-readex">{stats?.contacts.total}</div>
+            <div className="text-xs text-muted-foreground mt-1 font-readex">
               {stats?.contacts.unread ? (
-                <span className="text-red-600">{stats.contacts.unread} unread</span>
+                <span className="text-red-600">{stats.contacts.unread} {currentLang === 'ar' ? 'غير مقروءة' : 'unread'}</span>
               ) : (
-                <span className="text-green-600">All messages read</span>
+                <span className="text-green-600">{currentLang === 'ar' ? 'جميع الرسائل مقروءة' : 'All messages read'}</span>
               )}
             </div>
           </CardContent>
@@ -407,13 +430,13 @@ export default function AdminDashboard() {
 
         <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Media Storage</CardTitle>
+            <CardTitle className="text-sm font-medium font-readex">{currentLang === 'ar' ? 'مساحة الوسائط' : 'Media Storage'}</CardTitle>
             <Database className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.media.total}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              <span>{analytics?.mediaStorage.totalSizeMB} MB used</span>
+            <div className="text-2xl font-bold font-readex">{stats?.media.total}</div>
+            <div className="text-xs text-muted-foreground mt-1 font-readex">
+              <span>{analytics?.mediaStorage.totalSizeMB} {currentLang === 'ar' ? 'ميجابايت مستخدمة' : 'MB used'}</span>
             </div>
           </CardContent>
         </Card>
@@ -424,9 +447,9 @@ export default function AdminDashboard() {
         {/* Quick Actions - Enhanced */}
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-readex">
               <Plus className="h-5 w-5" />
-              Quick Actions
+              {t('dashboard_page.quickActions')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -437,7 +460,7 @@ export default function AdminDashboard() {
                 onClick={() => handleQuickAction('new-news')}
               >
                 <FileText className="h-6 w-6 text-blue-600" />
-                <span className="text-sm font-medium">New Article</span>
+                <span className="text-sm font-medium font-readex">{currentLang === 'ar' ? 'خبر جديد' : 'New Article'}</span>
               </Button>
               
               <Button
@@ -446,7 +469,7 @@ export default function AdminDashboard() {
                 onClick={() => handleQuickAction('new-program')}
               >
                 <BookOpen className="h-6 w-6 text-green-600" />
-                <span className="text-sm font-medium">New Program</span>
+                <span className="text-sm font-medium font-readex">{currentLang === 'ar' ? 'برنامج جديد' : 'New Program'}</span>
               </Button>
               
               <Button
@@ -455,7 +478,7 @@ export default function AdminDashboard() {
                 onClick={() => handleQuickAction('new-event')}
               >
                 <Calendar className="h-6 w-6 text-purple-600" />
-                <span className="text-sm font-medium">New Event</span>
+                <span className="text-sm font-medium font-readex">{currentLang === 'ar' ? 'فعالية جديدة' : 'New Event'}</span>
               </Button>
               
               <Button
@@ -464,7 +487,7 @@ export default function AdminDashboard() {
                 onClick={() => handleQuickAction('media-library')}
               >
                 <Database className="h-6 w-6 text-orange-600" />
-                <span className="text-sm font-medium">Media Library</span>
+                <span className="text-sm font-medium font-readex">{currentLang === 'ar' ? 'مكتبة الوسائط' : 'Media Library'}</span>
               </Button>
             </div>
           </CardContent>
@@ -473,34 +496,34 @@ export default function AdminDashboard() {
         {/* Performance Metrics */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-readex">
               <BarChart3 className="h-5 w-5" />
-              Performance Metrics
+              {currentLang === 'ar' ? 'مقاييس الأداء' : 'Performance Metrics'}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{analytics?.totalParticipants || 0}</div>
-                <div className="text-sm text-muted-foreground">Total Participants</div>
+                <div className="text-2xl font-bold text-blue-600 font-readex">{analytics?.totalParticipants || 0}</div>
+                <div className="text-sm text-muted-foreground font-readex">{currentLang === 'ar' ? 'إجمالي المشاركين' : 'Total Participants'}</div>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1">
-                  <div className="text-2xl font-bold text-yellow-600">{analytics?.avgProgramRating?.toFixed(1) || '0.0'}</div>
+                  <div className="text-2xl font-bold text-yellow-600 font-readex">{analytics?.avgProgramRating?.toFixed(1) || '0.0'}</div>
                   <Star className="h-4 w-4 text-yellow-400 fill-current" />
                 </div>
-                <div className="text-sm text-muted-foreground">Avg. Rating</div>
+                <div className="text-sm text-muted-foreground font-readex">{currentLang === 'ar' ? 'متوسط التقييم' : 'Avg. Rating'}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-2xl font-bold text-green-600 font-readex">
                   {analytics?.contentGrowth30d ? 
                     Object.values(analytics.contentGrowth30d).reduce((a, b) => a + b, 0) : 0}
                 </div>
-                <div className="text-sm text-muted-foreground">Growth (30d)</div>
+                <div className="text-sm text-muted-foreground font-readex">{currentLang === 'ar' ? 'النمو (30 يوم)' : 'Growth (30d)'}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{stats?.users.active || 0}</div>
-                <div className="text-sm text-muted-foreground">Active Users</div>
+                <div className="text-2xl font-bold text-purple-600 font-readex">{stats?.users.active || 0}</div>
+                <div className="text-sm text-muted-foreground font-readex">{t('stats.activeUsers')}</div>
               </div>
             </div>
           </CardContent>
@@ -512,106 +535,113 @@ export default function AdminDashboard() {
         {/* Recent Activity */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-readex">
               <Clock className="h-5 w-5" />
-              Recent Activity
+              {t('dashboard_page.recentActivity')}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4 max-h-80 overflow-y-auto">
-              {recentContent.map((content, index) => (
-                <div key={`${content.type}-${content.id}-${index}`} className="flex items-start justify-between p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors">
-                  <div className="flex items-start gap-3">
+            <ScrollArea className="h-80">
+              <div className="space-y-4">
+                {recentContent.map((content, index) => (
+                <div key={`${content.type}-${content.id}-${index}`} className={`flex items-start justify-between p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     {getTypeIcon(content.type)}
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm truncate">{content.title}</h4>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                        by {content.author} • {new Date(content.updatedAt).toLocaleDateString()}
+                      <h4 className="font-medium text-sm truncate font-readex">{currentLang === 'ar' ? content.titleAr : content.title}</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 font-readex">
+                        {currentLang === 'ar' ? 'بواسطة' : 'by'} {content.author} • {new Date(content.updatedAt).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
                       </p>
                       {content.featured && (
-                        <div className="flex items-center gap-1 mt-1">
+                        <div className={`flex items-center gap-1 mt-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
                           <Star className="h-3 w-3 text-yellow-400 fill-current" />
-                          <span className="text-xs text-yellow-600">Featured</span>
+                          <span className="text-xs text-yellow-600 font-readex">{currentLang === 'ar' ? 'مميز' : 'Featured'}</span>
                         </div>
                       )}
                     </div>
                   </div>
                   <Badge className={getStatusColor(content.status)} variant="secondary">
-                    {content.status}
+                    <span className="font-readex">{getStatusText(content.status)}</span>
                   </Badge>
                 </div>
               ))}
-            </div>
+              </div>
+            </ScrollArea>
           </CardContent>
         </Card>
 
         {/* Upcoming Events */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-readex">
               <Calendar className="h-5 w-5" />
-              Upcoming Events
+              {currentLang === 'ar' ? 'الفعاليات القادمة' : 'Upcoming Events'}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4 max-h-80 overflow-y-auto">
-              {upcomingEvents.length > 0 ? (
+            <ScrollArea className="h-80">
+              <div className="space-y-4">
+                {upcomingEvents.length > 0 ? (
                 upcomingEvents.map((event) => (
-                  <div key={event.id} className="p-3 border rounded-lg">
-                    <h4 className="font-medium text-sm">{event.titleEn}</h4>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400">
+                  <div key={event.id} className={`p-3 border rounded-lg ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <h4 className="font-medium text-sm font-readex">{currentLang === 'ar' ? event.titleAr : event.titleEn}</h4>
+                    <div className={`flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400 ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <Calendar className="h-3 w-3" />
-                      {new Date(event.startDate).toLocaleDateString()}
+                      <span className="font-readex">{new Date(event.startDate).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}</span>
                     </div>
-                    {event.locationEn && (
-                      <div className="flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400">
+                    {(event.locationEn || event.locationAr) && (
+                      <div className={`flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400 ${isRTL ? 'flex-row-reverse' : ''}`}>
                         <MapPin className="h-3 w-3" />
-                        {event.locationEn}
+                        <span className="font-readex">{currentLang === 'ar' ? event.locationAr : event.locationEn}</span>
                       </div>
                     )}
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-4">No upcoming events</p>
+                <p className="text-sm text-muted-foreground text-center py-4 font-readex">{currentLang === 'ar' ? 'لا توجد فعاليات قادمة' : 'No upcoming events'}</p>
               )}
-            </div>
+              </div>
+            </ScrollArea>
           </CardContent>
         </Card>
 
         {/* Recent Contact Messages */}
         <Card>
-          <CardHeader className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+            <CardTitle className="flex items-center gap-2 font-readex">
               <MessageSquare className="h-5 w-5" />
-              Contact Messages
+              {currentLang === 'ar' ? 'رسائل التواصل' : 'Contact Messages'}
             </CardTitle>
             <Button 
               variant="ghost" 
               size="sm"
               onClick={() => handleQuickAction('contact-messages')}
+              className="font-readex"
             >
-              View All
+              {currentLang === 'ar' ? 'عرض الكل' : 'View All'}
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4 max-h-80 overflow-y-auto">
-              {recentContacts.length > 0 ? (
+            <ScrollArea className="h-80">
+              <div className="space-y-4">
+                {recentContacts.length > 0 ? (
                 recentContacts.map((contact) => (
-                  <div key={contact.id} className="p-3 border rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-sm">{contact.name}</h4>
+                  <div key={contact.id} className={`p-3 border rounded-lg ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <h4 className="font-medium text-sm font-readex">{contact.name}</h4>
                       <Badge className={getStatusColor(contact.status)} variant="secondary">
-                        {contact.status}
+                        <span className="font-readex">{getStatusText(contact.status)}</span>
                       </Badge>
                     </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{contact.subject}</p>
-                    <p className="text-xs text-gray-500 mt-1">{new Date(contact.createdAt).toLocaleDateString()}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 font-readex">{contact.subject}</p>
+                    <p className="text-xs text-gray-500 mt-1 font-readex">{new Date(contact.createdAt).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-4">No recent messages</p>
+                <p className="text-sm text-muted-foreground text-center py-4 font-readex">{currentLang === 'ar' ? 'لا توجد رسائل حديثة' : 'No recent messages'}</p>
               )}
-            </div>
+              </div>
+            </ScrollArea>
           </CardContent>
         </Card>
       </div>
@@ -619,143 +649,143 @@ export default function AdminDashboard() {
       {/* Content Status Overview - Enhanced */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 font-readex">
             <BarChart3 className="h-5 w-5" />
-            Content Status Overview
+            {t('dashboard_page.overview')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="font-medium mb-4 flex items-center gap-2">
+              <h3 className={`font-medium mb-4 flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <FileText className="h-4 w-4" />
-                News Articles
+                {t('stats.totalNews')}
               </h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Published</span>
-                  <div className="flex items-center gap-2">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm font-readex">{t('content.published')}</span>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-green-500 h-2 rounded-full" 
                         style={{ width: `${((stats?.news.published || 0) / (stats?.news.total || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-green-600 w-8 text-right">{stats?.news.published}</span>
+                    <span className={`text-sm font-medium text-green-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.news.published}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Under Review</span>
-                  <div className="flex items-center gap-2">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm font-readex">{currentLang === 'ar' ? 'تحت المراجعة' : 'Under Review'}</span>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-blue-500 h-2 rounded-full" 
                         style={{ width: `${((stats?.news.review || 0) / (stats?.news.total || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-blue-600 w-8 text-right">{stats?.news.review}</span>
+                    <span className={`text-sm font-medium text-blue-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.news.review}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Draft</span>
-                  <div className="flex items-center gap-2">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm font-readex">{t('content.draft')}</span>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-yellow-500 h-2 rounded-full" 
                         style={{ width: `${((stats?.news.draft || 0) / (stats?.news.total || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-yellow-600 w-8 text-right">{stats?.news.draft}</span>
+                    <span className={`text-sm font-medium text-yellow-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.news.draft}</span>
                   </div>
                 </div>
               </div>
             </div>
             
             <div>
-              <h3 className="font-medium mb-4 flex items-center gap-2">
+              <h3 className={`font-medium mb-4 flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <BookOpen className="h-4 w-4" />
-                Training Programs
+                {t('stats.totalPrograms')}
               </h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Published</span>
-                  <div className="flex items-center gap-2">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm font-readex">{t('content.published')}</span>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-green-500 h-2 rounded-full" 
                         style={{ width: `${((stats?.programs.published || 0) / (stats?.programs.total || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-green-600 w-8 text-right">{stats?.programs.published}</span>
+                    <span className={`text-sm font-medium text-green-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.programs.published}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Under Review</span>
-                  <div className="flex items-center gap-2">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm font-readex">{currentLang === 'ar' ? 'تحت المراجعة' : 'Under Review'}</span>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-blue-500 h-2 rounded-full" 
                         style={{ width: `${((stats?.programs.review || 0) / (stats?.programs.total || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-blue-600 w-8 text-right">{stats?.programs.review}</span>
+                    <span className={`text-sm font-medium text-blue-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.programs.review}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Draft</span>
-                  <div className="flex items-center gap-2">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm font-readex">{t('content.draft')}</span>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-yellow-500 h-2 rounded-full" 
                         style={{ width: `${((stats?.programs.draft || 0) / (stats?.programs.total || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-yellow-600 w-8 text-right">{stats?.programs.draft}</span>
+                    <span className={`text-sm font-medium text-yellow-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.programs.draft}</span>
                   </div>
                 </div>
               </div>
             </div>
             
             <div>
-              <h3 className="font-medium mb-4 flex items-center gap-2">
+              <h3 className={`font-medium mb-4 flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <Calendar className="h-4 w-4" />
-                Events
+                {t('stats.totalEvents')}
               </h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Upcoming</span>
-                  <div className="flex items-center gap-2">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm font-readex">{currentLang === 'ar' ? 'قادمة' : 'Upcoming'}</span>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-blue-500 h-2 rounded-full" 
                         style={{ width: `${((stats?.events.upcoming || 0) / (stats?.events.total || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-blue-600 w-8 text-right">{stats?.events.upcoming}</span>
+                    <span className={`text-sm font-medium text-blue-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.events.upcoming}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Published</span>
-                  <div className="flex items-center gap-2">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm font-readex">{t('content.published')}</span>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-green-500 h-2 rounded-full" 
                         style={{ width: `${((stats?.events.published || 0) / (stats?.events.total || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-green-600 w-8 text-right">{stats?.events.published}</span>
+                    <span className={`text-sm font-medium text-green-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.events.published}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Draft</span>
-                  <div className="flex items-center gap-2">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm font-readex">{t('content.draft')}</span>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-yellow-500 h-2 rounded-full" 
                         style={{ width: `${((stats?.events.draft || 0) / (stats?.events.total || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-yellow-600 w-8 text-right">{stats?.events.draft}</span>
+                    <span className={`text-sm font-medium text-yellow-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.events.draft}</span>
                   </div>
                 </div>
               </div>

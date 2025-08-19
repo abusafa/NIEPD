@@ -65,7 +65,7 @@ export default function CreateCategoryPage() {
     slug: '',
     type: 'GENERAL',
     color: '#3B82F6',
-    parentId: '',
+    parentId: 'none',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -120,7 +120,7 @@ export default function CreateCategoryPage() {
         },
         body: JSON.stringify({
           ...formData,
-          parentId: formData.parentId || null,
+          parentId: formData.parentId && formData.parentId !== 'none' ? formData.parentId : null,
         }),
       });
 
@@ -222,7 +222,7 @@ export default function CreateCategoryPage() {
               <SelectValue placeholder="No parent (root category)" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">
+              <SelectItem value="none">
                 <span className="text-gray-500">No parent (root category)</span>
               </SelectItem>
               {categoriesState.items.filter(cat => cat.type === formData.type || cat.type === 'GENERAL').map(category => (

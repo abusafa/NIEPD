@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
 import { useCRUD } from '@/hooks/useCRUD';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { toast } from 'sonner';
 
 interface NewsItem {
   id: string;
@@ -40,6 +42,7 @@ interface NewsItem {
 
 export default function NewsPage() {
   const router = useRouter();
+  const { currentLang, t, isRTL } = useLanguage();
   const [state, actions] = useCRUD<NewsItem>({
     endpoint: '/api/news',
     resourceName: 'News Article',
@@ -68,12 +71,13 @@ export default function NewsPage() {
 
       if (response.ok) {
         actions.refresh?.(); // Refresh the list
+        toast.success(currentLang === 'ar' ? 'تم نشر المقال بنجاح' : 'Article published successfully');
       } else {
-        alert('Failed to publish article');
+        toast.error(currentLang === 'ar' ? 'فشل في نشر المقال' : 'Failed to publish article');
       }
     } catch (error) {
       console.error('Error publishing article:', error);
-      alert('Failed to publish article');
+      toast.error(currentLang === 'ar' ? 'فشل في نشر المقال' : 'Failed to publish article');
     }
   };
 
@@ -88,12 +92,13 @@ export default function NewsPage() {
 
       if (response.ok) {
         actions.refresh?.(); // Refresh the list
+        toast.success(currentLang === 'ar' ? 'تم إلغاء نشر المقال بنجاح' : 'Article unpublished successfully');
       } else {
-        alert('Failed to unpublish article');
+        toast.error(currentLang === 'ar' ? 'فشل في إلغاء نشر المقال' : 'Failed to unpublish article');
       }
     } catch (error) {
       console.error('Error unpublishing article:', error);
-      alert('Failed to unpublish article');
+      toast.error(currentLang === 'ar' ? 'فشل في إلغاء نشر المقال' : 'Failed to unpublish article');
     }
   };
 
@@ -108,39 +113,54 @@ export default function NewsPage() {
 
       if (response.ok) {
         actions.refresh?.(); // Refresh the list
+        toast.success(currentLang === 'ar' ? 'تم إرسال المقال للمراجعة بنجاح' : 'Article submitted for review successfully');
       } else {
-        alert('Failed to submit for review');
+        toast.error(currentLang === 'ar' ? 'فشل في إرسال المقال للمراجعة' : 'Failed to submit for review');
       }
     } catch (error) {
       console.error('Error submitting for review:', error);
-      alert('Failed to submit for review');
+      toast.error(currentLang === 'ar' ? 'فشل في إرسال المقال للمراجعة' : 'Failed to submit for review');
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'PUBLISHED':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
       case 'DRAFT':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
       case 'REVIEW':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
+  };
+
+  const getStatusText = (status: string) => {
+    const statusMap = {
+      'PUBLISHED': { en: 'Published', ar: 'منشور' },
+      'DRAFT': { en: 'Draft', ar: 'مسودة' },
+      'REVIEW': { en: 'Under Review', ar: 'تحت المراجعة' }
+    };
+    return currentLang === 'ar' ? statusMap[status as keyof typeof statusMap]?.ar || status : statusMap[status as keyof typeof statusMap]?.en || status;
   };
 
   const columns = [
     {
       key: 'title',
-      label: 'Title',
+      label: currentLang === 'ar' ? 'العنوان' : 'Title',
+      labelAr: 'العنوان',
       render: (_, article: NewsItem) => (
-        <div className="space-y-1">
-          <div className="font-medium text-sm">{article.titleEn}</div>
-          <div className="text-sm text-gray-600" dir="rtl">{article.titleAr}</div>
+        <div className={`space-y-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <div className="font-medium text-sm font-readex">
+            {currentLang === 'ar' ? article.titleAr : article.titleEn}
+          </div>
+          <div className="text-sm text-gray-600 font-readex" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
+            {currentLang === 'ar' ? article.titleEn : article.titleAr}
+          </div>
           {article.featured && (
-            <Badge variant="outline" className="text-xs">
-              Featured
+            <Badge variant="outline" className="text-xs font-readex">
+              {currentLang === 'ar' ? 'مميز' : 'Featured'}
             </Badge>
           )}
         </div>
@@ -148,30 +168,38 @@ export default function NewsPage() {
     },
     {
       key: 'category',
-      label: 'Category',
+      label: currentLang === 'ar' ? 'التصنيف' : 'Category',
+      labelAr: 'التصنيف',
       render: (_, article: NewsItem) => (
-        <div className="text-sm">{article.category?.nameEn || 'No Category'}</div>
+        <div className="text-sm font-readex">
+          {currentLang === 'ar' 
+            ? article.category?.nameAr || 'بدون تصنيف'
+            : article.category?.nameEn || 'No Category'
+          }
+        </div>
       ),
     },
     {
       key: 'status',
-      label: 'Status',
+      label: currentLang === 'ar' ? 'الحالة' : 'Status',
+      labelAr: 'الحالة',
       render: (status: string) => (
-        <Badge className={getStatusColor(status)}>
-          {status}
+        <Badge className={`${getStatusColor(status)} font-readex`}>
+          {getStatusText(status)}
         </Badge>
       ),
     },
     {
       key: 'author',
-      label: 'Author',
+      label: currentLang === 'ar' ? 'الكاتب' : 'Author',
+      labelAr: 'الكاتب',
       render: (_, article: NewsItem) => (
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <User className="h-4 w-4 text-gray-400" />
-          <span className="text-sm">
+          <span className="text-sm font-readex">
             {article.author?.firstName && article.author?.lastName 
               ? `${article.author.firstName} ${article.author.lastName}`
-              : article.author?.username || 'Unknown'
+              : article.author?.username || (currentLang === 'ar' ? 'غير معروف' : 'Unknown')
             }
           </span>
         </div>
@@ -179,11 +207,14 @@ export default function NewsPage() {
     },
     {
       key: 'updatedAt',
-      label: 'Updated',
+      label: currentLang === 'ar' ? 'آخر تحديث' : 'Updated',
+      labelAr: 'آخر تحديث',
       render: (date: string) => (
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <Calendar className="h-4 w-4 text-gray-400" />
-          <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+          <span className="text-sm font-readex">
+            {new Date(date).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
+          </span>
         </div>
       ),
     },
@@ -191,36 +222,42 @@ export default function NewsPage() {
 
   const tableActions = [
     {
-      label: 'View',
-      icon: <Eye className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'عرض' : 'View',
+      labelAr: 'عرض',
+      icon: <Eye className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: handleView,
     },
     {
-      label: 'Edit',
-      icon: <Edit className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'تعديل' : 'Edit',
+      labelAr: 'تعديل',
+      icon: <Edit className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: handleEdit,
     },
     {
-      label: 'Submit for Review',
-      icon: <Clock className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'إرسال للمراجعة' : 'Submit for Review',
+      labelAr: 'إرسال للمراجعة',
+      icon: <Clock className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: (article: NewsItem) => handleSubmitForReview(article),
       show: (article: NewsItem) => article.status === 'DRAFT',
     },
     {
-      label: 'Publish',
-      icon: <CheckCircle className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'نشر' : 'Publish',
+      labelAr: 'نشر',
+      icon: <CheckCircle className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: (article: NewsItem) => handlePublish(article),
       show: (article: NewsItem) => article.status === 'REVIEW',
     },
     {
-      label: 'Unpublish',
-      icon: <XCircle className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'إلغاء النشر' : 'Unpublish',
+      labelAr: 'إلغاء النشر',
+      icon: <XCircle className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: (article: NewsItem) => handleUnpublish(article),
       show: (article: NewsItem) => article.status === 'PUBLISHED',
     },
     {
-      label: 'Delete',
-      icon: <Trash2 className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'حذف' : 'Delete',
+      labelAr: 'حذف',
+      icon: <Trash2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: actions.deleteItem,
       variant: 'destructive' as const,
     },
@@ -229,47 +266,52 @@ export default function NewsPage() {
   const filterOptions = [
     {
       key: 'status',
-      label: 'Status',
+      label: currentLang === 'ar' ? 'الحالة' : 'Status',
+      labelAr: 'الحالة',
       options: [
-        { value: 'PUBLISHED', label: 'Published' },
-        { value: 'REVIEW', label: 'Under Review' },
-        { value: 'DRAFT', label: 'Draft' },
+        { value: 'PUBLISHED', label: 'Published', labelAr: 'منشور' },
+        { value: 'REVIEW', label: 'Under Review', labelAr: 'تحت المراجعة' },
+        { value: 'DRAFT', label: 'Draft', labelAr: 'مسودة' },
       ],
     },
   ];
 
   const stats = [
     {
-      label: 'Total Articles',
+      label: currentLang === 'ar' ? 'إجمالي المقالات' : 'Total Articles',
       value: state.items?.length ?? 0,
+      description: currentLang === 'ar' ? 'العدد الإجمالي' : 'Total count'
     },
     {
-      label: 'Published',
+      label: currentLang === 'ar' ? 'منشور' : 'Published',
       value: (state.items ?? []).filter(n => n.status === 'PUBLISHED').length,
+      description: currentLang === 'ar' ? 'مقالات منشورة' : 'Published articles'
     },
     {
-      label: 'Under Review',
+      label: currentLang === 'ar' ? 'تحت المراجعة' : 'Under Review',
       value: (state.items ?? []).filter(n => n.status === 'REVIEW').length,
+      description: currentLang === 'ar' ? 'في انتظار المراجعة' : 'Awaiting review'
     },
     {
-      label: 'Featured',
+      label: currentLang === 'ar' ? 'مميز' : 'Featured',
       value: (state.items ?? []).filter(n => n.featured).length,
+      description: currentLang === 'ar' ? 'مقالات مميزة' : 'Featured articles'
     },
   ];
 
   return (
     <DataTable
-      title="News Management"
-      description="Manage news articles and announcements"
+      title={t('news.title')}
+      description={currentLang === 'ar' ? 'إدارة المقالات الإخبارية والإعلانات' : 'Manage news articles and announcements'}
       data={state.items}
       columns={columns}
       actions={tableActions}
       loading={state.loading}
       onCreate={handleCreate}
-      createButtonText="New Article"
-      searchPlaceholder="Search articles..."
-      emptyMessage="No articles found"
-      emptyDescription="Create your first news article"
+      createButtonText={currentLang === 'ar' ? 'مقال جديد' : 'New Article'}
+      searchPlaceholder={currentLang === 'ar' ? 'البحث في المقالات...' : 'Search articles...'}
+      emptyMessage={currentLang === 'ar' ? 'لم يتم العثور على مقالات' : 'No articles found'}
+      emptyDescription={currentLang === 'ar' ? 'أنشئ أول مقال إخباري' : 'Create your first news article'}
       filters={filterOptions}
       stats={stats}
     />

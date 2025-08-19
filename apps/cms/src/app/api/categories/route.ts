@@ -38,7 +38,6 @@ export async function GET(request: NextRequest) {
               news: true,
               programs: true,
               events: true,
-              pages: true,
             },
           },
         },
@@ -95,8 +94,7 @@ export async function POST(request: NextRequest) {
       descriptionAr, 
       descriptionEn, 
       slug, 
-      type, 
-      color,
+      type,
       parentId 
     } = body;
 
@@ -130,7 +128,6 @@ export async function POST(request: NextRequest) {
         descriptionEn,
         slug,
         type: type || 'GENERAL',
-        color,
         parentId: parentId || null,
       },
       include: {
@@ -141,7 +138,6 @@ export async function POST(request: NextRequest) {
             news: true,
             programs: true,
             events: true,
-            pages: true,
           },
         },
       },

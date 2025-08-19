@@ -25,6 +25,7 @@ import {
 import DataTable from '@/components/shared/DataTable';
 import { useCRUD } from '@/hooks/useCRUD';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface MediaItem {
   id: string;
@@ -40,6 +41,7 @@ interface MediaItem {
 }
 
 export default function MediaPage() {
+  const { currentLang, t, isRTL } = useLanguage();
   const [state, actions] = useCRUD<MediaItem>({
     endpoint: '/api/media',
     resourceName: 'Media File',
@@ -69,15 +71,15 @@ export default function MediaPage() {
 
       if (response.ok) {
         const data = await response.json();
-        toast.success(data.message);
+        toast.success(data.message || (currentLang === 'ar' ? 'تم رفع الملفات بنجاح' : 'Files uploaded successfully'));
         actions.refresh?.(); // Refresh the list
       } else {
         const error = await response.json();
-        toast.error(error.error || 'Failed to upload files');
+        toast.error(error.error || (currentLang === 'ar' ? 'فشل في رفع الملفات' : 'Failed to upload files'));
       }
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Failed to upload files');
+      toast.error(currentLang === 'ar' ? 'فشل في رفع الملفات' : 'Failed to upload files');
     } finally {
       setUploading(false);
     }
@@ -101,7 +103,7 @@ export default function MediaPage() {
 
   const handleCopyUrl = (item: MediaItem) => {
     navigator.clipboard.writeText(window.location.origin + item.path);
-    toast.success('URL copied to clipboard');
+    toast.success(currentLang === 'ar' ? 'تم نسخ الرابط إلى الحافظة' : 'URL copied to clipboard');
   };
 
   const handleView = (item: MediaItem) => {
@@ -117,27 +119,41 @@ export default function MediaPage() {
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return currentLang === 'ar' ? '0 بايت' : '0 Bytes';
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizesEn = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizesAr = ['بايت', 'ك.ب', 'م.ب', 'ج.ب'];
+    const sizes = currentLang === 'ar' ? sizesAr : sizesEn;
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   const getFileTypeFromMimeType = (mimeType: string) => {
-    if (mimeType.startsWith('image/')) return 'image';
-    if (mimeType.startsWith('video/')) return 'video';
-    if (mimeType.startsWith('audio/')) return 'audio';
-    if (mimeType === 'application/pdf') return 'document';
-    return 'other';
+    const typeMap = {
+      image: { en: 'image', ar: 'صورة' },
+      video: { en: 'video', ar: 'فيديو' },
+      audio: { en: 'audio', ar: 'صوت' },
+      document: { en: 'document', ar: 'مستند' },
+      other: { en: 'other', ar: 'أخرى' }
+    };
+    
+    let type: keyof typeof typeMap;
+    if (mimeType.startsWith('image/')) type = 'image';
+    else if (mimeType.startsWith('video/')) type = 'video';
+    else if (mimeType.startsWith('audio/')) type = 'audio';
+    else if (mimeType === 'application/pdf') type = 'document';
+    else type = 'other';
+    
+    return currentLang === 'ar' ? typeMap[type].ar : typeMap[type].en;
   };
 
   const columns = [
     {
       key: 'file',
-      label: 'File',
+      label: currentLang === 'ar' ? 'الملف' : 'File',
+      labelAr: 'الملف',
       render: (_, item: MediaItem) => (
-        <div className="flex items-center gap-3">
+        <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
             {item.mimeType.startsWith('image/') ? (
               <img
@@ -154,9 +170,9 @@ export default function MediaPage() {
               getFileIcon(item.mimeType)
             )}
           </div>
-          <div>
-            <div className="font-medium text-sm">{item.originalName}</div>
-            <div className="text-xs text-gray-500">
+          <div className={isRTL ? 'text-right' : 'text-left'}>
+            <div className="font-medium text-sm font-readex">{item.originalName}</div>
+            <div className="text-xs text-gray-500 font-readex">
               {formatFileSize(item.size)} • {item.mimeType.split('/')[1].toUpperCase()}
             </div>
           </div>
@@ -165,57 +181,67 @@ export default function MediaPage() {
     },
     {
       key: 'description',
-      label: 'Description',
+      label: currentLang === 'ar' ? 'الوصف' : 'Description',
+      labelAr: 'الوصف',
       render: (description: string) => (
-        <div className="text-sm text-gray-600 max-w-xs truncate">
+        <div className={`text-sm text-gray-600 max-w-xs truncate font-readex ${isRTL ? 'text-right' : 'text-left'}`}>
           {description || '-'}
         </div>
       ),
     },
     {
       key: 'mimeType',
-      label: 'Type',
+      label: currentLang === 'ar' ? 'النوع' : 'Type',
+      labelAr: 'النوع',
       render: (mimeType: string) => (
-        <Badge variant="outline" className="text-xs">
+        <Badge variant="outline" className="text-xs font-readex">
           {getFileTypeFromMimeType(mimeType)}
         </Badge>
       ),
     },
     {
       key: 'size',
-      label: 'Size',
+      label: currentLang === 'ar' ? 'الحجم' : 'Size',
+      labelAr: 'الحجم',
       render: (size: number) => (
-        <span className="text-sm">{formatFileSize(size)}</span>
+        <span className="text-sm font-readex">{formatFileSize(size)}</span>
       ),
     },
     {
       key: 'createdAt',
-      label: 'Uploaded',
+      label: currentLang === 'ar' ? 'تاريخ الرفع' : 'Uploaded',
+      labelAr: 'تاريخ الرفع',
       render: (date: string) => (
-        <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+        <span className="text-sm font-readex">
+          {new Date(date).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
+        </span>
       ),
     },
   ];
 
   const tableActions = [
     {
-      label: 'View',
-      icon: <Eye className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'عرض' : 'View',
+      labelAr: 'عرض',
+      icon: <Eye className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: handleView,
     },
     {
-      label: 'Copy URL',
-      icon: <Copy className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'نسخ الرابط' : 'Copy URL',
+      labelAr: 'نسخ الرابط',
+      icon: <Copy className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: handleCopyUrl,
     },
     {
-      label: 'Download',
-      icon: <Download className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'تحميل' : 'Download',
+      labelAr: 'تحميل',
+      icon: <Download className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: handleView,
     },
     {
-      label: 'Delete',
-      icon: <Trash2 className="mr-2 h-4 w-4" />,
+      label: currentLang === 'ar' ? 'حذف' : 'Delete',
+      labelAr: 'حذف',
+      icon: <Trash2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: actions.deleteItem,
       variant: 'destructive' as const,
     },
@@ -224,62 +250,75 @@ export default function MediaPage() {
   const filterOptions = [
     {
       key: 'mimeType',
-      label: 'Type',
+      label: currentLang === 'ar' ? 'النوع' : 'Type',
+      labelAr: 'النوع',
       options: [
-        { value: 'image', label: 'Images' },
-        { value: 'video', label: 'Videos' },
-        { value: 'audio', label: 'Audio' },
-        { value: 'document', label: 'Documents' },
-        { value: 'other', label: 'Other' },
+        { value: 'image', label: 'Images', labelAr: 'صور' },
+        { value: 'video', label: 'Videos', labelAr: 'فيديوهات' },
+        { value: 'audio', label: 'Audio', labelAr: 'ملفات صوتية' },
+        { value: 'document', label: 'Documents', labelAr: 'مستندات' },
+        { value: 'other', label: 'Other', labelAr: 'أخرى' },
       ],
     },
   ];
 
   const stats = [
     {
-      label: 'Total Files',
+      label: currentLang === 'ar' ? 'إجمالي الملفات' : 'Total Files',
       value: state.items?.length ?? 0,
+      description: currentLang === 'ar' ? 'العدد الإجمالي' : 'Total count'
     },
     {
-      label: 'Images',
+      label: currentLang === 'ar' ? 'الصور' : 'Images',
       value: (state.items ?? []).filter(m => m.mimeType.startsWith('image/')).length,
+      description: currentLang === 'ar' ? 'ملفات الصور' : 'Image files'
     },
     {
-      label: 'Videos',
+      label: currentLang === 'ar' ? 'الفيديوهات' : 'Videos',
       value: (state.items ?? []).filter(m => m.mimeType.startsWith('video/')).length,
+      description: currentLang === 'ar' ? 'ملفات الفيديو' : 'Video files'
     },
     {
-      label: 'Documents',
+      label: currentLang === 'ar' ? 'المستندات' : 'Documents',
       value: (state.items ?? []).filter(m => m.mimeType === 'application/pdf' || m.mimeType.startsWith('text/')).length,
+      description: currentLang === 'ar' ? 'الملفات النصية' : 'Document files'
     },
     {
-      label: 'Total Size',
+      label: currentLang === 'ar' ? 'إجمالي الحجم' : 'Total Size',
       value: formatFileSize((state.items ?? []).reduce((sum, m) => sum + m.size, 0)),
+      description: currentLang === 'ar' ? 'مساحة التخزين المستخدمة' : 'Storage used'
     },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Upload Area */}
-      <Card>
+      <Card className="border-2 border-[#00808A]/10">
         <CardContent className="pt-6">
           <div
-            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors"
+            className="border-2 border-dashed border-[#00808A]/30 rounded-lg p-8 text-center hover:border-[#00808A]/50 transition-colors bg-gradient-to-br from-[#00808A]/5 to-[#00234E]/5"
             onDrop={handleDrop}
             onDragOver={handleDragOver}
           >
-            <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Drop files here or click to upload
+            <Upload className="mx-auto h-12 w-12 text-[#00808A] mb-4" />
+            <h3 className="text-lg font-medium text-[#00234E] mb-2 font-readex">
+              {currentLang === 'ar' ? 'اسحب الملفات هنا أو انقر للرفع' : 'Drop files here or click to upload'}
             </h3>
-            <p className="text-gray-600 mb-4">
-              Support for JPG, PNG, PDF, MP4, and other common file formats
+            <p className="text-gray-600 mb-4 font-readex">
+              {currentLang === 'ar' 
+                ? 'يدعم ملفات JPG وPNG وPDF وMP4 والصيغ الشائعة الأخرى'
+                : 'Support for JPG, PNG, PDF, MP4, and other common file formats'
+              }
             </p>
             <Button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
+              className="bg-gradient-to-r from-[#00808A] to-[#006b74] hover:from-[#006b74] hover:to-[#00808A] font-readex"
             >
-              {uploading ? 'Uploading...' : 'Select Files'}
+              {uploading 
+                ? (currentLang === 'ar' ? 'جاري الرفع...' : 'Uploading...') 
+                : (currentLang === 'ar' ? 'اختيار الملفات' : 'Select Files')
+              }
             </Button>
             <input
               ref={fileInputRef}
@@ -295,15 +334,15 @@ export default function MediaPage() {
 
       {/* Media DataTable */}
       <DataTable
-        title="Media Library"
-        description="Upload and manage your media files"
+        title={t('media.title')}
+        description={currentLang === 'ar' ? 'رفع وإدارة ملفات الوسائط الخاصة بك' : 'Upload and manage your media files'}
         data={state.items}
         columns={columns}
         actions={tableActions}
         loading={state.loading}
-        searchPlaceholder="Search media files..."
-        emptyMessage="No media files found"
-        emptyDescription="Upload some files to get started"
+        searchPlaceholder={currentLang === 'ar' ? 'البحث في ملفات الوسائط...' : 'Search media files...'}
+        emptyMessage={currentLang === 'ar' ? 'لا توجد ملفات وسائط' : 'No media files found'}
+        emptyDescription={currentLang === 'ar' ? 'ارفع بعض الملفات للبدء' : 'Upload some files to get started'}
         filters={filterOptions}
         stats={stats}
         showSearch={true}

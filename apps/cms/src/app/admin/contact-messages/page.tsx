@@ -41,6 +41,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { ToastProvider, useToast } from '@/components/ui/toast';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 interface ContactMessage {
   id: string;
@@ -611,7 +612,7 @@ const ContactMessagesPage = () => {
 
       {/* Enhanced Messages Table */}
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <div className="overflow-x-auto">
+        <ScrollArea>
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -753,7 +754,8 @@ const ContactMessagesPage = () => {
               ))}
             </tbody>
           </table>
-        </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
 
         {/* Enhanced Pagination */}
         {pagination.totalPages > 1 && (
@@ -805,7 +807,8 @@ const ContactMessagesPage = () => {
 
       {/* Enhanced Message Modal */}
       <Dialog open={showMessageModal} onOpenChange={setShowMessageModal}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh]">
+          <ScrollArea className="max-h-[80vh]">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-right">
               تفاصيل الرسالة
@@ -917,6 +920,7 @@ const ContactMessagesPage = () => {
               </div>
             </div>
           )}
+          </ScrollArea>
         </DialogContent>
       </Dialog>
 

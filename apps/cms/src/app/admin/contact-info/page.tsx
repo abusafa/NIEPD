@@ -335,14 +335,14 @@ export default function ContactInfoPage() {
                                   <div>
                                     <Label>Icon</Label>
                                     <Select 
-                                      value={item.icon || ''} 
+                                      value={item.icon || 'none'} 
                                       onValueChange={(value) => handleUpdateItem(itemIndex, 'icon', value)}
                                     >
                                       <SelectTrigger>
                                         <SelectValue placeholder="Select icon" />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        <SelectItem value="">No icon</SelectItem>
+                                        <SelectItem value="none">No icon</SelectItem>
                                         {iconOptions.map(icon => (
                                           <SelectItem key={icon.value} value={icon.value}>
                                             {icon.label}

@@ -73,71 +73,95 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Strapi-inspired Light Theme */
+  --background: oklch(0.99 0.005 264);
+  --foreground: oklch(0.15 0.02 264);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.15 0.02 264);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.15 0.02 264);
+  --primary: oklch(0.58 0.22 285);
+  --primary-foreground: oklch(0.98 0.01 264);
+  --secondary: oklch(0.96 0.01 264);
+  --secondary-foreground: oklch(0.25 0.03 264);
+  --muted: oklch(0.96 0.01 264);
+  --muted-foreground: oklch(0.55 0.04 264);
+  --accent: oklch(0.94 0.03 285);
+  --accent-foreground: oklch(0.25 0.03 264);
+  --destructive: oklch(0.62 0.18 29);
+  --destructive-foreground: oklch(0.98 0.01 264);
+  --border: oklch(0.90 0.02 264);
+  --input: oklch(0.98 0.005 264);
+  --ring: oklch(0.58 0.22 285);
+  --chart-1: oklch(0.58 0.22 285);
+  --chart-2: oklch(0.65 0.18 195);
+  --chart-3: oklch(0.70 0.15 120);
+  --chart-4: oklch(0.68 0.20 45);
+  --chart-5: oklch(0.60 0.25 350);
+  --sidebar: oklch(0.99 0.005 264);
+  --sidebar-foreground: oklch(0.15 0.02 264);
+  --sidebar-primary: oklch(0.58 0.22 285);
+  --sidebar-primary-foreground: oklch(0.98 0.01 264);
+  --sidebar-accent: oklch(0.94 0.03 285);
+  --sidebar-accent-foreground: oklch(0.25 0.03 264);
+  --sidebar-border: oklch(0.90 0.02 264);
+  --sidebar-ring: oklch(0.58 0.22 285);
+  
+  /* Strapi-inspired purple accents */
+  --purple-50: oklch(0.97 0.02 285);
+  --purple-100: oklch(0.94 0.03 285);
+  --purple-200: oklch(0.88 0.08 285);
+  --purple-500: oklch(0.58 0.22 285);
+  --purple-600: oklch(0.52 0.25 285);
+  --purple-700: oklch(0.42 0.27 285);
+  --purple-800: oklch(0.32 0.25 285);
+  --purple-900: oklch(0.22 0.20 285);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Strapi-inspired Dark Theme */
+  --background: oklch(0.08 0.01 264);
+  --foreground: oklch(0.96 0.005 264);
+  --card: oklch(0.12 0.015 264);
+  --card-foreground: oklch(0.96 0.005 264);
+  --popover: oklch(0.12 0.015 264);
+  --popover-foreground: oklch(0.96 0.005 264);
+  --primary: oklch(0.70 0.20 285);
+  --primary-foreground: oklch(0.08 0.01 264);
+  --secondary: oklch(0.18 0.02 264);
+  --secondary-foreground: oklch(0.96 0.005 264);
+  --muted: oklch(0.18 0.02 264);
+  --muted-foreground: oklch(0.65 0.04 264);
+  --accent: oklch(0.22 0.04 285);
+  --accent-foreground: oklch(0.96 0.005 264);
+  --destructive: oklch(0.65 0.20 29);
+  --destructive-foreground: oklch(0.96 0.005 264);
+  --border: oklch(0.28 0.03 264);
+  --input: oklch(0.15 0.02 264);
+  --ring: oklch(0.70 0.20 285);
+  --chart-1: oklch(0.70 0.20 285);
+  --chart-2: oklch(0.68 0.18 195);
+  --chart-3: oklch(0.72 0.15 120);
+  --chart-4: oklch(0.70 0.20 45);
+  --chart-5: oklch(0.65 0.25 350);
+  --sidebar: oklch(0.10 0.015 264);
+  --sidebar-foreground: oklch(0.96 0.005 264);
+  --sidebar-primary: oklch(0.70 0.20 285);
+  --sidebar-primary-foreground: oklch(0.08 0.01 264);
+  --sidebar-accent: oklch(0.22 0.04 285);
+  --sidebar-accent-foreground: oklch(0.96 0.005 264);
+  --sidebar-border: oklch(0.28 0.03 264);
+  --sidebar-ring: oklch(0.70 0.20 285);
+  
+  /* Dark theme purple accents */
+  --purple-50: oklch(0.22 0.04 285);
+  --purple-100: oklch(0.28 0.06 285);
+  --purple-200: oklch(0.35 0.12 285);
+  --purple-500: oklch(0.70 0.20 285);
+  --purple-600: oklch(0.74 0.22 285);
+  --purple-700: oklch(0.78 0.24 285);
+  --purple-800: oklch(0.82 0.22 285);
+  --purple-900: oklch(0.86 0.18 285);
 }
 
 @layer base {
@@ -328,22 +352,143 @@
   transform: translateY(-2px);
 }
 
-/* Smooth scrollbar */
+/* Strapi-inspired scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: hsl(var(--muted));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #00808A;
-  border-radius: 4px;
+  background: hsl(var(--primary));
+  border-radius: 6px;
+  border: 1px solid hsl(var(--background));
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #006065;
+  background: oklch(from hsl(var(--primary)) l c h / 0.8);
+}
+
+/* Strapi-inspired utility classes */
+.bg-strapi-purple {
+  background-color: var(--purple-500);
+}
+
+.text-strapi-purple {
+  color: var(--purple-500);
+}
+
+.border-strapi-purple {
+  border-color: var(--purple-500);
+}
+
+.hover\:bg-strapi-purple:hover {
+  background-color: var(--purple-600);
+}
+
+.focus\:ring-strapi-purple:focus {
+  --tw-ring-color: var(--purple-500);
+}
+
+/* Enhanced button styles */
+.btn-strapi {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200 ease-in-out;
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.btn-strapi-outline {
+  @apply border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200 ease-in-out;
+  border-radius: calc(var(--radius) - 2px);
+}
+
+/* Enhanced card styles */
+.card-strapi {
+  @apply bg-card text-card-foreground border border-border shadow-sm hover:shadow-md transition-all duration-300 ease-in-out;
+  border-radius: var(--radius);
+}
+
+.card-strapi:hover {
+  transform: translateY(-1px);
+}
+
+/* Dark theme specific improvements */
+.dark {
+  /* Ensure text readability */
+  color-scheme: dark;
+}
+
+.dark .bg-gray-50 {
+  @apply bg-background;
+}
+
+.dark .bg-gray-100 {
+  @apply bg-muted;
+}
+
+.dark .bg-gray-200 {
+  @apply bg-accent;
+}
+
+.dark .text-gray-600 {
+  @apply text-muted-foreground;
+}
+
+.dark .text-gray-700 {
+  @apply text-foreground;
+}
+
+.dark .text-gray-900 {
+  @apply text-foreground;
+}
+
+.dark .border-gray-200 {
+  @apply border-border;
+}
+
+.dark .border-gray-300 {
+  @apply border-border;
+}
+
+/* Improve form elements in dark mode */
+.dark input:not([type="checkbox"]):not([type="radio"]) {
+  @apply bg-input border-border text-foreground;
+}
+
+.dark textarea {
+  @apply bg-input border-border text-foreground;
+}
+
+.dark select {
+  @apply bg-input border-border text-foreground;
+}
+
+/* Improve button contrast */
+.dark .btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.dark .btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+}
+
+/* Data tables improvements */
+.dark table {
+  @apply border-border;
+}
+
+.dark th {
+  @apply bg-muted text-muted-foreground border-border;
+}
+
+.dark td {
+  @apply border-border;
+}
+
+/* Card improvements */
+.dark .card {
+  @apply bg-card text-card-foreground border-border;
 }
 
 /* Respect reduced motion preference */

@@ -163,7 +163,7 @@ export default function EditCategoryPage() {
         },
         body: JSON.stringify({
           ...formData,
-          parentId: formData.parentId || null,
+          parentId: formData.parentId && formData.parentId !== 'none' ? formData.parentId : null,
         }),
       });
 
@@ -278,7 +278,7 @@ export default function EditCategoryPage() {
           <div>
             <Label htmlFor="parentId">Parent Category (Optional)</Label>
             <Select 
-              value={formData.parentId} 
+              value={formData.parentId || 'none'} 
               onValueChange={(value) => handleInputChange('parentId', value === 'none' ? '' : value)}
             >
               <SelectTrigger>
