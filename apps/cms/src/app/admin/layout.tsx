@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ToastProvider } from '@/components/ui/toast';
+import { NotificationCenter } from '@/components/ui/notification-center';
 import { 
   Settings, 
   FileText, 
@@ -185,6 +186,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             </Button>
             
             <div className="flex items-center space-x-4">
+              <NotificationCenter />
               <span className="text-sm text-gray-600">
                 Welcome back, {user.firstName || user.username}
               </span>
