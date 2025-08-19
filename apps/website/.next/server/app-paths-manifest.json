@@ -3,6 +3,7 @@
   "/[locale]/contact/page": "app/[locale]/contact/page.js",
   "/[locale]/events/page": "app/[locale]/events/page.js",
   "/[locale]/faq/page": "app/[locale]/faq/page.js",
+  "/[locale]/news/[id]/page": "app/[locale]/news/[id]/page.js",
   "/[locale]/news/page": "app/[locale]/news/page.js",
   "/[locale]/page": "app/[locale]/page.js",
   "/[locale]/partners/page": "app/[locale]/partners/page.js",

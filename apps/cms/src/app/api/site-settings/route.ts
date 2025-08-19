@@ -24,12 +24,10 @@ export async function GET(request: NextRequest) {
     // Convert to key-value object for easier usage
     const settingsObject = settings.reduce((acc, setting) => {
       acc[setting.key] = {
-        value: setting.value,
+        valueAr: setting.valueAr,
+        valueEn: setting.valueEn,
         type: setting.type,
-        descriptionAr: setting.descriptionAr,
-        descriptionEn: setting.descriptionEn,
-        category: setting.category,
-        isPublic: setting.isPublic,
+        groupName: setting.groupName,
       };
       return acc;
     }, {} as Record<string, any>);
@@ -74,13 +72,16 @@ export async function PUT(request: NextRequest) {
       updates.push(
         prisma.siteSetting.upsert({
           where: { key },
-          update: { value: String(value) },
+          update: { 
+            valueEn: String(value),
+            valueAr: String(value) // For now, store same value in both languages
+          },
           create: {
             key,
-            value: String(value),
-            type: 'string',
-            category: 'general',
-            isPublic: false,
+            valueEn: String(value),
+            valueAr: String(value),
+            type: 'text',
+            groupName: 'general',
           },
         })
       );

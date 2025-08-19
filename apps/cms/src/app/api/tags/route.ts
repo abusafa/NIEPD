@@ -38,7 +38,6 @@ export async function GET(request: NextRequest) {
               news: true,
               programs: true,
               events: true,
-              pages: true,
             },
           },
         },
@@ -92,11 +91,7 @@ export async function POST(request: NextRequest) {
     const { 
       nameAr, 
       nameEn, 
-      descriptionAr, 
-      descriptionEn, 
-      slug, 
-      type, 
-      color 
+      slug
     } = body;
 
     // Validate required fields
@@ -125,11 +120,7 @@ export async function POST(request: NextRequest) {
       data: {
         nameAr,
         nameEn,
-        descriptionAr,
-        descriptionEn,
         slug,
-        type: type || 'GENERAL',
-        color,
       },
       include: {
         _count: {
@@ -137,7 +128,6 @@ export async function POST(request: NextRequest) {
             news: true,
             programs: true,
             events: true,
-            pages: true,
           },
         },
       },

@@ -21,7 +21,6 @@ export async function GET(
             news: true,
             programs: true,
             events: true,
-            pages: true,
           },
         },
       },
@@ -78,12 +77,10 @@ export async function PUT(
     const { 
       nameAr, 
       nameEn, 
-      descriptionAr, 
-      descriptionEn, 
-      slug, 
-      type, 
-      color 
+      slug
     } = body;
+
+    const { id } = await params;
 
     // Check if tag exists
     const existingTag = await prisma.tag.findUnique({
@@ -119,11 +116,7 @@ export async function PUT(
       data: {
         nameAr,
         nameEn,
-        descriptionAr,
-        descriptionEn,
         slug,
-        type,
-        color,
       },
       include: {
         _count: {
@@ -131,7 +124,6 @@ export async function PUT(
             news: true,
             programs: true,
             events: true,
-            pages: true,
           },
         },
       },
@@ -153,6 +145,8 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
+    const { id } = await params;
+    
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
@@ -186,7 +180,6 @@ export async function DELETE(
             news: true,
             programs: true,
             events: true,
-            pages: true,
           },
         },
       },
@@ -200,7 +193,7 @@ export async function DELETE(
     }
 
     // Check if tag is being used
-    const totalUsage = tag._count.news + tag._count.programs + tag._count.events + tag._count.pages;
+    const totalUsage = tag._count.news + tag._count.programs + tag._count.events;
     if (totalUsage > 0) {
       return NextResponse.json(
         { error: `Cannot delete tag. It is being used by ${totalUsage} items.` },

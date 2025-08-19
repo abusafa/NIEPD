@@ -81,7 +81,7 @@ export default function ContactInfoPage() {
 
       if (response.ok) {
         const data = await response.json();
-        setContactInfo(data.contactInfo.map((item: ContactInfoItem) => ({
+        setContactInfo(data.data.map((item: ContactInfoItem) => ({
           ...item,
           sortOrder: item.sortOrder || 0,
         })));

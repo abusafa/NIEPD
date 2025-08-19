@@ -19,7 +19,6 @@ interface TagItem {
     news: number;
     programs: number;
     events: number;
-    pages: number;
   };
   createdAt: string;
   updatedAt: string;
@@ -61,7 +60,7 @@ export default function TagsPage() {
 
   const getTotalUsage = (count?: TagItem['_count']) => {
     if (!count) return 0;
-    return count.news + count.programs + count.events + count.pages;
+    return count.news + count.programs + count.events;
   };
 
   const columns = [
@@ -120,7 +119,6 @@ export default function TagsPage() {
                 {tag._count.news > 0 && <span>News: {tag._count.news}</span>}
                 {tag._count.programs > 0 && <span>Programs: {tag._count.programs}</span>}
                 {tag._count.events > 0 && <span>Events: {tag._count.events}</span>}
-                {tag._count.pages > 0 && <span>Pages: {tag._count.pages}</span>}
               </div>
             )}
           </div>
