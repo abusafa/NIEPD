@@ -148,3 +148,4 @@ CREATE TABLE contact_messages (
 ## ✨ Ready to Use!
 
 The integration is now complete and ready for production use. Contact form submissions from your website will automatically appear in the CMS admin interface for easy management and response.
+
