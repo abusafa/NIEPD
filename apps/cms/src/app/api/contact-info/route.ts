@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
+// CORS headers for cross-origin requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 // GET /api/contact-info - Get all contact information
 export async function GET(request: NextRequest) {
   try {
@@ -9,10 +21,10 @@ export async function GET(request: NextRequest) {
       orderBy: { type: 'asc' }
     });
 
-    return NextResponse.json({ contactInfo });
+    return NextResponse.json({ data: contactInfo }, { headers: corsHeaders });
   } catch (error) {
     console.error('Error fetching contact info:', error);
-    return NextResponse.json({ error: 'Failed to fetch contact info' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch contact info' }, { status: 500, headers: corsHeaders });
   }
 }
 

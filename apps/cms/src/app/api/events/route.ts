@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
     ]);
 
     return NextResponse.json({
-      events,
+      data: events,
       totalPages: Math.ceil(total / limit),
       currentPage: page,
       total,

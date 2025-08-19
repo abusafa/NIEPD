@@ -4,6 +4,18 @@ import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
+// CORS headers for cross-origin requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 // Helper function to verify JWT token
 function verifyToken(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
@@ -55,18 +67,15 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       data: members,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
-      },
-    });
+      total,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error('Error fetching organizational structure:', error);
     return NextResponse.json(
       { error: 'Failed to fetch organizational structure' },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

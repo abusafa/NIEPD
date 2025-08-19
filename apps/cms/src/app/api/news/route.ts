@@ -64,12 +64,12 @@ export async function GET(request: NextRequest) {
     ]);
 
     return NextResponse.json({
-      news: news.map(item => ({
+      data: news.map(item => ({
         ...item,
         tags: item.tags.map(nt => nt.tag),
       })),
       total,
-      pages: Math.ceil(total / limit),
+      totalPages: Math.ceil(total / limit),
       currentPage: page,
     }, { headers: corsHeaders });
   } catch (error) {

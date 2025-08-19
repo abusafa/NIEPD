@@ -1,7 +1,26 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  env: {
+    DATABASE_URL: process.env.DATABASE_URL || "file:./dev.db",
+    JWT_SECRET: process.env.JWT_SECRET || "your-jwt-secret-key-here",
+    PORT: process.env.PORT || "3001",
+  },
+  images: {
+    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+      }
+    ],
+  },
 };
 
 export default nextConfig;

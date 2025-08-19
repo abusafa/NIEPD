@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
+    "dev": "NEXT_PUBLIC_CMS_API_URL=http://localhost:3001 PORT=3000 next dev --turbopack",
+    "build": "NEXT_PUBLIC_CMS_API_URL=http://localhost:3001 next build",
+    "start": "NEXT_PUBLIC_CMS_API_URL=http://localhost:3001 PORT=3000 next start",
     "lint": "next lint"
   },
   "dependencies": {

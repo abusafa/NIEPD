@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
     ]);
 
     return NextResponse.json({
-      programs,
+      data: programs,
       totalPages: Math.ceil(total / limit),
       currentPage: page,
       total,

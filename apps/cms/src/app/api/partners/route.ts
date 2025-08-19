@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
+// CORS headers for cross-origin requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 // GET /api/partners - List all partners
 export async function GET(request: NextRequest) {
   try {
@@ -47,16 +59,16 @@ export async function GET(request: NextRequest) {
     ]);
 
     return NextResponse.json({
-      partners,
+      data: partners,
       total,
-      pages: Math.ceil(total / limit),
+      totalPages: Math.ceil(total / limit),
       currentPage: page,
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error('Error fetching partners:', error);
     return NextResponse.json(
       { error: 'Failed to fetch partners' },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
