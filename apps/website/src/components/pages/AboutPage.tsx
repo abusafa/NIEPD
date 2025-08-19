@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { Building, Users, Award, Target, Eye, Heart, Sparkles, Globe, Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
 import { dataService, SiteSettings } from '@/lib/api';

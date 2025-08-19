@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 5, "column": 0}, "map": {"version":3,"sources":["file:///Users/ihababusafa/dev/NIEPD/apps/website/src/app/layout.tsx"],"sourcesContent":["// This root layout is handled by middleware\n// The middleware will redirect all requests to the appropriate locale\nexport default function RootLayout({\n  children,\n}: {\n  children: React.ReactNode\n}) {\n  return children\n}\n"],"names":[],"mappings":"AAAA,4CAA4C;AAC5C,sEAAsE;;;;AACvD,SAAS,WAAW,EACjC,QAAQ,EAGT;IACC,OAAO;AACT","debugId":null}}]
+}

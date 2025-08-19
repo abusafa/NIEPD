@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { Building, ExternalLink, Mail, Phone, Globe, Search, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 import { dataService } from '@/lib/api';

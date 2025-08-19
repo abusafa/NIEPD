@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { Building, Users, Award, Target, ChevronDown, ChevronUp, Mail, Phone, Linkedin, Twitter, User, Crown, Shield, Briefcase, GraduationCap, Globe } from 'lucide-react';
 import { dataService } from '@/lib/api';

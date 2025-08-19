@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { User, Mail, Phone, BookOpen, Calendar, MapPin, CheckCircle, AlertCircle } from 'lucide-react';

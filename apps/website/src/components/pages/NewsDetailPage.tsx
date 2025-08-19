@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Calendar, User, Eye, Share2, ArrowLeft, Tag, Clock } from 'lucide-react';

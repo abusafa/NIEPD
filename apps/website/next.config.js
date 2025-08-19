@@ -15,10 +15,6 @@ const nextConfig = {
       }
     ],
   },
-  // Configure i18n
-  // experimental: {
-  //   ppr: true, // Only available in canary versions
-  // },
   // Environment variables
   env: {
     CMS_API_URL: process.env.CMS_API_URL || 'http://localhost:3001',

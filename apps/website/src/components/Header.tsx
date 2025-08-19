@@ -1,20 +1,22 @@
+'use client'
+
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Logo from './Logo';
+import LocaleSwitcher from './LocaleSwitcher';
+import { createLocalizedPath } from '@/lib/navigation';
+import { type Locale } from '@/lib/i18n';
 
-type Language = 'ar' | 'en';
 type Page = 'home' | 'about' | 'programs' | 'news' | 'events' | 'partners' | 'contact' | 'faq' | 'privacy' | 'terms';
 
 interface HeaderProps {
-  currentLang: Language;
-  setCurrentLang: (lang: Language) => void;
+  currentLang: Locale;
   currentPage: Page;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
   currentLang, 
-  setCurrentLang, 
   currentPage
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,14 +51,14 @@ const Header: React.FC<HeaderProps> = ({
   const t = content[currentLang];
 
   const navigation = [
-    { key: 'home' as Page, label: t.home, path: '/' },
-    { key: 'about' as Page, label: t.about, path: '/about' },
-    { key: 'programs' as Page, label: t.programs, path: '/programs' },
-    { key: 'news' as Page, label: t.news, path: '/news' },
-    { key: 'events' as Page, label: t.events, path: '/events' },
-    { key: 'partners' as Page, label: t.partners, path: '/partners' },
-    { key: 'faq' as Page, label: t.faq, path: '/faq' },
-    { key: 'contact' as Page, label: t.contact, path: '/contact' },
+    { key: 'home' as Page, label: t.home, path: createLocalizedPath('/', currentLang) },
+    { key: 'about' as Page, label: t.about, path: createLocalizedPath('/about', currentLang) },
+    { key: 'programs' as Page, label: t.programs, path: createLocalizedPath('/programs', currentLang) },
+    { key: 'news' as Page, label: t.news, path: createLocalizedPath('/news', currentLang) },
+    { key: 'events' as Page, label: t.events, path: createLocalizedPath('/events', currentLang) },
+    { key: 'partners' as Page, label: t.partners, path: createLocalizedPath('/partners', currentLang) },
+    { key: 'faq' as Page, label: t.faq, path: createLocalizedPath('/faq', currentLang) },
+    { key: 'contact' as Page, label: t.contact, path: createLocalizedPath('/contact', currentLang) },
   ];
 
   return (
@@ -98,19 +100,13 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Language Toggle & CTA */}
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setCurrentLang(currentLang === 'ar' ? 'en' : 'ar')}
-              aria-label={currentLang === 'ar' ? 'التبديل إلى الإنجليزية' : 'Switch to Arabic'}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-secondary-700 hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 hover:scale-105 transition-all duration-300 border border-transparent hover:border-primary-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300"
-            >
-              <Globe className="w-4 h-4 transition-transform duration-300 hover:rotate-12" />
-              <span className="text-sm font-medium">
-                {currentLang === 'ar' ? 'EN' : 'عربي'}
-              </span>
-            </button>
+            <LocaleSwitcher 
+              currentLocale={currentLang}
+              className="hidden sm:block"
+            />
 
             <Link 
-              href="/register"
+              href={createLocalizedPath('/register', currentLang)}
               className="btn-primary hidden md:flex transform hover:scale-105"
             >
               {t.register}
@@ -152,13 +148,19 @@ const Header: React.FC<HeaderProps> = ({
                   {item.label}
                 </Link>
               ))}
-              <Link 
-                href="/register"
-                onClick={() => setIsMenuOpen(false)}
-                className="btn-primary mt-4 animate-fade-in-up animate-delay-500 transform hover:scale-105"
-              >
-                {t.register}
-              </Link>
+              <div className="mt-4 space-y-4">
+                <LocaleSwitcher 
+                  currentLocale={currentLang}
+                  className="w-full"
+                />
+                <Link 
+                  href={createLocalizedPath('/register', currentLang)}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="btn-primary w-full animate-fade-in-up animate-delay-500 transform hover:scale-105"
+                >
+                  {t.register}
+                </Link>
+              </div>
             </nav>
           </div>
         )}
