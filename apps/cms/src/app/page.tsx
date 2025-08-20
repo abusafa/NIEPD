@@ -326,11 +326,11 @@ export default function Home() {
               {/* Logo */}
               <div className="mb-8">
                 <Image
-                  src="/images/logos/niepd-logo-vertical.svg"
+                  src="/images/logos/png/شعار المعهد الوطني للتطوير المهني التعليمي-06-03.png"
                   alt="NIEPD Logo"
-                  width={200}
+                  width={150}
                   height={150}
-                  className="h-32 w-auto mx-auto mb-6 brightness-0 invert"
+                  className=" w-auto mx-auto mb-6 brightness-0 invert"
                 />
               </div>
               
