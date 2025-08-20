@@ -2,15 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
-interface RouteParams {
-  params: { id: string };
-}
-
 // GET /api/navigation/[id] - Get single navigation item
 export async function GET(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     const { id } = params;
     const navigationItem = await prisma.navigation.findUnique({

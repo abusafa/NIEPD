@@ -15,8 +15,9 @@ const updateErrorReportSchema = z.object({
 // GET /api/error-reports/[id] - Get a specific error report
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     const errorReport = await prisma.errorReport.findUnique({
       where: {
@@ -58,8 +59,9 @@ export async function GET(
 // PATCH /api/error-reports/[id] - Update a specific error report
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     const body = await request.json();
     
@@ -83,12 +85,12 @@ export async function PATCH(
 
     // If status is being updated to RESOLVED, set resolvedAt timestamp
     if (updateData.status === 'RESOLVED') {
-      (updateData as any).resolvedAt = new Date();
+      (updateData as Record<string, unknown>).resolvedAt = new Date();
     }
 
     // If status is changed from RESOLVED to something else, clear resolvedAt
     if (updateData.status && updateData.status !== 'RESOLVED') {
-      (updateData as any).resolvedAt = null;
+      (updateData as Record<string, unknown>).resolvedAt = null;
     }
 
     const errorReport = await prisma.errorReport.update({
@@ -125,7 +127,7 @@ export async function PATCH(
   } catch (error) {
     console.error('Error updating error report:', error);
     
-    if ((error as any).code === 'P2025') {
+    if (error && typeof error === 'object' && 'code' in error && (error as Record<string, unknown>).code === 'P2025') {
       return NextResponse.json(
         { error: 'Error report not found' },
         { status: 404 }
@@ -142,8 +144,9 @@ export async function PATCH(
 // DELETE /api/error-reports/[id] - Delete a specific error report
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     await prisma.errorReport.delete({
       where: {
@@ -160,7 +163,7 @@ export async function DELETE(
   } catch (error) {
     console.error('Error deleting error report:', error);
     
-    if ((error as any).code === 'P2025') {
+    if (error && typeof error === 'object' && 'code' in error && (error as Record<string, unknown>).code === 'P2025') {
       return NextResponse.json(
         { error: 'Error report not found' },
         { status: 404 }

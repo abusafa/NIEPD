@@ -25,7 +25,8 @@ function verifyToken(request: NextRequest) {
 
   const token = authHeader.substring(7);
   try {
-    return jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as any;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    return decoded as { userId: string; role: string; email: string };
   } catch {
     return null;
   }
@@ -36,19 +37,21 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
-    const featured = searchParams.get('featured');
+    const status = searchParams.get('status');
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const search = searchParams.get('search');
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     
     if (category) {
-      where.categorySlug = category;
+      where.category = {
+        slug: category
+      };
     }
     
-    if (featured === 'true') {
-      where.featured = true;
+    if (status) {
+      where.status = status as 'DRAFT' | 'REVIEW' | 'PUBLISHED' | 'ARCHIVED';
     }
     
     if (search) {
@@ -118,14 +121,13 @@ export async function POST(request: NextRequest) {
 
     const faq = await prisma.fAQ.create({
       data: {
-        categorySlug: body.categorySlug || 'general',
         questionAr: body.questionAr.trim(),
         questionEn: body.questionEn.trim(),
         answerAr: body.answerAr.trim(),
         answerEn: body.answerEn.trim(),
         sortOrder: body.sortOrder || 0,
-        isActive: body.isActive !== false,
-        featured: body.featured || false,
+        status: body.status || 'DRAFT',
+        authorId: user.userId,
       },
     });
 

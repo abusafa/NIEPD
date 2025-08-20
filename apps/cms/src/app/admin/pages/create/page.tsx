@@ -109,7 +109,7 @@ export default function CreatePagePage() {
     }
   }, [formData.titleAr]);
 
-  const handleInputChange = (field: keyof FormData, value: any) => {
+  const handleInputChange = (field: keyof FormData, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 

@@ -35,9 +35,13 @@ export function generateToken(user: AuthUser): string {
   );
 }
 
-export function verifyToken(token: string): any {
+export function verifyToken(token: string): { userId: string; role: string; email: string } {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (typeof decoded === 'object' && decoded !== null) {
+      return decoded as { userId: string; role: string; email: string };
+    }
+    throw new Error('Invalid token format');
   } catch (error) {
     throw new Error('Invalid token');
   }

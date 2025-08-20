@@ -20,7 +20,7 @@ export interface FormField {
     ar?: string;
   };
   options?: Array<{ value: string; label: string; }>;
-  validation?: (value: any) => string | null;
+  validation?: (value: unknown) => string | null;
 }
 
 // Common status options for content
@@ -32,7 +32,7 @@ export const contentStatuses = [
 
 // Common validation functions
 export const validators = {
-  required: (value: any, fieldName: string) => 
+  required: (value: unknown, fieldName: string) => 
     !value || (typeof value === 'string' && !value.trim()) 
       ? `${fieldName} is required` 
       : null,
@@ -58,7 +58,7 @@ export const validators = {
 
 // Helper to validate entire form based on field definitions
 export const validateForm = (
-  formData: Record<string, any>, 
+  formData: Record<string, unknown>, 
   fields: FormField[]
 ): Record<string, string> => {
   const errors: Record<string, string> = {};
@@ -119,7 +119,7 @@ export const validateForm = (
 export const apiCall = async (
   url: string, 
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
-  data?: any
+  data?: unknown
 ) => {
   const headers: Record<string, string> = {
     'Authorization': `Bearer ${localStorage.getItem('token')}`,

@@ -108,7 +108,7 @@ export default function ContactInfoPage() {
     setContactInfo(prev => [...prev, newItem]);
   };
 
-  const handleUpdateItem = (index: number, field: keyof ContactInfoItem, value: any) => {
+  const handleUpdateItem = (index: number, field: keyof ContactInfoItem, value: unknown) => {
     setContactInfo(prev => prev.map((item, i) => 
       i === index ? { ...item, [field]: value } : item
     ));
@@ -150,15 +150,15 @@ export default function ContactInfoPage() {
     }
   };
 
-  const getTypeIcon = (type: string) => {
-    const typeConfig = contactTypes.find(t => t.value === type);
-    return typeConfig ? typeConfig.icon : Phone;
-  };
+  // const getTypeIcon = (type: string) => {
+  //   const typeConfig = contactTypes.find(t => t.value === type);
+  //   return typeConfig ? typeConfig.icon : Phone;
+  // };
 
-  const groupedContactInfo = contactTypes.map(type => ({
-    ...type,
-    items: contactInfo.filter(item => item.type === type.value).sort((a, b) => a.sortOrder - b.sortOrder)
-  }));
+  // const groupedContactInfo = contactTypes.map(type => ({
+  //   ...type,
+  //   items: contactInfo.filter(item => item.type === type.value).sort((a, b) => a.sortOrder - b.sortOrder)
+  // }));
 
   if (loading) {
     return (
@@ -241,7 +241,7 @@ export default function ContactInfoPage() {
                       <Icon className="h-5 w-5" />
                       {type.label} ({items.length})
                     </CardTitle>
-                    <Button size="sm" onClick={() => handleAddItem(type.value)}>
+                    <Button size="sm" onClick={() => handleAddItem(type.value as ContactInfoItem['type'])}>
                       <Plus className="h-4 w-4 mr-2" />
                       Add {type.label}
                     </Button>
@@ -253,7 +253,7 @@ export default function ContactInfoPage() {
                       <Icon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 mb-2">No {type.label.toLowerCase()} information</h3>
                       <p className="text-gray-600 mb-4">Add your first {type.label.toLowerCase()} entry</p>
-                      <Button onClick={() => handleAddItem(type.value)}>
+                      <Button onClick={() => handleAddItem(type.value as ContactInfoItem['type'])}>
                         <Plus className="h-4 w-4 mr-2" />
                         Add {type.label}
                       </Button>

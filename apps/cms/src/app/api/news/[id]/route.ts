@@ -2,17 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
-interface RouteParams {
-  params: { id: string };
-}
+
 
 // GET /api/news/[id] - Get single news
 export async function GET(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const news = await prisma.news.findUnique({
       where: { id },
       include: {

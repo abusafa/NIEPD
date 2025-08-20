@@ -13,7 +13,8 @@ function verifyToken(request: NextRequest) {
 
   const token = authHeader.substring(7);
   try {
-    return jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as any;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    return decoded as { userId: string; role: string; email: string };
   } catch {
     return null;
   }
@@ -22,10 +23,11 @@ function verifyToken(request: NextRequest) {
 // GET /api/organizational-structure/[id] - Get specific member
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const member = await prisma.organizationalStructure.findUnique({
       where: { id },
     });
@@ -50,10 +52,11 @@ export async function GET(
 // PUT /api/organizational-structure/[id] - Update member
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const user = verifyToken(request);
     if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
       return NextResponse.json(
@@ -134,10 +137,11 @@ export async function PUT(
 // DELETE /api/organizational-structure/[id] - Delete member
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const user = verifyToken(request);
     if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
       return NextResponse.json(

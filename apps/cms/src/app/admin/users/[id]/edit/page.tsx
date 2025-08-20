@@ -100,7 +100,7 @@ export default function EditUserPage() {
     }
   };
 
-  const handleInputChange = (field: keyof FormData, value: any) => {
+  const handleInputChange = (field: keyof FormData, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -368,7 +368,7 @@ export default function EditUserPage() {
           <ul className="text-sm text-amber-700 space-y-1">
             <li>• Only assign Super Admin role to trusted personnel</li>
             <li>• Users will receive an email notification when their account is modified</li>
-            <li>• Changing a user's role takes effect immediately</li>
+            <li>• Changing a user&apos;s role takes effect immediately</li>
             <li>• Deactivating a user will immediately revoke their access</li>
             <li>• Password changes will require the user to log in again</li>
           </ul>

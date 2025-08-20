@@ -513,11 +513,11 @@ const translations: Record<Language, Translation> = {
 // Helper function to get nested translation
 const getNestedTranslation = (obj: Translation, path: string): string => {
   const keys = path.split('.');
-  let current: any = obj;
+  let current: Record<string, unknown> = obj;
   
   for (const key of keys) {
     if (current && typeof current === 'object' && key in current) {
-      current = current[key];
+      current = current[key] as Record<string, unknown>;
     } else {
       return path; // Return the key if translation not found
     }

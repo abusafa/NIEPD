@@ -8,7 +8,7 @@ export interface ValidationRule {
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp;
-  custom?: (value: any) => boolean;
+  custom?: (value: unknown) => boolean;
   message?: string;
   messageAr?: string;
 }
@@ -26,7 +26,7 @@ export interface FormField {
 export function useFormValidation(fields: FormField[]) {
   const { currentLang, t } = useLanguage();
 
-  const validateField = (fieldName: string, value: any, rules: ValidationRule[] = []): string => {
+  const validateField = (fieldName: string, value: unknown, rules: ValidationRule[] = []): string => {
     for (const rule of rules) {
       // Required validation
       if (rule.required && (!value || (typeof value === 'string' && value.trim() === ''))) {
@@ -68,7 +68,7 @@ export function useFormValidation(fields: FormField[]) {
     return '';
   };
 
-  const validateForm = (formData: Record<string, any>): ValidationErrors => {
+  const validateForm = (formData: Record<string, unknown>): ValidationErrors => {
     const errors: ValidationErrors = {};
 
     fields.forEach(field => {
@@ -81,7 +81,7 @@ export function useFormValidation(fields: FormField[]) {
     return errors;
   };
 
-  const isValidForm = (formData: Record<string, any>): boolean => {
+  const isValidForm = (formData: Record<string, unknown>): boolean => {
     const errors = validateForm(formData);
     return Object.keys(errors).length === 0;
   };

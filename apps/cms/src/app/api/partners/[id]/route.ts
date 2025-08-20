@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
-interface RouteParams {
-  params: { id: string };
-}
+
 
 // GET /api/partners/[id] - Get single partner (public access)
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   try {
     const { id } = await params;
     const partner = await prisma.partner.findUnique({
@@ -26,7 +25,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 // PUT /api/partners/[id]
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   try {
     const { id } = await params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -53,7 +53,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 }
 
 // DELETE /api/partners/[id]
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   try {
     const { id } = await params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');

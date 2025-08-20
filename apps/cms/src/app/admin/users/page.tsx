@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -83,7 +83,7 @@ export default function UsersPage() {
     {
       key: 'user',
       label: 'User',
-      render: (_, user: UserItem) => (
+      render: (_: unknown, user: UserItem) => (
         <div className="space-y-1">
           <div className="font-medium text-sm">
             {user.firstName && user.lastName 
@@ -104,11 +104,11 @@ export default function UsersPage() {
     {
       key: 'role',
       label: 'Role',
-      render: (role: string) => (
-        <Badge className={getRoleColor(role)}>
+      render: (_: unknown, user: UserItem) => (
+        <Badge className={getRoleColor(user.role)}>
           <div className="flex items-center gap-1">
-            {getRoleIcon(role)}
-            {role.replace('_', ' ')}
+            {getRoleIcon(user.role)}
+            {user.role.replace('_', ' ')}
           </div>
         </Badge>
       ),
@@ -116,29 +116,29 @@ export default function UsersPage() {
     {
       key: 'isActive',
       label: 'Status',
-      render: (isActive: boolean) => (
-        <Badge variant={isActive ? "default" : "secondary"}>
-          {isActive ? 'Active' : 'Inactive'}
+      render: (_: unknown, user: UserItem) => (
+        <Badge variant={user.isActive ? "default" : "secondary"}>
+          {user.isActive ? 'Active' : 'Inactive'}
         </Badge>
       ),
     },
     {
       key: 'createdAt',
       label: 'Created',
-      render: (date: string) => (
+      render: (_: unknown, user: UserItem) => (
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-gray-400" />
-          <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+          <span className="text-sm">{new Date(user.createdAt).toLocaleDateString()}</span>
         </div>
       ),
     },
     {
       key: 'updatedAt',
       label: 'Last Updated',
-      render: (date: string) => (
+      render: (_: unknown, user: UserItem) => (
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-gray-400" />
-          <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+          <span className="text-sm">{new Date(user.updatedAt).toLocaleDateString()}</span>
         </div>
       ),
     },
@@ -158,7 +158,7 @@ export default function UsersPage() {
     {
       label: 'Delete',
       icon: <Trash2 className="mr-2 h-4 w-4" />,
-      onClick: actions.deleteItem,
+      onClick: (user: UserItem) => actions.deleteItem(user.id),
       variant: 'destructive' as const,
     },
   ];
@@ -205,10 +205,10 @@ export default function UsersPage() {
   ];
 
   return (
-    <DataTable
+    <DataTable<UserItem>
       title="User Management"
       description="Manage system users and their permissions"
-      data={state.items}
+      data={state.items || []}
       columns={columns}
       actions={tableActions}
       loading={state.loading}

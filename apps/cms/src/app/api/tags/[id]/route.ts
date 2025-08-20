@@ -2,17 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
-interface RouteParams {
-  params: { id: string };
-}
+
 
 // GET /api/tags/[id] - Get single tag
 export async function GET(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const tag = await prisma.tag.findUnique({
       where: { id },
       include: {
@@ -46,7 +45,7 @@ export async function GET(
 // PUT /api/tags/[id] - Update tag
 export async function PUT(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -142,10 +141,11 @@ export async function PUT(
 // DELETE /api/tags/[id] - Delete tag
 export async function DELETE(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {

@@ -5,10 +5,11 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/events/[id] - Get a single event
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -61,10 +62,11 @@ export async function GET(
 // PUT /api/events/[id] - Update an event
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const user = await getUserFromToken(request);
     if (!user) {
       return NextResponse.json(
@@ -188,10 +190,11 @@ export async function PUT(
 // DELETE /api/events/[id] - Delete an event
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const user = await getUserFromToken(request);
     if (!user) {
       return NextResponse.json(

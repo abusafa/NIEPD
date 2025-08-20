@@ -152,7 +152,7 @@ export default function MediaPage() {
       key: 'file',
       label: currentLang === 'ar' ? 'الملف' : 'File',
       labelAr: 'الملف',
-      render: (_, item: MediaItem) => (
+      render: (_: unknown, item: MediaItem) => (
         <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
             {item.mimeType.startsWith('image/') ? (
@@ -183,9 +183,9 @@ export default function MediaPage() {
       key: 'description',
       label: currentLang === 'ar' ? 'الوصف' : 'Description',
       labelAr: 'الوصف',
-      render: (description: string) => (
+      render: (_: unknown, item: MediaItem) => (
         <div className={`text-sm text-gray-600 max-w-xs truncate font-readex ${isRTL ? 'text-right' : 'text-left'}`}>
-          {description || '-'}
+          {item.description || '-'}
         </div>
       ),
     },
@@ -193,9 +193,9 @@ export default function MediaPage() {
       key: 'mimeType',
       label: currentLang === 'ar' ? 'النوع' : 'Type',
       labelAr: 'النوع',
-      render: (mimeType: string) => (
+      render: (_: unknown, item: MediaItem) => (
         <Badge variant="outline" className="text-xs font-readex">
-          {getFileTypeFromMimeType(mimeType)}
+          {getFileTypeFromMimeType(item.mimeType)}
         </Badge>
       ),
     },
@@ -203,17 +203,17 @@ export default function MediaPage() {
       key: 'size',
       label: currentLang === 'ar' ? 'الحجم' : 'Size',
       labelAr: 'الحجم',
-      render: (size: number) => (
-        <span className="text-sm font-readex">{formatFileSize(size)}</span>
+      render: (_: unknown, item: MediaItem) => (
+        <span className="text-sm font-readex">{formatFileSize(item.size)}</span>
       ),
     },
     {
       key: 'createdAt',
       label: currentLang === 'ar' ? 'تاريخ الرفع' : 'Uploaded',
       labelAr: 'تاريخ الرفع',
-      render: (date: string) => (
+      render: (_: unknown, item: MediaItem) => (
         <span className="text-sm font-readex">
-          {new Date(date).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
+          {new Date(item.createdAt).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
         </span>
       ),
     },
@@ -242,7 +242,7 @@ export default function MediaPage() {
       label: currentLang === 'ar' ? 'حذف' : 'Delete',
       labelAr: 'حذف',
       icon: <Trash2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
-      onClick: actions.deleteItem,
+      onClick: (item: MediaItem) => actions.deleteItem(item.id),
       variant: 'destructive' as const,
     },
   ];

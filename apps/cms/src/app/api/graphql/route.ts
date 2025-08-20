@@ -1,5 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
+import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { typeDefs } from '@/lib/graphql/schema';
 import { resolvers } from '@/lib/graphql/resolvers';
@@ -20,10 +21,10 @@ const handler = startServerAndCreateNextHandler(server, {
     let user = null;
     
     try {
-      const authHeader = req.headers.get('authorization');
+      const authHeader = (req.headers as any)?.get('authorization');
       if (authHeader) {
         const token = authHeader.replace('Bearer ', '');
-        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; role: string; email: string };
         user = await prisma.user.findUnique({ 
           where: { id: decoded.userId }
         });
@@ -33,10 +34,16 @@ const handler = startServerAndCreateNextHandler(server, {
     }
     
     return {
-      user,
+      user: user || undefined,
       prisma,
     };
   },
 });
 
-export { handler as GET, handler as POST };
+export async function GET(request: NextRequest) {
+  return handler(request);
+}
+
+export async function POST(request: NextRequest) {
+  return handler(request);
+}

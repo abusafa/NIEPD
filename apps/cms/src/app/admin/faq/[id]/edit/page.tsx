@@ -200,17 +200,14 @@ export default function EditFAQPage() {
         </div>
         
         <BilingualTextFields
-          label="Question"
+          titleLabel="Question"
           required
-          arValue={formData.questionAr}
-          enValue={formData.questionEn}
-          onArChange={(value) => setFormData(prev => ({ ...prev, questionAr: value }))}
-          onEnChange={(value) => setFormData(prev => ({ ...prev, questionEn: value }))}
-          arError={errors.questionAr}
-          enError={errors.questionEn}
-          arPlaceholder="اكتب السؤال بالعربية..."
-          enPlaceholder="Enter question in English..."
-          component="input"
+          titleAr={formData.questionAr}
+          titleEn={formData.questionEn}
+          onTitleArChange={(value) => setFormData(prev => ({ ...prev, questionAr: value }))}
+          onTitleEnChange={(value) => setFormData(prev => ({ ...prev, questionEn: value }))}
+          showSummary={false}
+          showContent={false}
         />
       </div>
 
@@ -222,18 +219,18 @@ export default function EditFAQPage() {
         </div>
         
         <BilingualTextFields
-          label="Answer"
+          titleAr="" // Not used for content
+          titleEn="" // Not used for content
+          onTitleArChange={() => {}} // Required but not used
+          onTitleEnChange={() => {}} // Required but not used
+          contentLabel="Answer"
           required
-          arValue={formData.answerAr}
-          enValue={formData.answerEn}
-          onArChange={(value) => setFormData(prev => ({ ...prev, answerAr: value }))}
-          onEnChange={(value) => setFormData(prev => ({ ...prev, answerEn: value }))}
-          arError={errors.answerAr}
-          enError={errors.answerEn}
-          arPlaceholder="اكتب الإجابة بالعربية..."
-          enPlaceholder="Enter answer in English..."
-          component="textarea"
-          rows={4}
+          contentAr={formData.answerAr}
+          contentEn={formData.answerEn}
+          onContentArChange={(value) => setFormData(prev => ({ ...prev, answerAr: value }))}
+          onContentEnChange={(value) => setFormData(prev => ({ ...prev, answerEn: value }))}
+          showSummary={false}
+          showContent={true}
         />
       </div>
 
@@ -333,10 +330,10 @@ export default function EditFAQPage() {
     <FormLayout
       title="Edit FAQ"
       description="Update the frequently asked question"
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
+      onSave={handleSubmit}
+      onBack={handleCancel}
       loading={loading}
-      submitText="Update FAQ"
+      isEditing={true}
     >
       {formFields}
     </FormLayout>

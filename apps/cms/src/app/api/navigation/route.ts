@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const location = searchParams.get('location') || '';
 
     // Build where clause
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (location) {
       where.location = location;
     }

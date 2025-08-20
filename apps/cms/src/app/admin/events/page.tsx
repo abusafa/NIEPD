@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -124,7 +124,7 @@ export default function EventsPage() {
     {
       key: 'event',
       label: 'Event',
-      render: (_, event: EventItem) => (
+      render: (_: unknown, event: EventItem) => (
         <div className="space-y-1">
           <div className="font-medium text-sm">{event.titleEn}</div>
           <div className="text-sm text-gray-600" dir="rtl">{event.titleAr}</div>
@@ -146,7 +146,7 @@ export default function EventsPage() {
     {
       key: 'dateTime',
       label: 'Date & Time',
-      render: (_, event: EventItem) => (
+      render: (_: unknown, event: EventItem) => (
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-gray-400" />
@@ -164,7 +164,7 @@ export default function EventsPage() {
     {
       key: 'location',
       label: 'Location',
-      render: (_, event: EventItem) => (
+      render: (_: unknown, event: EventItem) => (
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-gray-400" />
@@ -179,7 +179,7 @@ export default function EventsPage() {
     {
       key: 'capacity',
       label: 'Capacity',
-      render: (_, event: EventItem) => (
+      render: (_: unknown, event: EventItem) => (
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4 text-gray-400" />
           <span className="text-sm">{event.capacity?.toLocaleString() || 'No limit'}</span>
@@ -189,18 +189,18 @@ export default function EventsPage() {
     {
       key: 'eventStatus',
       label: 'Event Status',
-      render: (eventStatus: string) => (
-        <Badge className={getEventStatusColor(eventStatus)}>
-          {eventStatus}
+      render: (_: unknown, event: EventItem) => (
+        <Badge className={getEventStatusColor(event.eventStatus)}>
+          {event.eventStatus}
         </Badge>
       ),
     },
     {
       key: 'status',
       label: 'Publish Status',
-      render: (status: string) => (
-        <Badge className={getStatusColor(status)}>
-          {status}
+      render: (_: unknown, event: EventItem) => (
+        <Badge className={getStatusColor(event.status)}>
+          {event.status}
         </Badge>
       ),
     },
@@ -238,7 +238,7 @@ export default function EventsPage() {
     {
       label: 'Delete',
       icon: <Trash2 className="mr-2 h-4 w-4" />,
-      onClick: actions.deleteItem,
+      onClick: (event: EventItem) => actions.deleteItem(event.id),
       variant: 'destructive' as const,
     },
   ];

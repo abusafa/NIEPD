@@ -182,8 +182,8 @@ function ToolbarPlugin() {
 
   useEffect(() => {
     return activeEditor.registerCommand(
-      'CAN_UNDO_COMMAND' as any,
-      (payload) => {
+      'CAN_UNDO_COMMAND',
+      (payload: boolean) => {
         setCanUndo(payload);
         return false;
       },
@@ -193,8 +193,8 @@ function ToolbarPlugin() {
 
   useEffect(() => {
     return activeEditor.registerCommand(
-      'CAN_REDO_COMMAND' as any,
-      (payload) => {
+      'CAN_REDO_COMMAND',
+      (payload: boolean) => {
         setCanRedo(payload);
         return false;
       },

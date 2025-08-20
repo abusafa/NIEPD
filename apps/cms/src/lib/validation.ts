@@ -3,7 +3,7 @@ export interface ValidationRule {
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp;
-  custom?: (value: any) => string | null;
+  custom?: (value: unknown) => string | null;
 }
 
 export interface ValidationSchema {
@@ -14,7 +14,7 @@ export interface ValidationErrors {
   [key: string]: string;
 }
 
-export function validateField(value: any, rule: ValidationRule): string | null {
+export function validateField(value: unknown, rule: ValidationRule): string | null {
   // Required validation
   if (rule.required && (!value || (typeof value === 'string' && value.trim() === ''))) {
     return 'This field is required';
@@ -49,7 +49,7 @@ export function validateField(value: any, rule: ValidationRule): string | null {
   return null;
 }
 
-export function validateObject(data: any, schema: ValidationSchema): ValidationErrors {
+export function validateObject(data: Record<string, unknown>, schema: ValidationSchema): ValidationErrors {
   const errors: ValidationErrors = {};
 
   for (const [fieldName, rule] of Object.entries(schema)) {
@@ -106,7 +106,7 @@ export const commonRules = {
     }
   },
   positiveNumber: {
-    custom: (value: any) => {
+    custom: (value: unknown) => {
       const num = Number(value);
       if (isNaN(num) || num < 0) {
         return 'Please enter a positive number';

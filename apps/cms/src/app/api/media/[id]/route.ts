@@ -5,17 +5,14 @@ import { unlink } from 'fs/promises';
 import path from 'path';
 import { getFullMediaUrl } from '@/lib/utils';
 
-interface RouteParams {
-  params: { id: string };
-}
-
 // GET /api/media/[id] - Get single media file
 export async function GET(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const media = await prisma.media.findUnique({
       where: { id },
     });
@@ -47,10 +44,11 @@ export async function GET(
 // PUT /api/media/[id] - Update media metadata
 export async function PUT(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
@@ -109,10 +107,11 @@ export async function PUT(
 // DELETE /api/media/[id] - Delete media file
 export async function DELETE(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(

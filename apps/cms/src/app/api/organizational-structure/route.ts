@@ -25,7 +25,8 @@ function verifyToken(request: NextRequest) {
 
   const token = authHeader.substring(7);
   try {
-    return jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as any;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    return decoded as { userId: string; role: string; email: string };
   } catch {
     return null;
   }
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20');
     const search = searchParams.get('search');
 
-    const where: any = { isActive: true };
+    const where: Record<string, unknown> = { isActive: true };
     
     if (search) {
       where.OR = [

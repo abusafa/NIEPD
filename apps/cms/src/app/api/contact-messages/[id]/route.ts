@@ -4,8 +4,9 @@ import { prisma } from '../../../../lib/prisma';
 // GET /api/contact-messages/[id] - Get a specific contact message
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     const id = params.id;
 
@@ -33,8 +34,9 @@ export async function GET(
 // PUT /api/contact-messages/[id] - Update contact message status
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     const id = params.id;
     const body = await request.json();
@@ -71,8 +73,9 @@ export async function PUT(
 // DELETE /api/contact-messages/[id] - Delete a contact message
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     const id = params.id;
 

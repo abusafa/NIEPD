@@ -135,7 +135,7 @@ export default function EditEventPage() {
           featuredImage: event.image || '',
           slug: event.slug || '',
           categoryId: event.categoryId || '',
-          selectedTags: event.tags ? event.tags.map((t: any) => t.tag.id) : [],
+          selectedTags: event.tags ? event.tags.map((t: { tag: { id: string } }) => t.tag.id) : [],
         });
       } else {
         toast.error('Failed to load event data');
@@ -148,7 +148,7 @@ export default function EditEventPage() {
     }
   };
 
-  const handleInputChange = (field: keyof FormData, value: any) => {
+  const handleInputChange = (field: keyof FormData, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 

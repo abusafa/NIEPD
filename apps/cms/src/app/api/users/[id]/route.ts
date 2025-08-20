@@ -6,10 +6,11 @@ import bcrypt from 'bcryptjs';
 // GET /api/users/[id] - Get a single user
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const user = await getUserFromToken(request);
     if (!user || user.role !== 'SUPER_ADMIN') {
       return NextResponse.json(
@@ -54,10 +55,11 @@ export async function GET(
 // PUT /api/users/[id] - Update a user
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const adminUser = await getUserFromToken(request);
     if (!adminUser || adminUser.role !== 'SUPER_ADMIN') {
       return NextResponse.json(
@@ -102,7 +104,7 @@ export async function PUT(
     }
 
     // Prepare update data
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
     if (email) updateData.email = email;
     if (username) updateData.username = username;
     if (firstName) updateData.firstName = firstName;
@@ -144,10 +146,11 @@ export async function PUT(
 // DELETE /api/users/[id] - Delete a user
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const adminUser = await getUserFromToken(request);
     if (!adminUser || adminUser.role !== 'SUPER_ADMIN') {
       return NextResponse.json(

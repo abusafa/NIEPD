@@ -5,29 +5,48 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret';
 
+// Type definitions for GraphQL resolvers
+interface User {
+  id: string;
+  role: string;
+}
+
+interface GraphQLContext {
+  user?: User;
+}
+
+interface ResolverArgs {
+  [key: string]: unknown;
+}
+
+interface AuthArgs {
+  email: string;
+  password: string;
+}
+
 export const resolvers = {
   DateTime: GraphQLDateTime,
   JSON: {
-    serialize: (value: any) => value,
-    parseValue: (value: any) => value,
-    parseLiteral: (ast: any) => ast.value,
+    serialize: (value: unknown) => value,
+    parseValue: (value: unknown) => value,
+    parseLiteral: (ast: { value: unknown }) => ast.value,
   },
 
   Query: {
     // Auth queries
-    me: async (_: any, __: any, { user }: { user: any }) => {
+    me: async (_: ResolverArgs, __: ResolverArgs, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       return await prisma.user.findUnique({ where: { id: user.id } });
     },
 
-    users: async (_: any, __: any, { user }: { user: any }) => {
+    users: async (_: ResolverArgs, __: ResolverArgs, { user }: GraphQLContext) => {
       if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
         throw new Error('Not authorized');
       }
       return await prisma.user.findMany();
     },
 
-    user: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+    user: async (_: ResolverArgs, { id }: { id: string }, { user }: GraphQLContext) => {
       if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
         throw new Error('Not authorized');
       }
@@ -35,7 +54,7 @@ export const resolvers = {
     },
 
     // News queries
-    news: async (_: any, __: any) => {
+    news: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.news.findMany({
         where: { status: 'PUBLISHED' },
         include: {
@@ -47,7 +66,7 @@ export const resolvers = {
       });
     },
 
-    newsItem: async (_: any, { slug }: { slug: string }) => {
+    newsItem: async (_: ResolverArgs, { slug }: { slug: string }) => {
       return await prisma.news.findUnique({
         where: { slug },
         include: {
@@ -59,7 +78,7 @@ export const resolvers = {
     },
 
     // Program queries
-    programs: async (_: any, __: any) => {
+    programs: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.program.findMany({
         where: { status: 'PUBLISHED' },
         include: {
@@ -71,7 +90,7 @@ export const resolvers = {
       });
     },
 
-    program: async (_: any, { slug }: { slug: string }) => {
+    program: async (_: ResolverArgs, { slug }: { slug: string }) => {
       return await prisma.program.findUnique({
         where: { slug },
         include: {
@@ -83,7 +102,7 @@ export const resolvers = {
     },
 
     // Event queries
-    events: async (_: any, __: any) => {
+    events: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.event.findMany({
         where: { status: 'PUBLISHED' },
         include: {
@@ -95,7 +114,7 @@ export const resolvers = {
       });
     },
 
-    event: async (_: any, { slug }: { slug: string }) => {
+    event: async (_: ResolverArgs, { slug }: { slug: string }) => {
       return await prisma.event.findUnique({
         where: { slug },
         include: {
@@ -107,7 +126,7 @@ export const resolvers = {
     },
 
     // Page queries
-    pages: async (_: any, __: any) => {
+    pages: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.page.findMany({
         where: { status: 'PUBLISHED' },
         include: {
@@ -119,7 +138,7 @@ export const resolvers = {
       });
     },
 
-    page: async (_: any, { slug }: { slug: string }) => {
+    page: async (_: ResolverArgs, { slug }: { slug: string }) => {
       return await prisma.page.findUnique({
         where: { slug },
         include: {
@@ -131,7 +150,7 @@ export const resolvers = {
     },
 
     // FAQ queries
-    faqs: async (_: any, __: any) => {
+    faqs: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.fAQ.findMany({
         where: { status: 'PUBLISHED' },
         include: {
@@ -143,7 +162,7 @@ export const resolvers = {
     },
 
     // Partner queries
-    partners: async (_: any, __: any) => {
+    partners: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.partner.findMany({
         where: { status: 'PUBLISHED' },
         include: {
@@ -153,7 +172,7 @@ export const resolvers = {
       });
     },
 
-    partner: async (_: any, { slug }: { slug: string }) => {
+    partner: async (_: ResolverArgs, { slug }: { slug: string }) => {
       return await prisma.partner.findUnique({
         where: { slug },
         include: {
@@ -163,7 +182,7 @@ export const resolvers = {
     },
 
     // Category queries
-    categories: async (_: any, { type }: { type?: string }) => {
+    categories: async (_: ResolverArgs, { type }: { type?: string }) => {
       const where = type ? { type } : {};
       return await prisma.category.findMany({
         where,
@@ -175,7 +194,7 @@ export const resolvers = {
       });
     },
 
-    category: async (_: any, { slug }: { slug: string }) => {
+    category: async (_: ResolverArgs, { slug }: { slug: string }) => {
       return await prisma.category.findUnique({
         where: { slug },
         include: {
@@ -186,20 +205,20 @@ export const resolvers = {
     },
 
     // Tag queries
-    tags: async (_: any, __: any) => {
+    tags: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.tag.findMany({
         orderBy: { nameEn: 'asc' },
       });
     },
 
-    tag: async (_: any, { slug }: { slug: string }) => {
+    tag: async (_: ResolverArgs, { slug }: { slug: string }) => {
       return await prisma.tag.findUnique({
         where: { slug },
       });
     },
 
     // Site data queries
-    navigation: async (_: any, __: any) => {
+    navigation: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.navigation.findMany({
         where: { isActive: true },
         include: {
@@ -210,18 +229,18 @@ export const resolvers = {
       });
     },
 
-    contactInfo: async (_: any, __: any) => {
+    contactInfo: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.contactInfo.findMany({
         where: { isActive: true },
         orderBy: { sortOrder: 'asc' },
       });
     },
 
-    siteSettings: async (_: any, __: any) => {
+    siteSettings: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.siteSetting.findMany();
     },
 
-    organizationalStructure: async (_: any, __: any) => {
+    organizationalStructure: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.organizationalStructure.findMany({
         where: { isActive: true },
         include: {
@@ -232,14 +251,14 @@ export const resolvers = {
       });
     },
 
-    media: async (_: any, __: any) => {
+    media: async (_: ResolverArgs, __: ResolverArgs) => {
       return await prisma.media.findMany({
         orderBy: { createdAt: 'desc' },
       });
     },
 
     // Error report queries
-    errorReports: async (_: any, __: any, { user }: { user: any }) => {
+    errorReports: async (_: ResolverArgs, __: ResolverArgs, { user }: GraphQLContext) => {
       if (!user || !['SUPER_ADMIN', 'ADMIN', 'EDITOR'].includes(user.role)) {
         throw new Error('Not authorized');
       }
@@ -259,7 +278,7 @@ export const resolvers = {
       });
     },
 
-    errorReport: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+    errorReport: async (_: ResolverArgs, { id }: { id: string }, { user }: GraphQLContext) => {
       if (!user || !['SUPER_ADMIN', 'ADMIN', 'EDITOR'].includes(user.role)) {
         throw new Error('Not authorized');
       }
@@ -282,7 +301,7 @@ export const resolvers = {
 
   Mutation: {
     // Auth mutations
-    login: async (_: any, { email, password }: { email: string; password: string }) => {
+    login: async (_: ResolverArgs, { email, password }: { email: string; password: string }) => {
       const user = await prisma.user.findUnique({ where: { email } });
       if (!user) throw new Error('Invalid credentials');
 
@@ -294,7 +313,7 @@ export const resolvers = {
     },
 
     // News mutations
-    createNews: async (_: any, { input }: { input: any }, { user }: { user: any }) => {
+    createNews: async (_: ResolverArgs, { input }: { input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const { tagIds, ...newsData } = input;
@@ -315,7 +334,7 @@ export const resolvers = {
       return news;
     },
 
-    updateNews: async (_: any, { id, input }: { id: string; input: any }, { user }: { user: any }) => {
+    updateNews: async (_: ResolverArgs, { id, input }: { id: string; input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const { tagIds, ...newsData } = input;
@@ -340,14 +359,14 @@ export const resolvers = {
       return news;
     },
 
-    deleteNews: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+    deleteNews: async (_: ResolverArgs, { id }: { id: string }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       await prisma.news.delete({ where: { id } });
       return true;
     },
 
     // Program mutations
-    createProgram: async (_: any, { input }: { input: any }, { user }: { user: any }) => {
+    createProgram: async (_: ResolverArgs, { input }: { input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const { tagIds, ...programData } = input;
@@ -368,7 +387,7 @@ export const resolvers = {
       return program;
     },
 
-    updateProgram: async (_: any, { id, input }: { id: string; input: any }, { user }: { user: any }) => {
+    updateProgram: async (_: ResolverArgs, { id, input }: { id: string; input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const { tagIds, ...programData } = input;
@@ -393,14 +412,14 @@ export const resolvers = {
       return program;
     },
 
-    deleteProgram: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+    deleteProgram: async (_: ResolverArgs, { id }: { id: string }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       await prisma.program.delete({ where: { id } });
       return true;
     },
 
     // Event mutations
-    createEvent: async (_: any, { input }: { input: any }, { user }: { user: any }) => {
+    createEvent: async (_: ResolverArgs, { input }: { input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const { tagIds, ...eventData } = input;
@@ -421,7 +440,7 @@ export const resolvers = {
       return event;
     },
 
-    updateEvent: async (_: any, { id, input }: { id: string; input: any }, { user }: { user: any }) => {
+    updateEvent: async (_: ResolverArgs, { id, input }: { id: string; input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const { tagIds, ...eventData } = input;
@@ -446,14 +465,14 @@ export const resolvers = {
       return event;
     },
 
-    deleteEvent: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+    deleteEvent: async (_: ResolverArgs, { id }: { id: string }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       await prisma.event.delete({ where: { id } });
       return true;
     },
 
     // Category mutations
-    createCategory: async (_: any, { input }: { input: any }, { user }: { user: any }) => {
+    createCategory: async (_: ResolverArgs, { input }: { input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const category = await prisma.category.create({
@@ -466,7 +485,7 @@ export const resolvers = {
       return category;
     },
 
-    updateCategory: async (_: any, { id, input }: { id: string; input: any }, { user }: { user: any }) => {
+    updateCategory: async (_: ResolverArgs, { id, input }: { id: string; input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const category = await prisma.category.update({
@@ -480,14 +499,14 @@ export const resolvers = {
       return category;
     },
 
-    deleteCategory: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+    deleteCategory: async (_: ResolverArgs, { id }: { id: string }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       await prisma.category.delete({ where: { id } });
       return true;
     },
 
     // Tag mutations
-    createTag: async (_: any, { input }: { input: any }, { user }: { user: any }) => {
+    createTag: async (_: ResolverArgs, { input }: { input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const tag = await prisma.tag.create({
@@ -496,7 +515,7 @@ export const resolvers = {
       return tag;
     },
 
-    updateTag: async (_: any, { id, input }: { id: string; input: any }, { user }: { user: any }) => {
+    updateTag: async (_: ResolverArgs, { id, input }: { id: string; input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const tag = await prisma.tag.update({
@@ -506,14 +525,14 @@ export const resolvers = {
       return tag;
     },
 
-    deleteTag: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+    deleteTag: async (_: ResolverArgs, { id }: { id: string }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       await prisma.tag.delete({ where: { id } });
       return true;
     },
 
     // Publishing workflow
-    publishContent: async (_: any, { contentType, id }: { contentType: string; id: string }, { user }: { user: any }) => {
+    publishContent: async (_: ResolverArgs, { contentType, id }: { contentType: string; id: string }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const updateData = { 
@@ -538,7 +557,7 @@ export const resolvers = {
       return true;
     },
 
-    unpublishContent: async (_: any, { contentType, id }: { contentType: string; id: string }, { user }: { user: any }) => {
+    unpublishContent: async (_: ResolverArgs, { contentType, id }: { contentType: string; id: string }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const updateData = { 
@@ -563,7 +582,7 @@ export const resolvers = {
       return true;
     },
 
-    submitForReview: async (_: any, { contentType, id }: { contentType: string; id: string }, { user }: { user: any }) => {
+    submitForReview: async (_: ResolverArgs, { contentType, id }: { contentType: string; id: string }, { user }: GraphQLContext) => {
       if (!user) throw new Error('Not authenticated');
       
       const updateData = { status: 'REVIEW' as const };
@@ -586,7 +605,7 @@ export const resolvers = {
     },
 
     // Error report mutations
-    createErrorReport: async (_: any, { input }: { input: any }) => {
+    createErrorReport: async (_: ResolverArgs, { input }: { input: Record<string, unknown> }) => {
       // This is for public submissions, so no authentication required
       const errorReport = await prisma.errorReport.create({
         data: {
@@ -613,12 +632,12 @@ export const resolvers = {
       return errorReport;
     },
 
-    updateErrorReport: async (_: any, { id, input }: { id: string; input: any }, { user }: { user: any }) => {
+    updateErrorReport: async (_: ResolverArgs, { id, input }: { id: string; input: Record<string, unknown> }, { user }: GraphQLContext) => {
       if (!user || !['SUPER_ADMIN', 'ADMIN', 'EDITOR'].includes(user.role)) {
         throw new Error('Not authorized');
       }
       
-      const updateData: any = { ...input };
+      const updateData: Record<string, unknown> = { ...input };
       
       // If status is being updated to RESOLVED, set resolvedAt timestamp
       if (input.status === 'RESOLVED') {
@@ -653,7 +672,7 @@ export const resolvers = {
       return errorReport;
     },
 
-    deleteErrorReport: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+    deleteErrorReport: async (_: ResolverArgs, { id }: { id: string }, { user }: GraphQLContext) => {
       if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
         throw new Error('Not authorized');
       }
@@ -665,7 +684,7 @@ export const resolvers = {
 
   // Field resolvers
   News: {
-    tags: async (parent: any) => {
+    tags: async (parent: Record<string, unknown>) => {
       const newsWithTags = await prisma.news.findUnique({
         where: { id: parent.id },
         include: { tags: { include: { tag: true } } },
@@ -675,7 +694,7 @@ export const resolvers = {
   },
 
   Program: {
-    tags: async (parent: any) => {
+    tags: async (parent: Record<string, unknown>) => {
       const programWithTags = await prisma.program.findUnique({
         where: { id: parent.id },
         include: { tags: { include: { tag: true } } },
@@ -685,7 +704,7 @@ export const resolvers = {
   },
 
   Event: {
-    tags: async (parent: any) => {
+    tags: async (parent: Record<string, unknown>) => {
       const eventWithTags = await prisma.event.findUnique({
         where: { id: parent.id },
         include: { tags: { include: { tag: true } } },
@@ -695,13 +714,13 @@ export const resolvers = {
   },
 
   Category: {
-    newsCount: async (parent: any) => {
+    newsCount: async (parent: Record<string, unknown>) => {
       return await prisma.news.count({ where: { categoryId: parent.id } });
     },
-    programsCount: async (parent: any) => {
+    programsCount: async (parent: Record<string, unknown>) => {
       return await prisma.program.count({ where: { categoryId: parent.id } });
     },
-    eventsCount: async (parent: any) => {
+    eventsCount: async (parent: Record<string, unknown>) => {
       return await prisma.event.count({ where: { categoryId: parent.id } });
     },
   },

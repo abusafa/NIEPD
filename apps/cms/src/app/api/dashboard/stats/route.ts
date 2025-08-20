@@ -307,14 +307,14 @@ export async function GET(request: NextRequest) {
     }));
 
     // Format monthly stats for charts
-    const formattedMonthlyStats = (monthlyStats as any[]).reduce((acc, stat) => {
+    const formattedMonthlyStats = (monthlyStats as { month: Date; type: string; count: string }[]).reduce((acc, stat) => {
       const monthKey = new Date(stat.month).toISOString().substring(0, 7);
       if (!acc[monthKey]) {
         acc[monthKey] = { month: monthKey, news: 0, program: 0, event: 0 };
       }
-      acc[monthKey][stat.type as string] = parseInt(stat.count);
+      acc[monthKey][stat.type as 'news' | 'program' | 'event'] = parseInt(stat.count);
       return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, { month: string; news: number; program: number; event: number }>);
 
     return NextResponse.json({
       stats,

@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (type && type !== 'all') {
       switch (type) {
         case 'image':

@@ -67,7 +67,7 @@ export default function TagsPage() {
     {
       key: 'name',
       label: 'Tag',
-      render: (_, tag: TagItem) => (
+      render: (_: unknown, tag: TagItem) => (
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <div 
@@ -91,25 +91,25 @@ export default function TagsPage() {
     {
       key: 'type',
       label: 'Type',
-      render: (type: string) => (
-        <Badge className={getTypeColor(type)}>
-          {type}
+      render: (_: unknown, tag: TagItem) => (
+        <Badge className={getTypeColor(tag.type)}>
+          {tag.type}
         </Badge>
       ),
     },
     {
       key: 'slug',
       label: 'Slug',
-      render: (slug: string) => (
+      render: (_: unknown, tag: TagItem) => (
         <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-          {slug || '-'}
+          {tag.slug || '-'}
         </code>
       ),
     },
     {
       key: 'usage',
       label: 'Usage',
-      render: (_, tag: TagItem) => {
+      render: (_: unknown, tag: TagItem) => {
         const total = getTotalUsage(tag._count);
         return (
           <div className="space-y-1">
@@ -128,7 +128,7 @@ export default function TagsPage() {
     {
       key: 'createdAt',
       label: 'Created',
-      render: (date: string) => new Date(date).toLocaleDateString(),
+      render: (_: unknown, tag: TagItem) => new Date(tag.createdAt).toLocaleDateString(),
     },
   ];
 
@@ -146,7 +146,7 @@ export default function TagsPage() {
     {
       label: 'Delete',
       icon: <Trash2 className="mr-2 h-4 w-4" />,
-      onClick: actions.deleteItem,
+      onClick: (tag: TagItem) => actions.deleteItem(tag.id),
       variant: 'destructive' as const,
       show: (tag: TagItem) => {
         const hasUsage = getTotalUsage(tag._count) > 0;
@@ -189,10 +189,10 @@ export default function TagsPage() {
   ];
 
   return (
-    <DataTable
+    <DataTable<TagItem>
       title="Tags"
       description="Manage content tags for better organization and discovery"
-      data={state.items}
+      data={state.items || []}
       columns={columns}
       actions={tableActions}
       loading={state.loading}

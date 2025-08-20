@@ -81,9 +81,9 @@ export default function FAQPage() {
       key: 'questionEn' as keyof FAQ,
       label: 'Question (English)',
       sortable: true,
-      render: (value: string, faq: FAQ) => (
+      render: (_: unknown, faq: FAQ) => (
         <div>
-          <div className="font-medium text-gray-900 line-clamp-2">{value}</div>
+          <div className="font-medium text-gray-900 line-clamp-2">{faq.questionEn}</div>
           <div className="text-sm text-gray-500 line-clamp-1 mt-1" dir="rtl">{faq.questionAr}</div>
         </div>
       ),
@@ -91,9 +91,9 @@ export default function FAQPage() {
     {
       key: 'answerEn' as keyof FAQ,
       label: 'Answer Preview',
-      render: (value: string) => (
+      render: (_: unknown, faq: FAQ) => (
         <div className="text-sm text-gray-600 line-clamp-2 max-w-xs">
-          {value}
+          {faq.answerEn}
         </div>
       ),
     },
@@ -101,9 +101,9 @@ export default function FAQPage() {
       key: 'status' as keyof FAQ,
       label: 'Status',
       sortable: true,
-      render: (value: string) => (
-        <Badge className={getStatusColor(value)}>
-          {value}
+      render: (_: unknown, faq: FAQ) => (
+        <Badge className={getStatusColor(faq.status)}>
+          {faq.status}
         </Badge>
       ),
     },
@@ -111,24 +111,24 @@ export default function FAQPage() {
       key: 'sortOrder' as keyof FAQ,
       label: 'Order',
       sortable: true,
-      render: (value: number) => (
-        <span className="text-sm text-gray-600">{value}</span>
+      render: (_: unknown, faq: FAQ) => (
+        <span className="text-sm text-gray-600">{faq.sortOrder}</span>
       ),
     },
     {
       key: 'updatedAt' as keyof FAQ,
       label: 'Last Updated',
       sortable: true,
-      render: (value: string) => (
+      render: (_: unknown, faq: FAQ) => (
         <span className="text-sm text-gray-500">
-          {new Date(value).toLocaleDateString()}
+          {new Date(faq.updatedAt).toLocaleDateString()}
         </span>
       ),
     },
     {
       key: 'actions' as keyof FAQ,
       label: 'Actions',
-      render: (_, faq: FAQ) => (
+      render: (_: unknown, faq: FAQ) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -248,15 +248,16 @@ export default function FAQPage() {
 
       {/* FAQ Table */}
       <div className="bg-white rounded-lg border">
-        <DataTable
-          data={filteredFaqs}
+        <DataTable<FAQ>
+          title="FAQ Management"
+          description="Manage frequently asked questions"
+          data={faqs}
           columns={columns}
           loading={loading}
-          searchValue={filters.search}
-          onSearchChange={(value) => setFilters(prev => ({ ...prev, search: value }))}
+          onCreate={handleCreateNew}
+          createButtonText="New FAQ"
           searchPlaceholder="Search FAQ..."
-          filterOptions={filterOptions}
-          onFilterChange={(key, value) => setFilters(prev => ({ ...prev, [key]: value }))}
+          filters={filterOptions}
           emptyMessage="No FAQ found"
           emptyDescription="Get started by creating your first FAQ item."
         />

@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     
     if (search) {
       where.OR = [
@@ -185,7 +185,6 @@ export async function POST(request: NextRequest) {
           select: {
             nameAr: true,
             nameEn: true,
-            color: true,
           }
         },
         author: {

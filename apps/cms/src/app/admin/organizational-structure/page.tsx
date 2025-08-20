@@ -78,11 +78,11 @@ export default function OrganizationalStructurePage() {
     {
       key: 'image' as keyof OrganizationMember,
       label: 'Photo',
-      render: (value: string, member: OrganizationMember) => (
+      render: (_: unknown, member: OrganizationMember) => (
         <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-          {value ? (
+          {member.image ? (
             <img 
-              src={value} 
+              src={member.image} 
               alt={member.nameEn}
               className="w-full h-full object-cover"
               onError={(e) => {
@@ -102,9 +102,9 @@ export default function OrganizationalStructurePage() {
       key: 'nameEn' as keyof OrganizationMember,
       label: 'Name',
       sortable: true,
-      render: (value: string, member: OrganizationMember) => (
+      render: (_: unknown, member: OrganizationMember) => (
         <div>
-          <div className="font-medium text-gray-900">{value}</div>
+          <div className="font-medium text-gray-900">{member.nameEn}</div>
           <div className="text-sm text-gray-500" dir="rtl">{member.nameAr}</div>
         </div>
       ),
@@ -113,9 +113,9 @@ export default function OrganizationalStructurePage() {
       key: 'positionEn' as keyof OrganizationMember,
       label: 'Position',
       sortable: true,
-      render: (value: string, member: OrganizationMember) => (
+      render: (_: unknown, member: OrganizationMember) => (
         <div>
-          <div className="text-sm text-gray-900">{value}</div>
+          <div className="text-sm text-gray-900">{member.positionEn}</div>
           <div className="text-xs text-gray-500" dir="rtl">{member.positionAr}</div>
         </div>
       ),
@@ -123,9 +123,9 @@ export default function OrganizationalStructurePage() {
     {
       key: 'id' as keyof OrganizationMember,
       label: 'Department',
-      render: (value: string) => (
+      render: (_: unknown, member: OrganizationMember) => (
         <Badge variant="outline" className="text-xs">
-          {getDepartmentFromId(value)}
+          {getDepartmentFromId(member.id)}
         </Badge>
       ),
     },
@@ -133,9 +133,9 @@ export default function OrganizationalStructurePage() {
       key: 'isActive' as keyof OrganizationMember,
       label: 'Status',
       sortable: true,
-      render: (value: boolean) => (
-        <Badge className={value ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
-          {value ? 'Active' : 'Inactive'}
+      render: (_: unknown, member: OrganizationMember) => (
+        <Badge className={member.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+          {member.isActive ? 'Active' : 'Inactive'}
         </Badge>
       ),
     },
@@ -143,24 +143,24 @@ export default function OrganizationalStructurePage() {
       key: 'sortOrder' as keyof OrganizationMember,
       label: 'Order',
       sortable: true,
-      render: (value: number) => (
-        <span className="text-sm text-gray-600">{value}</span>
+      render: (_: unknown, member: OrganizationMember) => (
+        <span className="text-sm text-gray-600">{member.sortOrder}</span>
       ),
     },
     {
       key: 'updatedAt' as keyof OrganizationMember,
       label: 'Last Updated',
       sortable: true,
-      render: (value: string) => (
+      render: (_: unknown, member: OrganizationMember) => (
         <span className="text-sm text-gray-500">
-          {new Date(value).toLocaleDateString()}
+          {new Date(member.updatedAt).toLocaleDateString()}
         </span>
       ),
     },
     {
       key: 'actions' as keyof OrganizationMember,
       label: 'Actions',
-      render: (_, member: OrganizationMember) => (
+      render: (_: unknown, member: OrganizationMember) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -306,15 +306,16 @@ export default function OrganizationalStructurePage() {
 
       {/* Organization Table */}
       <div className="bg-white rounded-lg border">
-        <DataTable
-          data={filteredMembers}
+        <DataTable<OrganizationMember>
+          title="Organization Members"
+          description="Manage your organization structure and team members"
+          data={members}
           columns={columns}
           loading={loading}
-          searchValue={filters.search}
-          onSearchChange={(value) => setFilters(prev => ({ ...prev, search: value }))}
+          onCreate={handleCreateNew}
+          createButtonText="Add Member"
           searchPlaceholder="Search members..."
-          filterOptions={filterOptions}
-          onFilterChange={(key, value) => setFilters(prev => ({ ...prev, [key]: value }))}
+          filters={filterOptions}
           emptyMessage="No organization members found"
           emptyDescription="Get started by adding your first team member."
         />

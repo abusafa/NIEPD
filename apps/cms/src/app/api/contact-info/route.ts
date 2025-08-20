@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { 
+        const {
       type,
       labelAr, 
       labelEn, 
@@ -54,8 +54,7 @@ export async function POST(request: NextRequest) {
       valueEn,
       icon,
       link,
-      sortOrder,
-      isPublic
+      sortOrder
     } = body;
 
     // Validate required fields
@@ -74,9 +73,9 @@ export async function POST(request: NextRequest) {
         valueAr,
         valueEn,
         icon,
-        link,
+        // link,
         sortOrder: sortOrder || 0,
-        isPublic: isPublic !== false,
+        // isPublic: isPublic !== false,
       },
     });
 
@@ -123,9 +122,8 @@ export async function PUT(request: NextRequest) {
             valueAr: item.valueAr,
             valueEn: item.valueEn,
             icon: item.icon,
-            link: item.link,
+            // link: item.link,
             sortOrder: item.sortOrder,
-            isPublic: item.isPublic,
           },
         });
       } else {
@@ -138,9 +136,8 @@ export async function PUT(request: NextRequest) {
             valueAr: item.valueAr,
             valueEn: item.valueEn,
             icon: item.icon,
-            link: item.link,
+            // link: item.link,
             sortOrder: item.sortOrder || 0,
-            isPublic: item.isPublic !== false,
           },
         });
       }

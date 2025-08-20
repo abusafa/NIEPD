@@ -72,7 +72,7 @@ export default function CreateTagPage() {
     }
   }, [formData.nameEn]);
 
-  const handleInputChange = (field: keyof FormData, value: any) => {
+  const handleInputChange = (field: keyof FormData, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -156,7 +156,7 @@ export default function CreateTagPage() {
               required
             />
             <p className="text-xs text-gray-500 mt-1">
-              Use title case (e.g., "Digital Learning")
+              Use title case (e.g., &quot;Digital Learning&quot;)
             </p>
           </div>
           <div>

@@ -74,7 +74,7 @@ export default function CategoriesPage() {
     {
       key: 'name',
       label: 'Category',
-      render: (_, category: Category) => (
+      render: (_: unknown, category: Category) => (
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             {category.parentId ? (
@@ -98,25 +98,25 @@ export default function CategoriesPage() {
     {
       key: 'type',
       label: 'Type',
-      render: (type: string) => (
-        <Badge className={getTypeColor(type)}>
-          {type}
+      render: (type: unknown, category: Category) => (
+        <Badge className={getTypeColor(category.type)}>
+          {category.type}
         </Badge>
       ),
     },
     {
       key: 'slug',
       label: 'Slug',
-      render: (slug: string) => (
+      render: (slug: unknown, category: Category) => (
         <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-          {slug || '-'}
+          {category.slug || '-'}
         </code>
       ),
     },
     {
       key: 'usage',
       label: 'Usage',
-      render: (_, category: Category) => {
+      render: (_: unknown, category: Category) => {
         const total = getTotalUsage(category._count);
         return (
           <div className="space-y-1">
@@ -136,16 +136,16 @@ export default function CategoriesPage() {
     {
       key: 'children',
       label: 'Subcategories',
-      render: (children: Category[]) => (
+      render: (children: unknown, category: Category) => (
         <div className="text-sm">
-          {children?.length || 0}
+          {category.children?.length || 0}
         </div>
       ),
     },
     {
       key: 'createdAt',
       label: 'Created',
-      render: (date: string) => new Date(date).toLocaleDateString(),
+      render: (date: unknown, category: Category) => new Date(category.createdAt).toLocaleDateString(),
     },
   ];
 
@@ -163,7 +163,7 @@ export default function CategoriesPage() {
     {
       label: 'Delete',
       icon: <Trash2 className="mr-2 h-4 w-4" />,
-      onClick: actions.deleteItem,
+      onClick: (category: Category) => actions.deleteItem(category.id),
       variant: 'destructive' as const,
       show: (category: Category) => {
         const hasChildren = category.children && category.children.length > 0;

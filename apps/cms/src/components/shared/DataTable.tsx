@@ -38,7 +38,7 @@ interface Column<T> {
   key: keyof T | string;
   label: string;
   labelAr?: string;
-  render?: (value: any, item: T) => React.ReactNode;
+  render?: (value: unknown, item: T) => React.ReactNode;
   sortable?: boolean;
   searchable?: boolean;
   align?: 'left' | 'center' | 'right';
@@ -111,7 +111,7 @@ export default function DataTable<T extends { id: string }>({
     if (searchTerm) {
       const searchableColumns = columns.filter(col => col.searchable !== false);
       const matchesSearch = searchableColumns.some(col => {
-        const value = col.key === 'id' ? item.id : (item as any)[col.key];
+        const value = col.key === 'id' ? item.id : (item as Record<string, unknown>)[col.key];
         return String(value).toLowerCase().includes(searchTerm.toLowerCase());
       });
       if (!matchesSearch) return false;
@@ -120,7 +120,7 @@ export default function DataTable<T extends { id: string }>({
     // Custom filters
     for (const [filterKey, filterValue] of Object.entries(activeFilters)) {
       if (filterValue && filterValue !== 'all') {
-        const itemValue = (item as any)[filterKey];
+        const itemValue = (item as Record<string, unknown>)[filterKey];
         if (itemValue !== filterValue) return false;
       }
     }
@@ -135,7 +135,7 @@ export default function DataTable<T extends { id: string }>({
     }));
   };
 
-  const getNestedValue = (obj: any, path: string) => {
+  const getNestedValue = (obj: Record<string, unknown>, path: string) => {
     return path.split('.').reduce((current, key) => current?.[key], obj);
   };
 

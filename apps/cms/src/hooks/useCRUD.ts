@@ -6,8 +6,8 @@ import { toast } from 'sonner';
 interface CRUDOptions {
   endpoint: string;
   resourceName?: string;
-  onSuccess?: (action: string, data?: any) => void;
-  onError?: (action: string, error: any) => void;
+  onSuccess?: (action: string, data?: unknown) => void;
+  onError?: (action: string, error: unknown) => void;
 }
 
 interface CRUDState<T> {

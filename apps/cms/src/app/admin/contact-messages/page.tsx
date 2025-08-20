@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Mail, 
   Phone, 
@@ -8,25 +8,16 @@ import {
   Calendar, 
   Eye, 
   Trash2, 
-  Filter,
   Search,
   MessageCircle,
   Archive,
   CheckCircle,
   Clock,
-  MoreHorizontal,
   Download,
-  Printer,
   RefreshCw,
   CheckSquare,
   Square,
-  Reply,
-  FileText,
-  Send,
-  AlertCircle,
-  Star,
-  StarOff,
-  ExternalLink
+  Reply
 } from 'lucide-react';
 
 import {
@@ -34,13 +25,10 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogClose
+  DialogTitle
 } from '@/components/ui/dialog';
 
-import { ToastProvider, useToast } from '@/components/ui/toast';
+import { useToast } from '@/components/ui/toast';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 interface ContactMessage {
@@ -96,6 +84,44 @@ const ContactMessagesPage = () => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
+    const fetchMessages = async (silent = false) => {
+      try {
+        if (!silent) {
+          setLoading(true);
+        }
+        // Mock data - replace with actual API call
+        setTimeout(() => {
+          const mockMessages: ContactMessage[] = [
+            {
+              id: '1',
+              name: 'محمد عبدالله',
+              email: 'mohammed@example.com',
+              phone: '+966501234567',
+              subject: 'استفسار عن البرامج التدريبية',
+              message: 'أرغب في الحصول على معلومات أكثر عن البرامج التدريبية المتاحة للمعلمين.',
+              status: 'UNREAD',
+              priority: 'MEDIUM',
+              ipAddress: '192.168.1.100',
+              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+              createdAt: '2024-01-15T10:30:00Z',
+              updatedAt: '2024-01-15T10:30:00Z'
+            },
+            // ... other mock messages
+          ];
+          
+          setMessages(mockMessages);
+          if (!silent) {
+            setLoading(false);
+          }
+        }, silent ? 500 : 1000);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+        if (!silent) {
+          setLoading(false);
+        }
+      }
+    };
+
     fetchMessages();
   }, [pagination.page, filters, sortBy, sortOrder]);
 

@@ -63,7 +63,7 @@ export default function PartnersPage() {
     {
       key: 'partner',
       label: 'Partner',
-      render: (_, partner: Partner) => (
+      render: (_: unknown, partner: Partner) => (
         <div className="flex items-start gap-3">
           {partner.logo ? (
             <img
@@ -93,16 +93,16 @@ export default function PartnersPage() {
     {
       key: 'type',
       label: 'Type',
-      render: (type: string) => (
-        <Badge className={getTypeColor(type)}>
-          {type}
+      render: (_: unknown, partner: Partner) => (
+        <Badge className={getTypeColor(partner.type)}>
+          {partner.type}
         </Badge>
       ),
     },
     {
       key: 'contact',
       label: 'Contact',
-      render: (_, partner: Partner) => (
+      render: (_: unknown, partner: Partner) => (
         <div className="space-y-1">
           {partner.website && (
             <div className="flex items-center gap-2 text-xs text-blue-600">
@@ -135,14 +135,14 @@ export default function PartnersPage() {
     {
       key: 'sortOrder',
       label: 'Order',
-      render: (order: number) => (
-        <span className="text-sm font-mono">{order}</span>
+      render: (_: unknown, partner: Partner) => (
+        <span className="text-sm font-mono">{partner.sortOrder}</span>
       ),
     },
     {
       key: 'createdAt',
       label: 'Created',
-      render: (date: string) => new Date(date).toLocaleDateString(),
+      render: (_: unknown, partner: Partner) => new Date(partner.createdAt).toLocaleDateString(),
     },
   ];
 
@@ -160,7 +160,7 @@ export default function PartnersPage() {
     {
       label: 'Delete',
       icon: <Trash2 className="mr-2 h-4 w-4" />,
-      onClick: actions.deleteItem,
+      onClick: (partner: Partner) => actions.deleteItem(partner.id),
       variant: 'destructive' as const,
     },
   ];
@@ -206,10 +206,10 @@ export default function PartnersPage() {
   ];
 
   return (
-    <DataTable
+    <DataTable<Partner>
       title="Partners"
       description="Manage organizational partners, sponsors, and collaborators"
-      data={state.items}
+      data={state.items || []}
       columns={columns}
       actions={tableActions}
       loading={state.loading}

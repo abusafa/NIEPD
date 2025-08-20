@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+
 import { 
   Select,
   SelectContent,
@@ -102,10 +102,14 @@ export default function CreateCategoryPage() {
   };
 
   const handleSave = async () => {
-    // Validate form
-    const validationErrors = validateObject(formData, validationSchema);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    // Basic form validation
+    const newErrors: Record<string, string> = {};
+    if (!formData.nameAr.trim()) newErrors.nameAr = 'Arabic name is required';
+    if (!formData.nameEn.trim()) newErrors.nameEn = 'English name is required';
+    if (!formData.slug.trim()) newErrors.slug = 'Slug is required';
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       toast.error('Please fix the validation errors');
       return;
     }

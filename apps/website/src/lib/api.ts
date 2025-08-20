@@ -16,7 +16,7 @@ import type {
 } from '@/types'
 
 // Base URL for CMS API
-const CMS_API_URL = process.env.NEXT_PUBLIC_CMS_API_URL || 'http://localhost:3000'
+const CMS_API_URL = process.env.NEXT_PUBLIC_CMS_API_URL || 'http://localhost:3001'
 
 // Create axios instance
 const api = axios.create({

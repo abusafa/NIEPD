@@ -2,15 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
-interface RouteParams {
-  params: { id: string };
-}
-
 // GET /api/categories/[id] - Get single category
 export async function GET(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
     const { id } = params;
     const category = await prisma.category.findUnique({
@@ -48,7 +45,7 @@ export async function GET(
 // PUT /api/categories/[id] - Update category
 export async function PUT(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -75,6 +72,7 @@ export async function PUT(
       );
     }
 
+    const params = await context.params;
     const { id } = params;
     const body = await request.json();
     const { 
@@ -161,7 +159,7 @@ export async function PUT(
 // DELETE /api/categories/[id] - Delete category
 export async function DELETE(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -188,6 +186,7 @@ export async function DELETE(
       );
     }
 
+    const params = await context.params;
     const { id } = params;
     
     // Check if category exists

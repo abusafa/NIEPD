@@ -5,10 +5,11 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/programs/[id] - Get a single program
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const program = await prisma.program.findUnique({
       where: { id },
       include: {
@@ -60,10 +61,11 @@ export async function GET(
 // PUT /api/programs/[id] - Update a program
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const user = await getUserFromToken(request);
     if (!user) {
       return NextResponse.json(
@@ -168,10 +170,11 @@ export async function PUT(
 // DELETE /api/programs/[id] - Delete a program
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const user = await getUserFromToken(request);
     if (!user) {
       return NextResponse.json(

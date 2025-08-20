@@ -78,7 +78,7 @@ export default function PagesPage() {
     {
       key: 'page',
       label: 'Page',
-      render: (_, page: Page) => (
+      render: (_: unknown, page: Page) => (
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <FileText className="h-4 w-4 text-gray-400" />
@@ -111,25 +111,25 @@ export default function PagesPage() {
     {
       key: 'type',
       label: 'Type',
-      render: (type: string) => (
-        <Badge className={getTypeColor(type)}>
-          {type}
+      render: (_: unknown, page: Page) => (
+        <Badge className={getTypeColor(page.type)}>
+          {page.type}
         </Badge>
       ),
     },
     {
       key: 'status',
       label: 'Status',
-      render: (status: string) => (
-        <Badge className={getStatusColor(status)}>
-          {status}
+      render: (_: unknown, page: Page) => (
+        <Badge className={getStatusColor(page.status)}>
+          {page.status}
         </Badge>
       ),
     },
     {
       key: 'author',
       label: 'Author',
-      render: (_, page: Page) => (
+      render: (_: unknown, page: Page) => (
         <div className="flex items-center gap-2">
           <User className="h-4 w-4 text-gray-400" />
           <span className="text-sm">
@@ -144,7 +144,7 @@ export default function PagesPage() {
     {
       key: 'updatedAt',
       label: 'Last Updated',
-      render: (date: string) => new Date(date).toLocaleDateString(),
+      render: (_: unknown, page: Page) => new Date(page.updatedAt).toLocaleDateString(),
     },
   ];
 
@@ -180,7 +180,7 @@ export default function PagesPage() {
     {
       label: 'Delete',
       icon: <Trash2 className="mr-2 h-4 w-4" />,
-      onClick: actions.deleteItem,
+      onClick: (page: Page) => actions.deleteItem(page.id),
       variant: 'destructive' as const,
     },
   ];
@@ -227,10 +227,10 @@ export default function PagesPage() {
   ];
 
   return (
-    <DataTable
+    <DataTable<Page>
       title="Pages"
       description="Manage static pages, policies, and informational content"
-      data={state.items}
+      data={state.items || []}
       columns={columns}
       actions={tableActions}
       loading={state.loading}

@@ -13,7 +13,8 @@ function verifyToken(request: NextRequest) {
 
   const token = authHeader.substring(7);
   try {
-    return jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as any;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    return decoded as { userId: string; role: string; email: string };
   } catch {
     return null;
   }
@@ -22,10 +23,11 @@ function verifyToken(request: NextRequest) {
 // GET /api/faq/[id] - Get specific FAQ item
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const faq = await prisma.fAQ.findUnique({
       where: { id },
     });
@@ -50,10 +52,11 @@ export async function GET(
 // PUT /api/faq/[id] - Update FAQ item
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const user = verifyToken(request);
     if (!user || !['SUPER_ADMIN', 'ADMIN', 'EDITOR'].includes(user.role)) {
       return NextResponse.json(
@@ -94,14 +97,12 @@ export async function PUT(
     const updatedFaq = await prisma.fAQ.update({
       where: { id },
       data: {
-        categorySlug: body.categorySlug || existingFaq.categorySlug,
         questionAr: body.questionAr.trim(),
         questionEn: body.questionEn.trim(),
         answerAr: body.answerAr.trim(),
         answerEn: body.answerEn.trim(),
         sortOrder: body.sortOrder ?? existingFaq.sortOrder,
-        isActive: body.isActive ?? existingFaq.isActive,
-        featured: body.featured ?? existingFaq.featured,
+        status: body.status ?? existingFaq.status,
         updatedAt: new Date(),
       },
     });
@@ -119,10 +120,11 @@ export async function PUT(
 // DELETE /api/faq/[id] - Delete FAQ item
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   try {
-    const { id } = await params;
+    const { id } = params;
     const user = verifyToken(request);
     if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
       return NextResponse.json(

@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+
 import { 
   ArrowLeft, 
   Edit, 
@@ -17,7 +17,6 @@ import {
   FileText,
   BookOpen,
   Calendar,
-  Users,
   Link,
   Loader2
 } from 'lucide-react';
@@ -58,12 +57,7 @@ export default function CategoryDetailPage() {
   const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
-    if (categoryId) {
-      fetchCategory();
-    }
-  }, [categoryId]);
-
-  const fetchCategory = async () => {
+    const fetchCategory = async () => {
     try {
       // Mock data - replace with API call
       const mockCategory: CategoryItem = {
@@ -75,7 +69,7 @@ export default function CategoryDetailPage() {
         slug: 'professional-development',
         type: 'GENERAL',
         color: '#3B82F6',
-        parentId: null,
+        parentId: undefined,
         children: [
           {
             id: 'child-1',
@@ -113,7 +107,12 @@ export default function CategoryDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+    };
+
+    if (categoryId) {
+      fetchCategory();
+    }
+  }, [categoryId]);
 
   const handleEdit = () => {
     router.push(`/admin/categories/${categoryId}/edit`);

@@ -102,7 +102,17 @@ export async function GET(request: NextRequest) {
     ]);
 
     // Build notifications array
-    const notifications = [];
+    const notifications: Array<{
+      id: string;
+      type: 'info' | 'success' | 'warning' | 'error';
+      title: string;
+      message: string;
+      category: 'message' | 'content' | 'system';
+      timestamp: Date;
+      read: boolean;
+      actionUrl?: string;
+      actionLabel?: string;
+    }> = [];
 
     // Contact message notifications
     recentContactMessages.forEach(message => {
@@ -164,7 +174,7 @@ export async function GET(request: NextRequest) {
         type: update.type,
         title: update.title,
         message: update.message,
-        category: update.category,
+        category: update.category as 'message' | 'content' | 'system',
         timestamp: update.timestamp,
         read: true, // System notifications are typically pre-read
       });

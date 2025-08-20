@@ -2,16 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 
-interface RouteParams {
-  params: { id: string };
-}
+
 
 // GET /api/pages/[id] - Get single page
 export async function GET(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     const { id } = params;
     const page = await prisma.page.findUnique({
       where: { id },
@@ -62,7 +61,7 @@ export async function GET(
 // PUT /api/pages/[id] - Update page
 export async function PUT(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -89,6 +88,7 @@ export async function PUT(
       );
     }
 
+    const params = await context.params;
     const { id } = params;
     const body = await request.json();
     const { 
@@ -204,7 +204,7 @@ export async function PUT(
 // DELETE /api/pages/[id] - Delete page
 export async function DELETE(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -231,6 +231,7 @@ export async function DELETE(
       );
     }
 
+    const params = await context.params;
     const { id } = params;
     
     // Check if page exists

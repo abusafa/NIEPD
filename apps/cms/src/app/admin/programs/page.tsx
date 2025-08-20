@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -9,7 +9,6 @@ import {
   Eye,
   Calendar,
   User,
-  BookOpen,
   Clock
 } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
@@ -94,7 +93,7 @@ export default function ProgramsPage() {
     {
       key: 'title',
       label: 'Program',
-      render: (_, program: ProgramItem) => (
+      render: (_: unknown, program: ProgramItem) => (
         <div className="space-y-1">
           <div className="font-medium text-sm">{program.titleEn}</div>
           <div className="text-sm text-gray-600" dir="rtl">{program.titleAr}</div>
@@ -121,16 +120,16 @@ export default function ProgramsPage() {
     {
       key: 'level',
       label: 'Level',
-      render: (level: string) => (
-        <Badge className={getLevelColor(level)}>
-          {level}
+      render: (_: unknown, program: ProgramItem) => (
+        <Badge className={getLevelColor(program.level)}>
+          {program.level}
         </Badge>
       ),
     },
     {
       key: 'duration',
       label: 'Duration',
-      render: (_, program: ProgramItem) => (
+      render: (_: unknown, program: ProgramItem) => (
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-gray-400" />
           <span className="text-sm">
@@ -142,29 +141,29 @@ export default function ProgramsPage() {
     {
       key: 'participants',
       label: 'Participants',
-      render: (participants: number) => (
+      render: (_: unknown, program: ProgramItem) => (
         <div className="flex items-center gap-2">
           <User className="h-4 w-4 text-gray-400" />
-          <span className="text-sm">{participants.toLocaleString()}</span>
+          <span className="text-sm">{program.participants.toLocaleString()}</span>
         </div>
       ),
     },
     {
       key: 'status',
       label: 'Status',
-      render: (status: string) => (
-        <Badge className={getStatusColor(status)}>
-          {status}
+      render: (_: unknown, program: ProgramItem) => (
+        <Badge className={getStatusColor(program.status)}>
+          {program.status}
         </Badge>
       ),
     },
     {
       key: 'updatedAt',
       label: 'Updated',
-      render: (date: string) => (
+      render: (_: unknown, program: ProgramItem) => (
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-gray-400" />
-          <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+          <span className="text-sm">{new Date(program.updatedAt).toLocaleDateString()}</span>
         </div>
       ),
     },
@@ -184,7 +183,7 @@ export default function ProgramsPage() {
     {
       label: 'Delete',
       icon: <Trash2 className="mr-2 h-4 w-4" />,
-      onClick: actions.deleteItem,
+      onClick: (program: ProgramItem) => actions.deleteItem(program.id),
       variant: 'destructive' as const,
     },
   ];
@@ -231,10 +230,10 @@ export default function ProgramsPage() {
   ];
 
   return (
-    <DataTable
+    <DataTable<ProgramItem>
       title="Programs Management"
       description="Manage training programs and courses"
-      data={state.items}
+      data={state.items || []}
       columns={columns}
       actions={tableActions}
       loading={state.loading}

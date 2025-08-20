@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   AlertTriangle, 
   Bug,
@@ -108,7 +108,7 @@ const ErrorReportsPage = () => {
   const [selectedReport, setSelectedReport] = useState<ErrorReport | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(false);
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<{ id: string; firstName?: string; lastName?: string; username: string }[]>([]);
   const [stats, setStats] = useState<ErrorReportStats>({
     total: 0,
     new: 0,
@@ -135,10 +135,8 @@ const ErrorReportsPage = () => {
     dateTo: '',
   });
   
-  const [selectedReports, setSelectedReports] = useState<Set<string>>(new Set());
-  const [bulkAction, setBulkAction] = useState('');
-  const [sortBy, setSortBy] = useState<'createdAt' | 'severity' | 'status'>('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [sortBy] = useState<'createdAt' | 'severity' | 'status'>('createdAt');
+  const [sortOrder] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
     fetchReports();

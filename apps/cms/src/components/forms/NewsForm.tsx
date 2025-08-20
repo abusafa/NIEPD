@@ -98,7 +98,7 @@ export default function NewsForm({ initialData, isEditing = false, newsId }: New
       .replace(/(^-|-$)/g, '');
   };
 
-  const handleInputChange = (field: keyof NewsFormData, value: any) => {
+  const handleInputChange = (field: keyof NewsFormData, value: unknown) => {
     setFormData(prev => {
       const updated = { ...prev, [field]: value };
       

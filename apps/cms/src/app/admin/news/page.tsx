@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -150,7 +150,7 @@ export default function NewsPage() {
       key: 'title',
       label: currentLang === 'ar' ? 'العنوان' : 'Title',
       labelAr: 'العنوان',
-      render: (_, article: NewsItem) => (
+      render: (_: unknown, article: NewsItem) => (
         <div className={`space-y-1 ${isRTL ? 'text-right' : 'text-left'}`}>
           <div className="font-medium text-sm font-readex">
             {currentLang === 'ar' ? article.titleAr : article.titleEn}
@@ -170,7 +170,7 @@ export default function NewsPage() {
       key: 'category',
       label: currentLang === 'ar' ? 'التصنيف' : 'Category',
       labelAr: 'التصنيف',
-      render: (_, article: NewsItem) => (
+      render: (_: unknown, article: NewsItem) => (
         <div className="text-sm font-readex">
           {currentLang === 'ar' 
             ? article.category?.nameAr || 'بدون تصنيف'
@@ -183,9 +183,9 @@ export default function NewsPage() {
       key: 'status',
       label: currentLang === 'ar' ? 'الحالة' : 'Status',
       labelAr: 'الحالة',
-      render: (status: string) => (
-        <Badge className={`${getStatusColor(status)} font-readex`}>
-          {getStatusText(status)}
+      render: (_: unknown, article: NewsItem) => (
+        <Badge className={`${getStatusColor(article.status)} font-readex`}>
+          {getStatusText(article.status)}
         </Badge>
       ),
     },
@@ -193,7 +193,7 @@ export default function NewsPage() {
       key: 'author',
       label: currentLang === 'ar' ? 'الكاتب' : 'Author',
       labelAr: 'الكاتب',
-      render: (_, article: NewsItem) => (
+      render: (_: unknown, article: NewsItem) => (
         <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <User className="h-4 w-4 text-gray-400" />
           <span className="text-sm font-readex">
@@ -209,11 +209,11 @@ export default function NewsPage() {
       key: 'updatedAt',
       label: currentLang === 'ar' ? 'آخر تحديث' : 'Updated',
       labelAr: 'آخر تحديث',
-      render: (date: string) => (
+      render: (_: unknown, article: NewsItem) => (
         <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <Calendar className="h-4 w-4 text-gray-400" />
           <span className="text-sm font-readex">
-            {new Date(date).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
+            {new Date(article.updatedAt).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
           </span>
         </div>
       ),
@@ -258,7 +258,7 @@ export default function NewsPage() {
       label: currentLang === 'ar' ? 'حذف' : 'Delete',
       labelAr: 'حذف',
       icon: <Trash2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
-      onClick: actions.deleteItem,
+      onClick: (article: NewsItem) => actions.deleteItem(article.id),
       variant: 'destructive' as const,
     },
   ];

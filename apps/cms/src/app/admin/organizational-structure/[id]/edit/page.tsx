@@ -218,45 +218,39 @@ export default function EditOrganizationMemberPage() {
         </div>
         
         <BilingualTextFields
-          label="Full Name"
+          titleLabel="Full Name"
           required
-          arValue={formData.nameAr}
-          enValue={formData.nameEn}
-          onArChange={(value) => setFormData(prev => ({ ...prev, nameAr: value }))}
-          onEnChange={(value) => setFormData(prev => ({ ...prev, nameEn: value }))}
-          arError={errors.nameAr}
-          enError={errors.nameEn}
-          arPlaceholder="الاسم الكامل بالعربية..."
-          enPlaceholder="Full name in English..."
-          component="input"
+          titleAr={formData.nameAr}
+          titleEn={formData.nameEn}
+          onTitleArChange={(value) => setFormData(prev => ({ ...prev, nameAr: value }))}
+          onTitleEnChange={(value) => setFormData(prev => ({ ...prev, nameEn: value }))}
+          showSummary={false}
+          showContent={false}
         />
 
         <BilingualTextFields
-          label="Position"
+          titleLabel="Position"
           required
-          arValue={formData.positionAr}
-          enValue={formData.positionEn}
-          onArChange={(value) => setFormData(prev => ({ ...prev, positionAr: value }))}
-          onEnChange={(value) => setFormData(prev => ({ ...prev, positionEn: value }))}
-          arError={errors.positionAr}
-          enError={errors.positionEn}
-          arPlaceholder="المنصب بالعربية..."
-          enPlaceholder="Position in English..."
-          component="input"
+          titleAr={formData.positionAr}
+          titleEn={formData.positionEn}
+          onTitleArChange={(value) => setFormData(prev => ({ ...prev, positionAr: value }))}
+          onTitleEnChange={(value) => setFormData(prev => ({ ...prev, positionEn: value }))}
+          showSummary={false}
+          showContent={false}
         />
 
         <BilingualTextFields
-          label="Description"
-          arValue={formData.descriptionAr}
-          enValue={formData.descriptionEn}
-          onArChange={(value) => setFormData(prev => ({ ...prev, descriptionAr: value }))}
-          onEnChange={(value) => setFormData(prev => ({ ...prev, descriptionEn: value }))}
-          arError={errors.descriptionAr}
-          enError={errors.descriptionEn}
-          arPlaceholder="وصف موجز بالعربية..."
-          enPlaceholder="Brief description in English..."
-          component="textarea"
-          rows={3}
+          titleAr="" // Not used for content
+          titleEn="" // Not used for content
+          onTitleArChange={() => {}} // Required but not used
+          onTitleEnChange={() => {}} // Required but not used
+          contentLabel="Description"
+          contentAr={formData.descriptionAr}
+          contentEn={formData.descriptionEn}
+          onContentArChange={(value) => setFormData(prev => ({ ...prev, descriptionAr: value }))}
+          onContentEnChange={(value) => setFormData(prev => ({ ...prev, descriptionEn: value }))}
+          showSummary={false}
+          showContent={true}
         />
       </div>
 
@@ -383,10 +377,10 @@ export default function EditOrganizationMemberPage() {
     <FormLayout
       title="Edit Organization Member"
       description="Update organization member information"
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
+      onSave={handleSubmit}
+      onBack={handleCancel}
       loading={loading}
-      submitText="Update Member"
+      isEditing={true}
     >
       {formFields}
     </FormLayout>

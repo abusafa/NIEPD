@@ -128,7 +128,7 @@ export default function EditProgramPage() {
           objectives: [], // TODO: Add to schema if needed
           slug: program.slug || '',
           categoryId: program.categoryId || '',
-          selectedTags: program.tags ? program.tags.map((t: any) => t.tag.id) : [],
+          selectedTags: program.tags ? program.tags.map((t: { tag: { id: string } }) => t.tag.id) : [],
         });
       } else {
         toast.error('Failed to load program data');
@@ -141,7 +141,7 @@ export default function EditProgramPage() {
     }
   };
 
-  const handleInputChange = (field: keyof FormData, value: any) => {
+  const handleInputChange = (field: keyof FormData, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
