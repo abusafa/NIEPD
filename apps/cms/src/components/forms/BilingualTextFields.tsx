@@ -120,7 +120,6 @@ export default function BilingualTextFields({
                 placeholder={currentLang === 'ar' ? `${getLabelInArabic(contentLabel)} كامل بالإنجليزية` : `Full ${contentLabel.toLowerCase()} in English`}
                 dir="ltr"
                 required={required}
-                disabled={disabled}
               />
             </div>
           )}
@@ -170,7 +169,6 @@ export default function BilingualTextFields({
                 placeholder={`${getLabelInArabic(contentLabel)} الكامل بالعربية`}
                 dir="rtl"
                 required={required}
-                disabled={disabled}
               />
             </div>
           )}

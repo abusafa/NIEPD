@@ -6,13 +6,8 @@ import { getUserFromToken } from '@/lib/auth';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const location = searchParams.get('location') || '';
-
     // Build where clause
     const where: Record<string, unknown> = {};
-    if (location) {
-      where.location = location;
-    }
 
     const navigation = await prisma.navigation.findMany({
       where,
@@ -63,12 +58,10 @@ export async function POST(request: NextRequest) {
       labelAr, 
       labelEn, 
       url, 
-      location, 
       parentId, 
       sortOrder, 
       isActive, 
-      openInNewWindow,
-      icon
+      target
     } = body;
 
     // Validate required fields
@@ -84,12 +77,10 @@ export async function POST(request: NextRequest) {
         labelAr,
         labelEn,
         url: url || '#',
-        location: location || 'header',
         parentId: parentId || null,
         sortOrder: sortOrder || 0,
         isActive: isActive !== false,
-        openInNewWindow: openInNewWindow || false,
-        icon,
+        target: target || '_self',
       },
       include: {
         children: true,

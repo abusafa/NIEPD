@@ -103,7 +103,7 @@ export default function NewsForm({ initialData, isEditing = false, newsId }: New
       const updated = { ...prev, [field]: value };
       
       // Auto-generate slug when English title changes
-      if (field === 'titleEn' && value) {
+      if (field === 'titleEn' && value && typeof value === 'string') {
         updated.slug = generateSlug(value);
       }
       

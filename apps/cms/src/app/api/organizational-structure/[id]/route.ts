@@ -87,9 +87,9 @@ export async function PUT(
       );
     }
 
-    if (!body.titleAr?.trim() || !body.titleEn?.trim()) {
+    if (!body.positionAr?.trim() || !body.positionEn?.trim()) {
       return NextResponse.json(
-        { error: 'Title is required in both languages' },
+        { error: 'Position is required in both languages' },
         { status: 400 }
       );
     }
@@ -107,17 +107,12 @@ export async function PUT(
       data: {
         nameAr: body.nameAr.trim(),
         nameEn: body.nameEn.trim(),
-        titleAr: body.titleAr.trim(),
-        titleEn: body.titleEn.trim(),
-        roleAr: body.roleAr?.trim() || existingMember.roleAr,
-        roleEn: body.roleEn?.trim() || existingMember.roleEn,
-        bioAr: body.bioAr?.trim() ?? existingMember.bioAr,
-        bioEn: body.bioEn?.trim() ?? existingMember.bioEn,
-        photo: body.photo ?? existingMember.photo,
-        email: body.email?.trim() ?? existingMember.email,
-        phone: body.phone?.trim() ?? existingMember.phone,
-        department: body.department ?? existingMember.department,
-        isExecutive: body.isExecutive ?? existingMember.isExecutive,
+        positionAr: body.positionAr.trim(),
+        positionEn: body.positionEn.trim(),
+        descriptionAr: body.descriptionAr?.trim() ?? existingMember.descriptionAr,
+        descriptionEn: body.descriptionEn?.trim() ?? existingMember.descriptionEn,
+        image: body.image ?? existingMember.image,
+        parentId: body.parentId ?? existingMember.parentId,
         sortOrder: body.sortOrder ?? existingMember.sortOrder,
         isActive: body.isActive ?? existingMember.isActive,
         updatedAt: new Date(),

@@ -79,7 +79,7 @@ export async function PUT(
       slug
     } = body;
 
-    const { id } = await params;
+    const { id } = await context.params;
 
     // Check if tag exists
     const existingTag = await prisma.tag.findUnique({

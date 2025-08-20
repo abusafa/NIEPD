@@ -46,7 +46,7 @@ export async function GET(
 // PUT /api/navigation/[id] - Update navigation item
 export async function PUT(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -73,18 +73,16 @@ export async function PUT(
       );
     }
 
-    const { id } = params;
+    const { id } = await context.params;
     const body = await request.json();
     const { 
       labelAr, 
       labelEn, 
       url, 
-      location, 
       parentId, 
       sortOrder, 
       isActive, 
-      openInNewWindow,
-      icon
+      target
     } = body;
 
     // Check if navigation item exists
@@ -160,12 +158,10 @@ export async function PUT(
         labelAr,
         labelEn,
         url: url || '#',
-        location: location || 'header',
         parentId: parentId || null,
         sortOrder: sortOrder || 0,
         isActive: isActive !== false,
-        openInNewWindow: openInNewWindow || false,
-        icon,
+        target: target || '_self',
       },
       include: {
         children: {
@@ -190,7 +186,7 @@ export async function PUT(
 // DELETE /api/navigation/[id] - Delete navigation item
 export async function DELETE(
   request: NextRequest,
-  { params }: RouteParams
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -217,7 +213,7 @@ export async function DELETE(
       );
     }
 
-    const { id } = params;
+    const { id } = await context.params;
     
     // Check if navigation item exists
     const existingItem = await prisma.navigation.findUnique({

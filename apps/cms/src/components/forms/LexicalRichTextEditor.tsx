@@ -18,6 +18,7 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import {
   $getRoot,
   $getSelection,
+  $isRangeSelection,
   $createParagraphNode,
   $createTextNode,
   EditorState,
@@ -150,7 +151,7 @@ function ToolbarPlugin() {
 
   const updateToolbar = () => {
     const selection = $getSelection();
-    if (selection) {
+    if (selection && $isRangeSelection(selection)) {
       // Update formatting states
       setIsBold(selection.hasFormat('bold'));
       setIsItalic(selection.hasFormat('italic'));
@@ -180,33 +181,14 @@ function ToolbarPlugin() {
     });
   }, [activeEditor, editor]);
 
-  useEffect(() => {
-    return activeEditor.registerCommand(
-      'CAN_UNDO_COMMAND',
-      (payload: boolean) => {
-        setCanUndo(payload);
-        return false;
-      },
-      1
-    );
-  }, [activeEditor]);
+  // Note: CAN_UNDO_COMMAND and CAN_REDO_COMMAND are not available in this version of Lexical
+  // The undo/redo functionality will still work through the HistoryPlugin
 
-  useEffect(() => {
-    return activeEditor.registerCommand(
-      'CAN_REDO_COMMAND',
-      (payload: boolean) => {
-        setCanRedo(payload);
-        return false;
-      },
-      1
-    );
-  }, [activeEditor]);
-
-  const formatText = (format: string) => {
+  const formatText = (format: 'bold' | 'italic' | 'underline') => {
     activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
   };
 
-  const formatElement = (format: string) => {
+  const formatElement = (format: 'left' | 'center' | 'right' | 'justify') => {
     activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, format);
   };
 
@@ -232,7 +214,7 @@ function ToolbarPlugin() {
   const formatHeading = (headingSize: 'h1' | 'h2' | 'h3') => {
     activeEditor.update(() => {
       const selection = $getSelection();
-      if (selection) {
+      if (selection && $isRangeSelection(selection)) {
         const anchorNode = selection.anchor.getNode();
         const element = anchorNode.getKey() === 'root' ? anchorNode : anchorNode.getTopLevelElement();
         if (element) {
@@ -510,6 +492,7 @@ export default function LexicalRichTextEditor({
               contentEditable={
                 <ContentEditable
                   className="min-h-[150px] p-4 outline-none focus:ring-0 resize-none"
+                  aria-placeholder={placeholder}
                   placeholder={
                     <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
                       {placeholder}

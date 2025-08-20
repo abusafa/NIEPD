@@ -21,7 +21,7 @@ const handler = startServerAndCreateNextHandler(server, {
     let user = null;
     
     try {
-      const authHeader = (req.headers as any)?.get('authorization');
+      const authHeader = req.headers.authorization;
       if (authHeader) {
         const token = authHeader.replace('Bearer ', '');
         const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; role: string; email: string };

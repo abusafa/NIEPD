@@ -111,7 +111,7 @@ export default function DataTable<T extends { id: string }>({
     if (searchTerm) {
       const searchableColumns = columns.filter(col => col.searchable !== false);
       const matchesSearch = searchableColumns.some(col => {
-        const value = col.key === 'id' ? item.id : (item as Record<string, unknown>)[col.key];
+        const value = col.key === 'id' ? item.id : (item as any)[col.key];
         return String(value).toLowerCase().includes(searchTerm.toLowerCase());
       });
       if (!matchesSearch) return false;

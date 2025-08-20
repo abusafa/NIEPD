@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
         groupName: setting.groupName,
       };
       return acc;
-    }, {} as Record<string, { key: string; value: string; groupName: string }>);
+    }, {} as Record<string, { valueAr: string | null; valueEn: string | null; type: string; groupName: string | null }>);
 
     return NextResponse.json({ 
       settings: settingsObject,
