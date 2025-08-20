@@ -125,7 +125,7 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
       {/* Sidebar */}
       <div className={`fixed inset-y-0 ${isRTL ? 'right-0' : 'left-0'} z-50 w-64 bg-card shadow-lg transform transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : (isRTL ? 'translate-x-full' : '-translate-x-full')} flex flex-col`}>
         <div className={`flex items-center justify-between p-4 border-b border-border flex-shrink-0 ${isRTL ? 'flex-row-reverse' : ''}`}>
-          <h1 className="text-xl font-bold text-foreground font-readex">NIEPD CMS</h1>
+          <h1 className="text-sm font-bold text-foreground font-readex">المعهد الوطني للتطوير المهني التعليمي</h1>
           <Button
             variant="ghost"
             size="sm"

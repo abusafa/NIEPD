@@ -76,7 +76,7 @@ function LoginContent() {
         </div>
         
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-[#00234E] font-readex">NIEPD CMS</h1>
+          <h1 className="text-3xl font-bold text-[#00234E] font-readex">المعهد الوطني للتطوير المهني التعليمي</h1>
           <p className="mt-2 text-gray-600 font-readex">{currentLang === 'ar' ? 'نظام إدارة المحتوى' : 'Content Management System'}</p>
         </div>
 
