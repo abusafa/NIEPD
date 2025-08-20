@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
-import { BookOpen, Users, Award, TrendingUp, Calendar, ExternalLink, ArrowLeft, ArrowRight, Newspaper, HelpCircle, UserCheck, Globe } from 'lucide-react';
+import { BookOpen, Users, Award, TrendingUp, Calendar, ExternalLink, ArrowLeft, ArrowRight, Newspaper, HelpCircle, UserCheck, Globe, Heart, MessageCircle, GraduationCap, Building } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Hero from '../Hero';
 import FeaturedPrograms from '../FeaturedPrograms';
@@ -292,123 +292,223 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {/* Programs Card */}
             <div 
-              className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-100"
+              className="group bg-gray-50 rounded-3xl p-8 transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-200"
               onClick={() => router.push(createLocalizedPath('/programs', currentLang))}
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <BookOpen className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-secondary-700 mb-2 group-hover:text-primary-600 transition-colors">
-                {currentLang === 'ar' ? 'البرامج التدريبية' : 'Training Programs'}
-              </h3>
-              <p className="text-secondary-600 text-sm mb-4">
-                {currentLang === 'ar' 
-                  ? 'برامج تطوير مهني متخصصة للمعلمين والقيادات التعليمية'
-                  : 'Specialized professional development programs for teachers and educational leaders'
-                }
-              </p>
-              <div className="flex items-center text-primary-600 font-medium text-sm group-hover:gap-2 transition-all duration-300">
-                {currentLang === 'ar' ? 'استكشف البرامج' : 'Explore Programs'}
-                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <BookOpen className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-secondary-800 mb-4">
+                  {currentLang === 'ar' ? 'البرامج التدريبية' : 'Training Programs'}
+                </h3>
+                <p className="text-secondary-600 text-sm leading-relaxed">
+                  {currentLang === 'ar' 
+                    ? 'برامج تطوير مهني متخصصة للمعلمين والقيادات التعليمية'
+                    : 'Specialized professional development programs for teachers and educational leaders'
+                  }
+                </p>
               </div>
             </div>
 
             {/* Events Card */}
             <div 
-              className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-100"
+              className="group bg-gray-50 rounded-3xl p-8 transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-200"
               onClick={() => router.push(createLocalizedPath('/events', currentLang))}
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Calendar className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-secondary-700 mb-2 group-hover:text-primary-600 transition-colors">
-                {currentLang === 'ar' ? 'الفعاليات والأنشطة' : 'Events & Activities'}
-              </h3>
-              <p className="text-secondary-600 text-sm mb-4">
-                {currentLang === 'ar' 
-                  ? 'فعاليات ومؤتمرات وورش عمل تفاعلية في مجال التعليم'
-                  : 'Interactive events, conferences, and workshops in education'
-                }
-              </p>
-              <div className="flex items-center text-primary-600 font-medium text-sm group-hover:gap-2 transition-all duration-300">
-                {currentLang === 'ar' ? 'تصفح الفعاليات' : 'Browse Events'}
-                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Calendar className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-secondary-800 mb-4">
+                  {currentLang === 'ar' ? 'الفعاليات والأنشطة' : 'Events & Activities'}
+                </h3>
+                <p className="text-secondary-600 text-sm leading-relaxed">
+                  {currentLang === 'ar' 
+                    ? 'فعاليات ومؤتمرات وورش عمل تفاعلية في مجال التعليم'
+                    : 'Interactive events, conferences, and workshops in education'
+                  }
+                </p>
               </div>
             </div>
 
             {/* News Card */}
             <div 
-              className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-100"
+              className="group bg-gray-50 rounded-3xl p-8 transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-200"
               onClick={() => router.push(createLocalizedPath('/news', currentLang))}
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Newspaper className="w-8 h-8 text-white" />
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Newspaper className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-secondary-800 mb-4">
+                  {currentLang === 'ar' ? 'الأخبار والمستجدات' : 'News & Updates'}
+                </h3>
+                <p className="text-secondary-600 text-sm leading-relaxed">
+                  {currentLang === 'ar' 
+                    ? 'آخر الأخبار والتطورات في عالم التطوير المهني التعليمي'
+                    : 'Latest news and developments in educational professional development'
+                  }
+                </p>
               </div>
-              <h3 className="text-xl font-bold text-secondary-700 mb-2 group-hover:text-primary-600 transition-colors">
-                {currentLang === 'ar' ? 'الأخبار والمستجدات' : 'News & Updates'}
-              </h3>
-              <p className="text-secondary-600 text-sm mb-4">
-                {currentLang === 'ar' 
-                  ? 'آخر الأخبار والتطورات في عالم التطوير المهني التعليمي'
-                  : 'Latest news and developments in educational professional development'
-                }
-              </p>
-              <div className="flex items-center text-primary-600 font-medium text-sm group-hover:gap-2 transition-all duration-300">
-                {currentLang === 'ar' ? 'قراءة الأخبار' : 'Read News'}
-                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+            </div>
+
+            {/* Partners Card */}
+            <div 
+              className="group bg-gray-50 rounded-3xl p-8 transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-200"
+              onClick={() => router.push(createLocalizedPath('/partners', currentLang))}
+            >
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Building className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-secondary-800 mb-4">
+                  {currentLang === 'ar' ? 'الشراكات الاستراتيجية' : 'Strategic Partnerships'}
+                </h3>
+                <p className="text-secondary-600 text-sm leading-relaxed">
+                  {currentLang === 'ar' 
+                    ? 'بناء علاقات استراتيجية مع أفضل المؤسسات المحلية والدولية'
+                    : 'Building strategic relationships with top local and international institutions'
+                  }
+                </p>
+              </div>
+            </div>
+
+            {/* Contact Card */}
+            <div 
+              className="group bg-gray-50 rounded-3xl p-8 transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-200"
+              onClick={() => router.push(createLocalizedPath('/contact', currentLang))}
+            >
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <MessageCircle className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-secondary-800 mb-4">
+                  {currentLang === 'ar' ? 'تواصل معنا' : 'Contact Us'}
+                </h3>
+                <p className="text-secondary-600 text-sm leading-relaxed">
+                  {currentLang === 'ar' 
+                    ? 'نحن هنا للإجابة على استفساراتكم ومساعدتكم في رحلتكم التطويرية'
+                    : 'We are here to answer your questions and help you on your development journey'
+                  }
+                </p>
               </div>
             </div>
 
             {/* FAQ Card */}
             <div 
-              className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-100"
+              className="group bg-gray-50 rounded-3xl p-8 transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-200"
               onClick={() => router.push(createLocalizedPath('/faq', currentLang))}
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <HelpCircle className="w-8 h-8 text-white" />
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <HelpCircle className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-secondary-800 mb-4">
+                  {currentLang === 'ar' ? 'الأسئلة الشائعة' : 'FAQ'}
+                </h3>
+                <p className="text-secondary-600 text-sm leading-relaxed">
+                  {currentLang === 'ar' 
+                    ? 'إجابات على الأسئلة الأكثر شيوعاً حول برامجنا وخدماتنا'
+                    : 'Answers to frequently asked questions about our programs and services'
+                  }
+                </p>
               </div>
-              <h3 className="text-xl font-bold text-secondary-700 mb-2 group-hover:text-primary-600 transition-colors">
-                {currentLang === 'ar' ? 'الأسئلة الشائعة' : 'FAQ'}
-              </h3>
-              <p className="text-secondary-600 text-sm mb-4">
-                {currentLang === 'ar' 
-                  ? 'إجابات على الأسئلة الأكثر شيوعاً حول برامجنا وخدماتنا'
-                  : 'Answers to frequently asked questions about our programs and services'
-                }
-              </p>
-              <div className="flex items-center text-primary-600 font-medium text-sm group-hover:gap-2 transition-all duration-300">
-                {currentLang === 'ar' ? 'عرض الأسئلة' : 'View Questions'}
-                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+            </div>
+
+            {/* LMS Card */}
+            <div 
+              className="group bg-gray-50 rounded-3xl p-8 transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-200"
+              onClick={() => router.push(createLocalizedPath('/courses', currentLang))}
+            >
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <GraduationCap className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-secondary-800 mb-4">
+                  {currentLang === 'ar' ? 'المقررات الإلكترونية' : 'Online Courses'}
+                </h3>
+                <p className="text-secondary-600 text-sm leading-relaxed">
+                  {currentLang === 'ar' 
+                    ? 'مقررات تفاعلية عبر الإنترنت للتعلم الذاتي والتطوير المستمر'
+                    : 'Interactive online courses for self-learning and continuous development'
+                  }
+                </p>
+              </div>
+            </div>
+
+            {/* Registration Card */}
+            <div 
+              className="group bg-gray-50 rounded-3xl p-8 transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-200"
+              onClick={() => router.push(createLocalizedPath('/register', currentLang))}
+            >
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <UserCheck className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-secondary-800 mb-4">
+                  {currentLang === 'ar' ? 'انضم إلينا' : 'Join Us'}
+                </h3>
+                <p className="text-secondary-600 text-sm leading-relaxed">
+                  {currentLang === 'ar' 
+                    ? 'ابدأ رحلتك التطويرية معنا واحصل على فرص تعليمية متميزة'
+                    : 'Start your development journey with us and get excellent educational opportunities'
+                  }
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Additional Quick Actions */}
-          <div className="mt-12 text-center">
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-white rounded-2xl p-6 shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
-                  <UserCheck className="w-6 h-6 text-white" />
+          {/* Service Categories Summary */}
+          <div className="mt-16 text-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white rounded-xl p-6 border border-gray-100">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-6 h-6 text-white" />
                 </div>
-                <div className="text-left">
-                  <h4 className="font-bold text-secondary-700">
-                    {currentLang === 'ar' ? 'سجل في برامجنا' : 'Register for Programs'}
-                  </h4>
-                  <p className="text-sm text-secondary-600">
-                    {currentLang === 'ar' ? 'ابدأ رحلتك التطويرية اليوم' : 'Start your development journey today'}
-                  </p>
-                </div>
+                <h4 className="text-lg font-bold text-secondary-700 mb-2">
+                  {currentLang === 'ar' ? 'للمعلمين' : 'For Teachers'}
+                </h4>
+                <p className="text-sm text-secondary-600">
+                  {currentLang === 'ar' 
+                    ? 'برامج ومقررات مخصصة لتطوير مهارات المعلمين'
+                    : 'Programs and courses designed to develop teachers\' skills'
+                  }
+                </p>
               </div>
-              <button 
-                className="btn-primary px-6 py-3 hover:scale-105 transition-transform duration-200"
-                onClick={() => router.push(createLocalizedPath('/register', currentLang))}
-              >
-                {currentLang === 'ar' ? 'التسجيل الآن' : 'Register Now'}
-                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
-              </button>
+              
+              <div className="bg-white rounded-xl p-6 border border-gray-100">
+                <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Award className="w-6 h-6 text-white" />
+                </div>
+                <h4 className="text-lg font-bold text-secondary-700 mb-2">
+                  {currentLang === 'ar' ? 'للقيادات' : 'For Leaders'}
+                </h4>
+                <p className="text-sm text-secondary-600">
+                  {currentLang === 'ar' 
+                    ? 'برامج قيادية متقدمة للمديرين والمشرفين التربويين'
+                    : 'Advanced leadership programs for principals and educational supervisors'
+                  }
+                </p>
+              </div>
+              
+              <div className="bg-white rounded-xl p-6 border border-gray-100">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Globe className="w-6 h-6 text-white" />
+                </div>
+                <h4 className="text-lg font-bold text-secondary-700 mb-2">
+                  {currentLang === 'ar' ? 'للمجتمع' : 'For Community'}
+                </h4>
+                <p className="text-sm text-secondary-600">
+                  {currentLang === 'ar' 
+                    ? 'فعاليات مجتمعية وشراكات استراتيجية مع الجهات المختلفة'
+                    : 'Community events and strategic partnerships with various entities'
+                  }
+                </p>
+              </div>
             </div>
           </div>
         </div>

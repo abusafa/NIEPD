@@ -204,33 +204,64 @@ async function importData() {
       model: 'navigation',
       transform: (data: any[]) => data.map(item => ({
         id: item.id.toString(),
-        labelAr: item.labelAr,
-        labelEn: item.labelEn,
+        labelAr: item.title_ar,
+        labelEn: item.title_en,
         url: item.url,
-        parentId: item.parentId?.toString(),
-        sortOrder: item.sortOrder || 0,
-        isActive: item.isActive !== false,
+        parentId: item.parent_id?.toString(),
+        sortOrder: item.sort_order || 0,
+        isActive: item.status === 'active',
         target: item.target || '_self',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date(item.created_at || Date.now()),
+        updatedAt: new Date(item.updated_at || Date.now()),
       }))
     },
     {
       file: 'contact-info.json',
       model: 'contactInfo',
-      transform: (data: any[]) => data.map(item => ({
-        id: item.id.toString(),
-        type: item.type,
-        labelAr: item.labelAr,
-        labelEn: item.labelEn,
-        valueAr: item.valueAr,
-        valueEn: item.valueEn,
-        icon: item.icon,
-        sortOrder: item.sortOrder || 0,
-        isActive: item.isActive !== false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }))
+      transform: (data: any) => {
+        const records = [];
+        let sortOrder = 0;
+
+        // Transform contactMethods
+        if (data.contactMethods && Array.isArray(data.contactMethods)) {
+          for (const method of data.contactMethods) {
+            records.push({
+              id: `contact-${sortOrder + 1}`,
+              type: 'CONTACT',
+              labelAr: method.titleAr,
+              labelEn: method.titleEn,
+              valueAr: method.valueAr,
+              valueEn: method.valueEn,
+              icon: method.icon,
+              sortOrder: sortOrder++,
+              isActive: true,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
+          }
+        }
+
+        // Transform departments
+        if (data.departments && Array.isArray(data.departments)) {
+          for (const dept of data.departments) {
+            records.push({
+              id: `dept-${sortOrder + 1}`,
+              type: 'DEPARTMENT',
+              labelAr: dept.nameAr,
+              labelEn: dept.nameEn,
+              valueAr: `البريد: ${dept.email} | الهاتف: ${dept.phone}`,
+              valueEn: `Email: ${dept.email} | Phone: ${dept.phone}`,
+              icon: 'Building',
+              sortOrder: sortOrder++,
+              isActive: true,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
+          }
+        }
+
+        return records;
+      }
     },
     {
       file: 'faq.json',

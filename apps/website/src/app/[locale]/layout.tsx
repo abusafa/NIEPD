@@ -77,8 +77,8 @@ export default async function LocaleLayout({ children, params }: Props) {
             {/* Cookie Consent Banner */}
             <CookieBanner />
             
-            {/* Floating Error Report Button */}
-            <ErrorReportButton variant="floating" />
+            {/* Floating Error Report Button - Hidden temporarily */}
+            {/* <ErrorReportButton variant="floating" /> */}
           </div>
         </AppProvider>
       </body>

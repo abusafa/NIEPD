@@ -323,6 +323,17 @@ export default function Home() {
 
           <div className="container mx-auto px-6 relative z-10">
             <div className="max-w-5xl mx-auto text-center text-white">
+              {/* Logo */}
+              <div className="mb-8">
+                <Image
+                  src="/images/logos/niepd-logo-vertical.svg"
+                  alt="NIEPD Logo"
+                  width={200}
+                  height={150}
+                  className="h-32 w-auto mx-auto mb-6 brightness-0 invert"
+                />
+              </div>
+              
               {/* Welcome Badge */}
               <div className="mb-8">
                 <span className="inline-block px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium border border-white/20">
@@ -334,7 +345,7 @@ export default function Home() {
               <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
                 <span className="block mb-4">{t.systemName}</span>
                 <span className="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-                  NIEPD CMS
+                  Content Management System
                 </span>
               </h1>
               
@@ -356,7 +367,7 @@ export default function Home() {
                     <ArrowIcon className="h-5 w-5" />
                   </Button>
                 </Link>
-                <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white hover:text-[#00234E] px-10 py-6 text-lg">
+                <Button variant="outline" size="lg" className="border-2 border-white/50 bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-[#00234E] px-10 py-6 text-lg font-semibold">
                   <Globe className={`h-5 w-5 ${currentLang === 'ar' ? 'ml-2' : 'mr-2'}`} />
                   {t.viewPublicSite}
                 </Button>
@@ -365,283 +376,20 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Vision & Mission Section */}
-        <section className="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
-          {/* Background Elements */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-20 left-10 w-32 h-32 bg-[#00808A] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 right-10 w-40 h-40 bg-[#00234E] rounded-full blur-3xl"></div>
-          </div>
 
-          <div className="container mx-auto px-6 relative">
-            {/* Section Header */}
-            <div className="max-w-3xl mx-auto text-center mb-20">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#00234E] mb-6">
-                {t.visionMissionTitle}
-              </h2>
-              <p className="text-xl text-gray-600 leading-relaxed">
-                {t.visionMissionSubtitle}
-              </p>
-            </div>
 
-            {/* Vision & Mission Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
-              {/* Vision Card */}
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#00808A] to-[#006b74] rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-                <div className="relative bg-white rounded-3xl p-8 md:p-10 border border-gray-100 hover:shadow-xl transition-all duration-300">
-                  {/* Icon */}
-                  <div className="w-20 h-20 bg-gradient-to-br from-[#00808A] to-[#006b74] rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                    <Eye className="w-10 h-10 text-white" />
-                  </div>
-                  
-                  {/* Title */}
-                  <h3 className="text-3xl font-bold text-[#00234E] mb-6 group-hover:text-[#00808A] transition-colors duration-300">
-                    {t.vision}
-                  </h3>
-                  
-                  {/* Content */}
-                  <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                    {t.visionText}
-                  </p>
-                  
-                  {/* Decorative Element */}
-                  <div className="flex items-center gap-2 text-[#00808A] font-medium">
-                    <div className="w-8 h-0.5 bg-gradient-to-r from-[#00808A] to-transparent"></div>
-                    <span className="text-sm">{currentLang === 'ar' ? 'رؤيتنا' : 'Our Vision'}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Mission Card */}
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#00234E] to-[#001a3a] rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-10"></div>
-                <div className="relative bg-white rounded-3xl p-8 md:p-10 border border-gray-100 hover:shadow-xl transition-all duration-300">
-                  {/* Icon */}
-                  <div className="w-20 h-20 bg-gradient-to-br from-[#00234E] to-[#001a3a] rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                    <Heart className="w-10 h-10 text-white" />
-                  </div>
-                  
-                  {/* Title */}
-                  <h3 className="text-3xl font-bold text-[#00234E] mb-6 group-hover:text-[#00234E] transition-colors duration-300">
-                    {t.mission}
-                  </h3>
-                  
-                  {/* Content */}
-                  <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                    {t.missionText}
-                  </p>
-                  
-                  {/* Decorative Element */}
-                  <div className="flex items-center gap-2 text-[#00234E] font-medium">
-                    <div className="w-8 h-0.5 bg-gradient-to-r from-[#00234E] to-transparent"></div>
-                    <span className="text-sm">{currentLang === 'ar' ? 'رسالتنا' : 'Our Mission'}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Values Section */}
-            <div className="max-w-6xl mx-auto">
-              {/* Values Header */}
-              <div className="text-center mb-16">
-                <h3 className="text-3xl md:text-4xl font-bold text-[#00234E] mb-4">
-                  {currentLang === 'ar' ? 'قيمنا التقنية' : 'Our Technical Values'}
-                </h3>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  {currentLang === 'ar' ? 'المبادئ التقنية التي نؤمن بها ونعمل من خلالها' : 'The technical principles we believe in and work through'}
-                </p>
-              </div>
-
-              {/* Values Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div className="group relative bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300">
-                  <div className="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Sparkles className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <h4 className="text-xl font-bold text-[#00234E] mb-4 group-hover:text-[#00808A] transition-colors duration-300">
-                    {t.excellence}
-                  </h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {t.excellenceDesc}
-                  </p>
-                </div>
-
-                <div className="group relative bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300">
-                  <div className="w-16 h-16 bg-purple-50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Target className="w-8 h-8 text-purple-600" />
-                  </div>
-                  <h4 className="text-xl font-bold text-[#00234E] mb-4 group-hover:text-[#00808A] transition-colors duration-300">
-                    {t.innovation}
-                  </h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {t.innovationDesc}
-                  </p>
-                </div>
-
-                <div className="group relative bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300">
-                  <div className="w-16 h-16 bg-green-50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Shield className="w-8 h-8 text-green-600" />
-                  </div>
-                  <h4 className="text-xl font-bold text-[#00234E] mb-4 group-hover:text-[#00808A] transition-colors duration-300">
-                    {t.security}
-                  </h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {t.securityDesc}
-                  </p>
-                </div>
-
-                <div className="group relative bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300">
-                  <div className="w-16 h-16 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Heart className="w-8 h-8 text-orange-600" />
-                  </div>
-                  <h4 className="text-xl font-bold text-[#00234E] mb-4 group-hover:text-[#00808A] transition-colors duration-300">
-                    {t.usability}
-                  </h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {t.usabilityDesc}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20 bg-white">
+        {/* Simple Call to Action */}
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#00234E] mb-4">
-                {t.featuresTitle}
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                {t.featuresSubtitle}
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-[#00808A]">
-                <CardHeader className="text-center">
-                  <div className="mx-auto w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
-                    <FileText className="h-8 w-8 text-[#00808A]" />
-                  </div>
-                  <CardTitle className="text-[#00234E] mb-4">{t.contentManagement}</CardTitle>
-                  <CardDescription className="text-gray-600 leading-relaxed">
-                    {t.contentManagementDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-green-500">
-                <CardHeader className="text-center">
-                  <div className="mx-auto w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mb-6">
-                    <BookOpen className="h-8 w-8 text-green-600" />
-                  </div>
-                  <CardTitle className="text-[#00234E] mb-4">{t.programsManagement}</CardTitle>
-                  <CardDescription className="text-gray-600 leading-relaxed">
-                    {t.programsManagementDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-purple-500">
-                <CardHeader className="text-center">
-                  <div className="mx-auto w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center mb-6">
-                    <Calendar className="h-8 w-8 text-purple-600" />
-                  </div>
-                  <CardTitle className="text-[#00234E] mb-4">{t.eventsManagement}</CardTitle>
-                  <CardDescription className="text-gray-600 leading-relaxed">
-                    {t.eventsManagementDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-orange-500">
-                <CardHeader className="text-center">
-                  <div className="mx-auto w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-6">
-                    <Users className="h-8 w-8 text-orange-600" />
-                  </div>
-                  <CardTitle className="text-[#00234E] mb-4">{t.userManagement}</CardTitle>
-                  <CardDescription className="text-gray-600 leading-relaxed">
-                    {t.userManagementDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-teal-500">
-                <CardHeader className="text-center">
-                  <div className="mx-auto w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center mb-6">
-                    <Settings className="h-8 w-8 text-teal-600" />
-                  </div>
-                  <CardTitle className="text-[#00234E] mb-4">{t.systemConfig}</CardTitle>
-                  <CardDescription className="text-gray-600 leading-relaxed">
-                    {t.systemConfigDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-pink-500">
-                <CardHeader className="text-center">
-                  <div className="mx-auto w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center mb-6">
-                    <Sparkles className="h-8 w-8 text-pink-600" />
-                  </div>
-                  <CardTitle className="text-[#00234E] mb-4">{t.mediaLibrary}</CardTitle>
-                  <CardDescription className="text-gray-600 leading-relaxed">
-                    {t.mediaLibraryDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Statistics Section */}
-        <section className="py-20 bg-gradient-to-r from-[#00234E] via-[#003d5c] to-[#00808A] text-white overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#00808A]/20 to-[#00234E]/20"></div>
-          <div className="container mx-auto px-6 relative">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                {t.statsTitle}
-              </h2>
-              <p className="text-xl opacity-90 max-w-3xl mx-auto">
-                {t.statsSubtitle}
-              </p>
-            </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              {stats.map((stat, index) => {
-                const Icon = stat.icon;
-                return (
-                  <div key={index} className="text-center group">
-                    <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6 hover:bg-white/20 hover:scale-110 transition-all duration-300 border border-white/20 group-hover:border-white/40">
-                      <Icon className="w-8 h-8 text-white" />
-                    </div>
-                    <AnimatedCounter 
-                      value={stat.number} 
-                      duration={2000}
-                      className="text-4xl md:text-5xl font-bold text-white mb-3 group-hover:scale-110 transition-transform duration-300"
-                    />
-                    <div className="text-white/90 text-lg font-medium">{stat.label}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* Call to Action */}
-        <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-[#00808A]/5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-[#00808A]/10 to-transparent rounded-full -translate-y-48 translate-x-48"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#00234E]/10 to-transparent rounded-full translate-y-48 -translate-x-48"></div>
-          <div className="container mx-auto px-6 relative">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#00234E] mb-8">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#00234E] mb-6">
                 {t.ctaTitle}
               </h2>
-              <p className="text-xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto">
+              <p className="text-lg text-gray-600 mb-8">
                 {t.ctaSubtitle}
               </p>
               <Link href="/admin">
-                <Button size="lg" className="bg-gradient-to-r from-[#00808A] to-[#006b74] hover:from-[#006b74] hover:to-[#00808A] px-10 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300">
+                <Button size="lg" className="bg-gradient-to-r from-[#00808A] to-[#006b74] hover:from-[#006b74] hover:to-[#00808A] px-8 py-4 text-lg font-semibold shadow-lg">
                   <Shield className={`h-5 w-5 ${currentLang === 'ar' ? 'ml-2' : 'mr-2'}`} />
                   {t.goToAdminDashboard}
                   <ArrowIcon className="h-5 w-5" />
