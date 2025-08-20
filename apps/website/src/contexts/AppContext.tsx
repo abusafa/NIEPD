@@ -42,6 +42,9 @@ export interface AppState {
   // Network State
   isOnline: boolean;
   lastSync: Date | null;
+  
+  // Cookie Consent
+  cookieConsent: boolean | null;
 }
 
 export interface Notification {
@@ -71,6 +74,7 @@ export type AppAction =
   | { type: 'SET_EVENTS'; payload: unknown[] }
   | { type: 'SET_ONLINE_STATUS'; payload: boolean }
   | { type: 'SET_LAST_SYNC'; payload: Date }
+  | { type: 'SET_COOKIE_CONSENT'; payload: boolean | null }
   | { type: 'RESET_STATE' };
 
 // Initial State
@@ -88,6 +92,7 @@ const initialState: AppState = {
   events: [],
   isOnline: typeof window !== 'undefined' ? navigator.onLine : true,
   lastSync: null,
+  cookieConsent: null,
 };
 
 // Reducer
@@ -194,6 +199,12 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
         lastSync: action.payload,
       };
     
+    case 'SET_COOKIE_CONSENT':
+      return {
+        ...state,
+        cookieConsent: action.payload,
+      };
+    
     case 'RESET_STATE':
       return {
         ...initialState,
@@ -221,6 +232,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (typeof window !== 'undefined') {
       const savedLang = localStorage.getItem('niepd-language') as Language;
       const savedTheme = localStorage.getItem('niepd-theme') as 'light' | 'dark';
+      const savedConsent = localStorage.getItem('niepd-cookie-consent');
       
       if (savedLang && (savedLang === 'ar' || savedLang === 'en')) {
         dispatch({ type: 'SET_LANGUAGE', payload: savedLang });
@@ -228,6 +240,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       
       // Always force light theme
       dispatch({ type: 'SET_THEME', payload: 'light' });
+      
+      // Load cookie consent
+      if (savedConsent === 'accepted') {
+        dispatch({ type: 'SET_COOKIE_CONSENT', payload: true });
+      } else if (savedConsent === 'declined') {
+        dispatch({ type: 'SET_COOKIE_CONSENT', payload: false });
+      }
     }
   }, []);
 
@@ -415,5 +434,40 @@ export const useNetworkStatus = () => {
     isOnline: state.isOnline,
     isOffline: !state.isOnline,
     lastSync: state.lastSync,
+  };
+};
+
+export const useCookieConsent = () => {
+  const { state, dispatch } = useApp();
+  
+  const acceptCookies = () => {
+    dispatch({ type: 'SET_COOKIE_CONSENT', payload: true });
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('niepd-cookie-consent', 'accepted');
+    }
+  };
+  
+  const declineCookies = () => {
+    dispatch({ type: 'SET_COOKIE_CONSENT', payload: false });
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('niepd-cookie-consent', 'declined');
+    }
+  };
+  
+  const resetConsent = () => {
+    dispatch({ type: 'SET_COOKIE_CONSENT', payload: null });
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('niepd-cookie-consent');
+    }
+  };
+  
+  return {
+    cookieConsent: state.cookieConsent,
+    hasConsented: state.cookieConsent === true,
+    hasDeclined: state.cookieConsent === false,
+    needsConsent: state.cookieConsent === null,
+    acceptCookies,
+    declineCookies,
+    resetConsent,
   };
 };

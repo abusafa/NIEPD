@@ -9,6 +9,7 @@ __turbopack_context__.s({
     "AppProvider": ()=>AppProvider,
     "useApp": ()=>useApp,
     "useAuth": ()=>useAuth,
+    "useCookieConsent": ()=>useCookieConsent,
     "useLanguage": ()=>useLanguage,
     "useLoading": ()=>useLoading,
     "useNetworkStatus": ()=>useNetworkStatus,
@@ -18,7 +19,7 @@ __turbopack_context__.s({
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 ;
-var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature(), _s2 = __turbopack_context__.k.signature(), _s3 = __turbopack_context__.k.signature(), _s4 = __turbopack_context__.k.signature(), _s5 = __turbopack_context__.k.signature(), _s6 = __turbopack_context__.k.signature(), _s7 = __turbopack_context__.k.signature();
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature(), _s2 = __turbopack_context__.k.signature(), _s3 = __turbopack_context__.k.signature(), _s4 = __turbopack_context__.k.signature(), _s5 = __turbopack_context__.k.signature(), _s6 = __turbopack_context__.k.signature(), _s7 = __turbopack_context__.k.signature(), _s8 = __turbopack_context__.k.signature();
 'use client';
 ;
 // Initial State
@@ -35,7 +36,8 @@ const initialState = {
     news: [],
     events: [],
     isOnline: ("TURBOPACK compile-time truthy", 1) ? navigator.onLine : "TURBOPACK unreachable",
-    lastSync: null
+    lastSync: null,
+    cookieConsent: null
 };
 // Reducer
 const appReducer = (state, action)=>{
@@ -131,6 +133,11 @@ const appReducer = (state, action)=>{
                 ...state,
                 lastSync: action.payload
             };
+        case 'SET_COOKIE_CONSENT':
+            return {
+                ...state,
+                cookieConsent: action.payload
+            };
         case 'RESET_STATE':
             return {
                 ...initialState,
@@ -153,6 +160,7 @@ const AppProvider = (param)=>{
             if ("TURBOPACK compile-time truthy", 1) {
                 const savedLang = localStorage.getItem('niepd-language');
                 const savedTheme = localStorage.getItem('niepd-theme');
+                const savedConsent = localStorage.getItem('niepd-cookie-consent');
                 if (savedLang && (savedLang === 'ar' || savedLang === 'en')) {
                     dispatch({
                         type: 'SET_LANGUAGE',
@@ -164,6 +172,18 @@ const AppProvider = (param)=>{
                     type: 'SET_THEME',
                     payload: 'light'
                 });
+                // Load cookie consent
+                if (savedConsent === 'accepted') {
+                    dispatch({
+                        type: 'SET_COOKIE_CONSENT',
+                        payload: true
+                    });
+                } else if (savedConsent === 'declined') {
+                    dispatch({
+                        type: 'SET_COOKIE_CONSENT',
+                        payload: false
+                    });
+                }
             }
         }
     }["AppProvider.useEffect"], []);
@@ -253,7 +273,7 @@ const AppProvider = (param)=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/src/contexts/AppContext.tsx",
-        lineNumber: 286,
+        lineNumber: 305,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -428,6 +448,51 @@ const useNetworkStatus = ()=>{
     };
 };
 _s7(useNetworkStatus, "4T9imRGE2C10qdYg9OIaug00+PA=", false, function() {
+    return [
+        useApp
+    ];
+});
+const useCookieConsent = ()=>{
+    _s8();
+    const { state, dispatch } = useApp();
+    const acceptCookies = ()=>{
+        dispatch({
+            type: 'SET_COOKIE_CONSENT',
+            payload: true
+        });
+        if ("TURBOPACK compile-time truthy", 1) {
+            localStorage.setItem('niepd-cookie-consent', 'accepted');
+        }
+    };
+    const declineCookies = ()=>{
+        dispatch({
+            type: 'SET_COOKIE_CONSENT',
+            payload: false
+        });
+        if ("TURBOPACK compile-time truthy", 1) {
+            localStorage.setItem('niepd-cookie-consent', 'declined');
+        }
+    };
+    const resetConsent = ()=>{
+        dispatch({
+            type: 'SET_COOKIE_CONSENT',
+            payload: null
+        });
+        if ("TURBOPACK compile-time truthy", 1) {
+            localStorage.removeItem('niepd-cookie-consent');
+        }
+    };
+    return {
+        cookieConsent: state.cookieConsent,
+        hasConsented: state.cookieConsent === true,
+        hasDeclined: state.cookieConsent === false,
+        needsConsent: state.cookieConsent === null,
+        acceptCookies,
+        declineCookies,
+        resetConsent
+    };
+};
+_s8(useCookieConsent, "M29g0gCSGCC/HGC+e/IQ+8IjGBQ=", false, function() {
     return [
         useApp
     ];

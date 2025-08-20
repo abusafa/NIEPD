@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import '../../index.css'
 import { AppProvider } from '@/contexts/AppContext'
 import { NetworkStatusBanner } from '@/components/ErrorHandling'
+import { CookieBanner } from '@/components/CookieBanner'
 import { getLocaleConfig, isValidLocale, type Locale } from '@/lib/i18n'
 import { notFound } from 'next/navigation'
 
@@ -70,9 +71,10 @@ export default async function LocaleLayout({ children, params }: Props) {
             {/* Network Status Banner */}
             <NetworkStatusBanner />
             
-
-            
             {children}
+            
+            {/* Cookie Consent Banner */}
+            <CookieBanner />
           </div>
         </AppProvider>
       </body>

@@ -82,6 +82,11 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/niepd-website?schema
 NEXTAUTH_SECRET="your-nextauth-secret-key-here"
 NEXTAUTH_URL="http://localhost:3000"
 JWT_SECRET="your-jwt-secret-key-here"
+
+# Base URL for generating full media URLs
+# In development, defaults to http://localhost:3001
+# In production, set to your actual domain
+NEXT_PUBLIC_BASE_URL="http://localhost:3001"
 ```
 
 ### 2. Database Setup
@@ -306,6 +311,7 @@ NEXTAUTH_SECRET="secure-random-string"
 NEXTAUTH_URL="https://your-domain.com"
 JWT_SECRET="secure-jwt-secret"
 NODE_ENV="production"
+NEXT_PUBLIC_BASE_URL="https://your-cms-domain.com"
 ```
 
 ### Build & Deploy

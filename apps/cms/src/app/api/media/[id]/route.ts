@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 import { unlink } from 'fs/promises';
 import path from 'path';
+import { getFullMediaUrl } from '@/lib/utils';
 
 interface RouteParams {
   params: { id: string };
@@ -26,7 +27,14 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(media);
+    // Convert relative path to full URL
+    const mediaWithFullUrl = {
+      ...media,
+      path: getFullMediaUrl(media.path, request),
+      url: getFullMediaUrl(media.path, request), // Add url field as well for convenience
+    };
+
+    return NextResponse.json(mediaWithFullUrl);
   } catch (error) {
     console.error('Error fetching media:', error);
     return NextResponse.json(
@@ -81,7 +89,14 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(updatedMedia);
+    // Convert relative path to full URL
+    const mediaWithFullUrl = {
+      ...updatedMedia,
+      path: getFullMediaUrl(updatedMedia.path, request),
+      url: getFullMediaUrl(updatedMedia.path, request), // Add url field as well for convenience
+    };
+
+    return NextResponse.json(mediaWithFullUrl);
   } catch (error) {
     console.error('Error updating media:', error);
     return NextResponse.json(

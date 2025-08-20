@@ -66,10 +66,36 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
     const fetchOrganizationData = async () => {
       try {
         setLoading(true);
-        const data = await dataService.getOrganizationalStructure();
+        
+        // Try to fetch from CMS first
+        let data = await dataService.getOrganizationalStructure();
+        
+        // Check if CMS data is valid and has content
+        const hasValidData = data && 
+          data.board && Array.isArray(data.board) && data.board.length > 0 &&
+          data.management && Array.isArray(data.management) && data.management.length > 0 &&
+          data.departments && Array.isArray(data.departments) && data.departments.length > 0;
+        
+        // If CMS data is not valid or empty, fall back to static JSON
+        if (!hasValidData) {
+          console.log('CMS organizational data not available, falling back to static JSON');
+          const fallbackResponse = await fetch('/data/organizational-structure.json');
+          if (fallbackResponse.ok) {
+            data = await fallbackResponse.json();
+          } else {
+            throw new Error('Failed to load fallback organizational data');
+          }
+        }
+        
         setOrganizationData(data);
       } catch (error) {
         console.error('Error fetching organizational structure:', error);
+        // Last resort: set empty structure to prevent crashes
+        setOrganizationData({
+          board: [],
+          management: [],
+          departments: []
+        });
       } finally {
         setLoading(false);
       }
@@ -79,13 +105,30 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
   }, []);
 
   // Show loading state
-  if (loading || !organizationData) {
+  if (loading) {
     return (
       <section className="section-spacing bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
-            <p className="text-secondary-600">Loading organizational structure...</p>
+            <p className="text-secondary-600">
+              {currentLang === 'ar' ? 'جاري تحميل الهيكل التنظيمي...' : 'Loading organizational structure...'}
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+  
+  // Show error state if no data
+  if (!organizationData) {
+    return (
+      <section className="section-spacing bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p className="text-secondary-600">
+              {currentLang === 'ar' ? 'لا توجد بيانات للهيكل التنظيمي' : 'No organizational structure data available'}
+            </p>
           </div>
         </div>
       </section>
@@ -296,7 +339,7 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Crown className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-secondary-700 mb-2">{orgData.board.length}</h3>
+            <h3 className="text-2xl font-bold text-secondary-700 mb-2">{orgData.board?.length || 0}</h3>
             <p className="text-secondary-600">{t.boardMembers}</p>
           </div>
           
@@ -304,7 +347,7 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
             <div className="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Briefcase className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-secondary-700 mb-2">{orgData.management.length}</h3>
+            <h3 className="text-2xl font-bold text-secondary-700 mb-2">{orgData.management?.length || 0}</h3>
             <p className="text-secondary-600">{t.executiveTeam}</p>
           </div>
           
@@ -312,7 +355,7 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
             <div className="w-16 h-16 bg-gradient-to-br from-accent-green-500 to-accent-green-600 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Building className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-secondary-700 mb-2">{orgData.departments.length}</h3>
+            <h3 className="text-2xl font-bold text-secondary-700 mb-2">{orgData.departments?.length || 0}</h3>
             <p className="text-secondary-600">{t.departments}</p>
           </div>
         </div>
@@ -334,7 +377,7 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
           
           {expandedSections.includes('board') && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
-              {orgData.board.map(person => renderPersonCard(person, 'board'))}
+              {(orgData.board || []).map(person => renderPersonCard(person, 'board'))}
             </div>
           )}
         </div>
@@ -356,7 +399,7 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
           
           {expandedSections.includes('management') && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-              {orgData.management.map(person => renderPersonCard(person, 'management'))}
+              {(orgData.management || []).map(person => renderPersonCard(person, 'management'))}
             </div>
           )}
         </div>
@@ -378,7 +421,7 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
           
           {expandedSections.includes('departments') && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-              {orgData.departments.map(dept => renderDepartmentCard(dept))}
+              {(orgData.departments || []).map(dept => renderDepartmentCard(dept))}
             </div>
           )}
         </div>

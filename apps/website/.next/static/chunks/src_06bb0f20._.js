@@ -1956,14 +1956,17 @@ const ProgramsPage = (param)=>{
                                         className: "flex gap-2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>router.push("/register?program=".concat(program.id)),
+                                                onClick: ()=>{
+                                                    const registrationUrl = "https://niepd.futurex.sa/courses?program=".concat(program.id, "&title=").concat(encodeURIComponent(currentLang === 'ar' ? program.titleAr : program.titleEn), "&level=").concat(program.level, "&source=website");
+                                                    window.open(registrationUrl, '_blank');
+                                                },
                                                 className: "flex-1 btn-primary",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"], {
                                                         className: "w-4 h-4 mr-2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/ProgramsPage.tsx",
-                                                        lineNumber: 371,
+                                                        lineNumber: 374,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     t.startLearning
@@ -1979,7 +1982,7 @@ const ProgramsPage = (param)=>{
                                                 children: t.learnMore
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/pages/ProgramsPage.tsx",
-                                                lineNumber: 374,
+                                                lineNumber: 377,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]

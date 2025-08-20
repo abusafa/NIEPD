@@ -365,7 +365,10 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang }) => {
                 {/* Action Buttons */}
                 <div className="flex gap-2">
                   <button 
-                    onClick={() => router.push(`/register?program=${program.id}`)}
+                    onClick={() => {
+                      const registrationUrl = `https://niepd.futurex.sa/courses?program=${program.id}&title=${encodeURIComponent(currentLang === 'ar' ? program.titleAr : program.titleEn)}&level=${program.level}&source=website`;
+                      window.open(registrationUrl, '_blank');
+                    }}
                     className="flex-1 btn-primary"
                   >
                     <BookOpen className="w-4 h-4 mr-2" />

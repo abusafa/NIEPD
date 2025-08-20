@@ -7,6 +7,7 @@ __turbopack_context__.s({
     "AppProvider": ()=>AppProvider,
     "useApp": ()=>useApp,
     "useAuth": ()=>useAuth,
+    "useCookieConsent": ()=>useCookieConsent,
     "useLanguage": ()=>useLanguage,
     "useLoading": ()=>useLoading,
     "useNetworkStatus": ()=>useNetworkStatus,
@@ -32,7 +33,8 @@ const initialState = {
     news: [],
     events: [],
     isOnline: ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : true,
-    lastSync: null
+    lastSync: null,
+    cookieConsent: null
 };
 // Reducer
 const appReducer = (state, action)=>{
@@ -128,6 +130,11 @@ const appReducer = (state, action)=>{
                 ...state,
                 lastSync: action.payload
             };
+        case 'SET_COOKIE_CONSENT':
+            return {
+                ...state,
+                cookieConsent: action.payload
+            };
         case 'RESET_STATE':
             return {
                 ...initialState,
@@ -189,7 +196,7 @@ const AppProvider = ({ children })=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/src/contexts/AppContext.tsx",
-        lineNumber: 286,
+        lineNumber: 305,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -324,6 +331,42 @@ const useNetworkStatus = ()=>{
         isOnline: state.isOnline,
         isOffline: !state.isOnline,
         lastSync: state.lastSync
+    };
+};
+const useCookieConsent = ()=>{
+    const { state, dispatch } = useApp();
+    const acceptCookies = ()=>{
+        dispatch({
+            type: 'SET_COOKIE_CONSENT',
+            payload: true
+        });
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
+    };
+    const declineCookies = ()=>{
+        dispatch({
+            type: 'SET_COOKIE_CONSENT',
+            payload: false
+        });
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
+    };
+    const resetConsent = ()=>{
+        dispatch({
+            type: 'SET_COOKIE_CONSENT',
+            payload: null
+        });
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
+    };
+    return {
+        cookieConsent: state.cookieConsent,
+        hasConsented: state.cookieConsent === true,
+        hasDeclined: state.cookieConsent === false,
+        needsConsent: state.cookieConsent === null,
+        acceptCookies,
+        declineCookies,
+        resetConsent
     };
 };
 }),

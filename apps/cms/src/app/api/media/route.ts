@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getUserFromToken } from '@/lib/auth';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
+import { getFullMediaUrl } from '@/lib/utils';
 
 // GET /api/media - List all media files (public access)
 export async function GET(request: NextRequest) {
@@ -45,8 +46,15 @@ export async function GET(request: NextRequest) {
       prisma.media.count({ where }),
     ]);
 
+    // Convert relative paths to full URLs
+    const mediaWithFullUrls = media.map(item => ({
+      ...item,
+      path: getFullMediaUrl(item.path, request),
+      url: getFullMediaUrl(item.path, request), // Add url field as well for convenience
+    }));
+
     return NextResponse.json({
-      media,
+      media: mediaWithFullUrls,
       total,
       pages: Math.ceil(total / limit),
       currentPage: page,
@@ -135,7 +143,14 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      uploadedFiles.push(mediaRecord);
+      // Add full URL to the response
+      const mediaWithFullUrl = {
+        ...mediaRecord,
+        path: getFullMediaUrl(mediaRecord.path, request),
+        url: getFullMediaUrl(mediaRecord.path, request), // Add url field as well for convenience
+      };
+
+      uploadedFiles.push(mediaWithFullUrl);
     }
 
     return NextResponse.json({

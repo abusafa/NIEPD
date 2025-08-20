@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Clock, Users, Award, ArrowLeft, ArrowRight, ExternalLink, CheckCircle, Star } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { dataService } from '@/lib/api';
 import { LegacyProgram as Program } from '@/types';
+import { createLocalizedPath } from '@/lib/navigation';
 
 interface FeaturedProgramsProps {
   currentLang: 'ar' | 'en';
@@ -11,6 +13,7 @@ interface FeaturedProgramsProps {
 }
 
 const FeaturedPrograms: React.FC<FeaturedProgramsProps> = ({ currentLang, onProgramSelect }) => {
+  const router = useRouter();
   const [featuredPrograms, setFeaturedPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);
   const content = {
@@ -151,7 +154,7 @@ const FeaturedPrograms: React.FC<FeaturedProgramsProps> = ({ currentLang, onProg
           <h2 className="text-4xl md:text-5xl font-bold text-secondary-700 mb-6">{t.title}</h2>
           <p className="text-xl text-secondary-600 leading-relaxed mb-8">{t.subtitle}</p>
           <button 
-            onClick={() => onProgramSelect && onProgramSelect(0)}
+            onClick={() => router.push(createLocalizedPath('/programs', currentLang))}
             className="btn-secondary inline-flex items-center gap-2 hover:scale-105 transition-transform duration-200"
           >
             {t.viewAll}
@@ -259,14 +262,17 @@ const FeaturedPrograms: React.FC<FeaturedProgramsProps> = ({ currentLang, onProg
                   <div className="flex gap-3">
                     <button 
                       className="btn-primary flex-1 text-sm py-2.5 hover:scale-105 transition-transform duration-200"
-                      onClick={() => window.open('https://niepd.futurex.sa/courses', '_blank')}
+                      onClick={() => {
+                        const registrationUrl = `https://niepd.futurex.sa/courses?program=${program.id}&title=${encodeURIComponent(currentLang === 'ar' ? program.titleAr : program.titleEn)}&source=website`;
+                        window.open(registrationUrl, '_blank');
+                      }}
                     >
                       {t.registerNow}
                       <ExternalLink className="w-4 h-4" />
                     </button>
                     <button 
                       className="btn-secondary px-4 py-2.5 text-sm hover:scale-105 transition-transform duration-200"
-                      onClick={() => onProgramSelect && onProgramSelect(program.id)}
+                      onClick={() => router.push(createLocalizedPath(`/programs/${program.id}`, currentLang))}
                     >
                       {t.learnMore}
                     </button>
@@ -292,7 +298,7 @@ const FeaturedPrograms: React.FC<FeaturedProgramsProps> = ({ currentLang, onProg
               </p>
               <button 
                 className="btn-primary hover:scale-105 transition-transform duration-200"
-                onClick={() => window.open('https://niepd.futurex.sa/courses', '_blank')}
+                onClick={() => router.push(createLocalizedPath('/programs', currentLang))}
               >
                 {currentLang === 'ar' ? 'تصفح جميع البرامج' : 'Browse All Programs'}
                 <ArrowIcon className="w-4 h-4" />

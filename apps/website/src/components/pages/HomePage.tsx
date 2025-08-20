@@ -1,13 +1,14 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
-import { BookOpen, Users, Award, TrendingUp, Calendar, ExternalLink, ArrowLeft, ArrowRight } from 'lucide-react';
+import { BookOpen, Users, Award, TrendingUp, Calendar, ExternalLink, ArrowLeft, ArrowRight, Newspaper, HelpCircle, UserCheck, Globe } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Hero from '../Hero';
 import FeaturedPrograms from '../FeaturedPrograms';
 import VisionMission from '../VisionMission';
 import { dataService, SiteSettings } from '@/lib/api';
 import { Statistics, LegacyNewsItem as NewsItem } from '@/types';
+import { createLocalizedPath } from '@/lib/navigation';
 
 interface HomePageProps {
   currentLang: 'ar' | 'en';
@@ -276,6 +277,143 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
       {/* Enhanced Vision & Mission */}
       <VisionMission currentLang={currentLang} />
 
+      {/* Quick Navigation Cards */}
+      <section className="section-spacing bg-gradient-to-b from-gray-50 to-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="section-title text-gradient-animated">
+              {currentLang === 'ar' ? 'استكشف خدماتنا' : 'Explore Our Services'}
+            </h2>
+            <p className="text-xl text-secondary-600 max-w-2xl mx-auto">
+              {currentLang === 'ar' 
+                ? 'اختر الخدمة التي تناسب احتياجاتك التطويرية'
+                : 'Choose the service that meets your development needs'
+              }
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Programs Card */}
+            <div 
+              className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-100"
+              onClick={() => router.push(createLocalizedPath('/programs', currentLang))}
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <BookOpen className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-secondary-700 mb-2 group-hover:text-primary-600 transition-colors">
+                {currentLang === 'ar' ? 'البرامج التدريبية' : 'Training Programs'}
+              </h3>
+              <p className="text-secondary-600 text-sm mb-4">
+                {currentLang === 'ar' 
+                  ? 'برامج تطوير مهني متخصصة للمعلمين والقيادات التعليمية'
+                  : 'Specialized professional development programs for teachers and educational leaders'
+                }
+              </p>
+              <div className="flex items-center text-primary-600 font-medium text-sm group-hover:gap-2 transition-all duration-300">
+                {currentLang === 'ar' ? 'استكشف البرامج' : 'Explore Programs'}
+                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </div>
+            </div>
+
+            {/* Events Card */}
+            <div 
+              className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-100"
+              onClick={() => router.push(createLocalizedPath('/events', currentLang))}
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Calendar className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-secondary-700 mb-2 group-hover:text-primary-600 transition-colors">
+                {currentLang === 'ar' ? 'الفعاليات والأنشطة' : 'Events & Activities'}
+              </h3>
+              <p className="text-secondary-600 text-sm mb-4">
+                {currentLang === 'ar' 
+                  ? 'فعاليات ومؤتمرات وورش عمل تفاعلية في مجال التعليم'
+                  : 'Interactive events, conferences, and workshops in education'
+                }
+              </p>
+              <div className="flex items-center text-primary-600 font-medium text-sm group-hover:gap-2 transition-all duration-300">
+                {currentLang === 'ar' ? 'تصفح الفعاليات' : 'Browse Events'}
+                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </div>
+            </div>
+
+            {/* News Card */}
+            <div 
+              className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-100"
+              onClick={() => router.push(createLocalizedPath('/news', currentLang))}
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Newspaper className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-secondary-700 mb-2 group-hover:text-primary-600 transition-colors">
+                {currentLang === 'ar' ? 'الأخبار والمستجدات' : 'News & Updates'}
+              </h3>
+              <p className="text-secondary-600 text-sm mb-4">
+                {currentLang === 'ar' 
+                  ? 'آخر الأخبار والتطورات في عالم التطوير المهني التعليمي'
+                  : 'Latest news and developments in educational professional development'
+                }
+              </p>
+              <div className="flex items-center text-primary-600 font-medium text-sm group-hover:gap-2 transition-all duration-300">
+                {currentLang === 'ar' ? 'قراءة الأخبار' : 'Read News'}
+                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </div>
+            </div>
+
+            {/* FAQ Card */}
+            <div 
+              className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 border border-gray-100"
+              onClick={() => router.push(createLocalizedPath('/faq', currentLang))}
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <HelpCircle className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-secondary-700 mb-2 group-hover:text-primary-600 transition-colors">
+                {currentLang === 'ar' ? 'الأسئلة الشائعة' : 'FAQ'}
+              </h3>
+              <p className="text-secondary-600 text-sm mb-4">
+                {currentLang === 'ar' 
+                  ? 'إجابات على الأسئلة الأكثر شيوعاً حول برامجنا وخدماتنا'
+                  : 'Answers to frequently asked questions about our programs and services'
+                }
+              </p>
+              <div className="flex items-center text-primary-600 font-medium text-sm group-hover:gap-2 transition-all duration-300">
+                {currentLang === 'ar' ? 'عرض الأسئلة' : 'View Questions'}
+                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Quick Actions */}
+          <div className="mt-12 text-center">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-white rounded-2xl p-6 shadow-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
+                  <UserCheck className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-bold text-secondary-700">
+                    {currentLang === 'ar' ? 'سجل في برامجنا' : 'Register for Programs'}
+                  </h4>
+                  <p className="text-sm text-secondary-600">
+                    {currentLang === 'ar' ? 'ابدأ رحلتك التطويرية اليوم' : 'Start your development journey today'}
+                  </p>
+                </div>
+              </div>
+              <button 
+                className="btn-primary px-6 py-3 hover:scale-105 transition-transform duration-200"
+                onClick={() => router.push(createLocalizedPath('/register', currentLang))}
+              >
+                {currentLang === 'ar' ? 'التسجيل الآن' : 'Register Now'}
+                {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Enhanced Featured Programs */}
       <FeaturedPrograms currentLang={currentLang} />
 
@@ -332,7 +470,11 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
           {newsItems.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {newsItems.slice(0, 3).map((item, index) => (
-                <article key={item.id || index} className="card group hover:shadow-lg transition-all duration-300">
+                <article 
+                  key={item.id || index} 
+                  className="card group hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  onClick={() => router.push(createLocalizedPath(`/news/${item.id}`, currentLang))}
+                >
                   <div className="relative overflow-hidden rounded-lg mb-6">
                     <img 
                       src={item.image || '/images/news-placeholder.jpg'} 
@@ -361,7 +503,13 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
                     </p>
                     
                     <div className="flex items-center justify-between pt-4">
-                      <button className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-2 group-hover:gap-3 transition-all duration-300">
+                      <button 
+                        className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-2 group-hover:gap-3 transition-all duration-300"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(createLocalizedPath(`/news/${item.id}`, currentLang));
+                        }}
+                      >
                         {currentLang === 'ar' ? 'اقرأ المزيد' : 'Read More'}
                         {currentLang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
                       </button>
