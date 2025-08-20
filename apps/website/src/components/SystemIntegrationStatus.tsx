@@ -239,3 +239,4 @@ const SystemIntegrationStatus: React.FC<IntegrationStatusProps> = ({ currentLang
 };
 
 export default SystemIntegrationStatus;
+

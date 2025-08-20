@@ -12,3 +12,4 @@ export default async function CourseDetailPage({ params }: Props) {
   // Redirect to program detail page for consistency
   redirect(createLocalizedPath(`/programs/${id}`, locale as Locale))
 }
+
