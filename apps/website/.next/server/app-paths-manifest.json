@@ -1,15 +1,7 @@
 {
-  "/[locale]/about/page": "app/[locale]/about/page.js",
-  "/[locale]/contact/page": "app/[locale]/contact/page.js",
   "/[locale]/events/page": "app/[locale]/events/page.js",
-  "/[locale]/faq/page": "app/[locale]/faq/page.js",
-  "/[locale]/news/[id]/page": "app/[locale]/news/[id]/page.js",
   "/[locale]/news/page": "app/[locale]/news/page.js",
   "/[locale]/page": "app/[locale]/page.js",
   "/[locale]/partners/page": "app/[locale]/partners/page.js",
-  "/[locale]/programs/[id]/page": "app/[locale]/programs/[id]/page.js",
-  "/[locale]/programs/page": "app/[locale]/programs/page.js",
-  "/[locale]/register/page": "app/[locale]/register/page.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/api/contact/route": "app/api/contact/route.js"
+  "/[locale]/programs/page": "app/[locale]/programs/page.js"
 }

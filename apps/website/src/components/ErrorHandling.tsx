@@ -317,7 +317,7 @@ export const useErrorHandler = () => {
     }
 
     // Server errors
-    if (error.response?.status >= 500) {
+    if ((error as any).response?.status >= 500) {
       return {
         type: 'server',
         title: currentLang === 'ar' ? 'خطأ في الخادم' : 'Server Error',
@@ -328,11 +328,11 @@ export const useErrorHandler = () => {
     }
 
     // Client errors
-    if (error.response?.status >= 400) {
+    if ((error as any).response?.status >= 400) {
       return {
         type: 'client',
         title: currentLang === 'ar' ? 'خطأ في الطلب' : 'Request Error',
-        message: error.response?.data?.message || (currentLang === 'ar' 
+        message: (error as any).response?.data?.message || (currentLang === 'ar' 
           ? 'حدث خطأ في معالجة طلبك.'
           : 'An error occurred while processing your request.')
       };

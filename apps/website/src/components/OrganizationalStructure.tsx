@@ -377,7 +377,7 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
           
           {expandedSections.includes('board') && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
-              {(orgData.board || []).map(person => renderPersonCard(person, 'board'))}
+              {(orgData.board || []).map((person: any) => renderPersonCard(person, 'board'))}
             </div>
           )}
         </div>
@@ -399,7 +399,7 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
           
           {expandedSections.includes('management') && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-              {(orgData.management || []).map(person => renderPersonCard(person, 'management'))}
+              {(orgData.management || []).map((person: any) => renderPersonCard(person, 'management'))}
             </div>
           )}
         </div>
@@ -421,7 +421,7 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
           
           {expandedSections.includes('departments') && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-              {(orgData.departments || []).map(dept => renderDepartmentCard(dept))}
+              {(orgData.departments || []).map((dept: any) => renderDepartmentCard(dept))}
             </div>
           )}
         </div>

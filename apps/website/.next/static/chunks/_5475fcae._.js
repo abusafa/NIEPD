@@ -1034,7 +1034,7 @@ const useErrorHandler = ()=>{
     _s5();
     const { currentLang } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$contexts$2f$AppContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useLanguage"])();
     const handleApiError = (error)=>{
-        var _error_response, _error_response1;
+        var _response, _response1;
         console.error('API Error:', error);
         // Network errors
         if (!navigator.onLine) {
@@ -1045,7 +1045,7 @@ const useErrorHandler = ()=>{
             };
         }
         // Server errors
-        if (((_error_response = error.response) === null || _error_response === void 0 ? void 0 : _error_response.status) >= 500) {
+        if (((_response = error.response) === null || _response === void 0 ? void 0 : _response.status) >= 500) {
             return {
                 type: 'server',
                 title: currentLang === 'ar' ? 'خطأ في الخادم' : 'Server Error',
@@ -1053,12 +1053,12 @@ const useErrorHandler = ()=>{
             };
         }
         // Client errors
-        if (((_error_response1 = error.response) === null || _error_response1 === void 0 ? void 0 : _error_response1.status) >= 400) {
-            var _error_response_data, _error_response2;
+        if (((_response1 = error.response) === null || _response1 === void 0 ? void 0 : _response1.status) >= 400) {
+            var _response_data, _response2;
             return {
                 type: 'client',
                 title: currentLang === 'ar' ? 'خطأ في الطلب' : 'Request Error',
-                message: ((_error_response2 = error.response) === null || _error_response2 === void 0 ? void 0 : (_error_response_data = _error_response2.data) === null || _error_response_data === void 0 ? void 0 : _error_response_data.message) || (currentLang === 'ar' ? 'حدث خطأ في معالجة طلبك.' : 'An error occurred while processing your request.')
+                message: ((_response2 = error.response) === null || _response2 === void 0 ? void 0 : (_response_data = _response2.data) === null || _response_data === void 0 ? void 0 : _response_data.message) || (currentLang === 'ar' ? 'حدث خطأ في معالجة طلبك.' : 'An error occurred while processing your request.')
             };
         }
         // Generic error

@@ -467,7 +467,7 @@ const RegistrationPage: React.FC<RegistrationPageProps> = ({ currentLang }) => {
                       </h4>
                       <div className="text-sm text-neutral-600 space-y-1">
                         <div className="flex items-center">
-                          <Clock className="w-4 h-4 mr-2" />
+                          <Calendar className="w-4 h-4 mr-2" />
                           {selectedProgram.duration} {selectedProgram.durationType}
                         </div>
                         {selectedProgram.instructorAr && (

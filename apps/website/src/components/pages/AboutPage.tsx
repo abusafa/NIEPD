@@ -170,7 +170,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ currentLang }) => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const refs: { [key: string]: React.RefObject<HTMLElement> } = {
+    const refs: { [key: string]: React.RefObject<HTMLElement | null> } = {
       about: aboutRef,
       stats: statsRef,
       vision: visionRef,

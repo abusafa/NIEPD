@@ -204,25 +204,25 @@ const Header = ({ currentLang, currentPage })=>{
         ar: {
             home: 'الرئيسية',
             about: 'عن المعهد',
-            programs: 'البرامج والخدمات',
+            programs: 'البرامج التدريبية',
             news: 'الأخبار',
             events: 'الفعاليات',
             partners: 'الشركاء',
             contact: 'اتصل بنا',
             faq: 'الأسئلة الشائعة',
-            register: 'سجّل الآن',
+            register: 'سجّل في البرامج',
             instituteTitle: 'المعهد الوطني للتطوير المهني التعليمي'
         },
         en: {
             home: 'Home',
             about: 'About Us',
-            programs: 'Programs & Services',
+            programs: 'Training Courses',
             news: 'News',
             events: 'Events',
             partners: 'Partners',
             contact: 'Contact Us',
             faq: 'FAQ',
-            register: 'Register Now',
+            register: 'Register for Courses',
             instituteTitle: 'National Institute for Professional Educational Development'
         }
     };

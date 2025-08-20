@@ -1,0 +1,20 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/contact/route": "/api/contact",
+  "/[locale]/contact/page": "/[locale]/contact",
+  "/[locale]/about/page": "/[locale]/about",
+  "/[locale]/events/[id]/page": "/[locale]/events/[id]",
+  "/[locale]/courses/page": "/[locale]/courses",
+  "/[locale]/events/page": "/[locale]/events",
+  "/[locale]/faq/page": "/[locale]/faq",
+  "/[locale]/courses/[id]/page": "/[locale]/courses/[id]",
+  "/[locale]/news/[id]/page": "/[locale]/news/[id]",
+  "/[locale]/news/page": "/[locale]/news",
+  "/[locale]/page": "/[locale]",
+  "/[locale]/partners/page": "/[locale]/partners",
+  "/[locale]/privacy/page": "/[locale]/privacy",
+  "/[locale]/programs/[id]/page": "/[locale]/programs/[id]",
+  "/[locale]/programs/page": "/[locale]/programs",
+  "/[locale]/terms/page": "/[locale]/terms",
+  "/[locale]/register/page": "/[locale]/register"
+}

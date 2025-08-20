@@ -85,20 +85,19 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
   }, [t.error]);
 
   const getPartnerTypes = () => {
-    const types = Array.from(new Set(partners.map(partner => partner.type).filter(Boolean)));
-    return types;
+    // Partner type property not available in current interface
+    return [];
   };
 
   const filteredPartners = partners.filter(partner => {
     const matchesSearch = searchTerm === '' || 
       (currentLang === 'ar' ? partner.nameAr : partner.nameEn)
         .toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (currentLang === 'ar' ? partner.organizationAr : partner.organizationEn)
+      (currentLang === 'ar' ? partner.descriptionAr || '' : partner.descriptionEn || '')
         .toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesType = filterType === 'all' ||
-      (filterType === 'featured' && partner.featured) ||
-      partner.type?.toLowerCase() === filterType;
+    // Type filtering disabled - properties not available in Partner interface
+    const matchesType = filterType === 'all';
     
     return matchesSearch && matchesType;
   });
@@ -192,40 +191,19 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
               >
                 {t.all}
               </button>
-              <button
-                onClick={() => setFilterType('featured')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  filterType === 'featured'
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-white text-neutral-700 hover:bg-neutral-100 border border-neutral-200'
-                }`}
-              >
-                {t.featured}
-              </button>
-              {getPartnerTypes().map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setFilterType(type.toLowerCase())}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    filterType === type.toLowerCase()
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-white text-neutral-700 hover:bg-neutral-100 border border-neutral-200'
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
+              {/* Featured and type filters removed - properties not available in Partner interface */}
             </div>
           </div>
         )}
       </div>
 
       {/* Featured Partners Section */}
-      {filteredPartners.filter(partner => partner.featured).length > 0 && filterType === 'all' && (
+      {/* Featured section disabled - 'featured' property not available in Partner interface */}
+      {false && (
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-secondary-700 mb-6">{t.featured}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredPartners.filter(partner => partner.featured).map((partner) => (
+            {/* Featured filter removed */[].map((partner: any) => (
               <div key={partner.id} className="card group hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-primary-50 to-white border-primary-200">
                 <div className="p-6 text-center">
                   {/* Partner Logo */}
@@ -295,7 +273,7 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredPartners
-            .filter(partner => filterType === 'all' ? !partner.featured : true)
+            // Featured filter removed - property not available in Partner interface
             .map((partner) => (
             <div key={partner.id} className="card group hover:shadow-lg transition-all duration-300">
               <div className="p-6 text-center">
@@ -315,37 +293,19 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
                 )}
                 
                 {/* Partner Type */}
-                {partner.type && (
-                  <div className="inline-block px-2 py-1 bg-neutral-100 text-neutral-700 text-xs font-medium rounded mb-2">
-                    {partner.type}
-                  </div>
-                )}
-                
                 {/* Partner Name */}
                 <h3 className="text-lg font-semibold text-secondary-700 mb-2 group-hover:text-primary-600 transition-colors">
                   {currentLang === 'ar' ? partner.nameAr : partner.nameEn}
                 </h3>
                 
-                {/* Organization */}
-                <p className="text-neutral-600 text-sm mb-3">
-                  {currentLang === 'ar' ? partner.organizationAr : partner.organizationEn}
-                </p>
+                {/* Description */}
+                {(partner.descriptionAr || partner.descriptionEn) && (
+                  <p className="text-neutral-600 text-sm mb-3">
+                    {currentLang === 'ar' ? partner.descriptionAr : partner.descriptionEn}
+                  </p>
+                )}
                 
-                {/* Contact Information */}
-                <div className="space-y-2 mb-4">
-                  {partner.email && (
-                    <div className="flex items-center justify-center text-xs text-neutral-500">
-                      <Mail className="w-3 h-3 mr-1" />
-                      <span className="truncate">{partner.email}</span>
-                    </div>
-                  )}
-                  {partner.phone && (
-                    <div className="flex items-center justify-center text-xs text-neutral-500">
-                      <Phone className="w-3 h-3 mr-1" />
-                      <span>{partner.phone}</span>
-                    </div>
-                  )}
-                </div>
+                {/* Contact Information - properties not available in Partner interface */}
                 
                 {/* Action Button */}
                 {partner.website ? (

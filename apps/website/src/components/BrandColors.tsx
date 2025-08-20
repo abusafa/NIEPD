@@ -71,9 +71,9 @@ const BrandColors: React.FC<BrandColorsProps> = ({ currentLang }) => {
   }
 
   // Transform color groups for display
-  const colorGroups = brandColors.colorGroups.map(group => ({
+  const colorGroups = brandColors.colorGroups.map((group: any) => ({
     title: currentLang === 'ar' ? group.titleAr : group.titleEn,
-    colors: group.colors.map(color => ({
+    colors: group.colors.map((color: any) => ({
       name: currentLang === 'ar' ? color.nameAr : color.nameEn,
       hex: color.hex,
       class: color.class
@@ -88,11 +88,11 @@ const BrandColors: React.FC<BrandColorsProps> = ({ currentLang }) => {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {colorGroups.map((group, groupIndex) => (
+          {colorGroups.map((group: any, groupIndex: number) => (
             <div key={groupIndex} className="card">
               <h3 className="text-xl font-bold text-secondary-700 mb-6">{group.title}</h3>
               <div className="space-y-4">
-                {group.colors.map((color, colorIndex) => (
+                {group.colors.map((color: any, colorIndex: number) => (
                   <div key={colorIndex} className="flex items-center gap-4">
                     <div className={`w-16 h-16 rounded-lg ${color.class} shadow-sm border border-neutral-200`}></div>
                     <div>

@@ -235,44 +235,11 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
 
           {/* Program Details Sections */}
           <div className="space-y-8">
-            {/* Objectives */}
-            {(program.objectivesAr || program.objectivesEn) && (
-              <section>
-                <h2 className="text-2xl font-semibold text-secondary-700 mb-4 flex items-center">
-                  <Award className="w-6 h-6 mr-3 text-primary-600" />
-                  {t.objectives}
-                </h2>
-                <div className="prose prose-lg max-w-none text-neutral-600">
-                  <p>{currentLang === 'ar' ? program.objectivesAr : program.objectivesEn}</p>
-                </div>
-              </section>
-            )}
+            {/* Objectives section removed - properties not available in LegacyProgram interface */}
 
-            {/* Curriculum */}
-            {(program.curriculumAr || program.curriculumEn) && (
-              <section>
-                <h2 className="text-2xl font-semibold text-secondary-700 mb-4 flex items-center">
-                  <BookOpen className="w-6 h-6 mr-3 text-primary-600" />
-                  {t.curriculum}
-                </h2>
-                <div className="prose prose-lg max-w-none text-neutral-600">
-                  <p>{currentLang === 'ar' ? program.curriculumAr : program.curriculumEn}</p>
-                </div>
-              </section>
-            )}
+            {/* Curriculum section removed - properties not available in LegacyProgram interface */}
 
-            {/* Requirements */}
-            {(program.requirementsAr || program.requirementsEn) && (
-              <section>
-                <h2 className="text-2xl font-semibold text-secondary-700 mb-4 flex items-center">
-                  <Tag className="w-6 h-6 mr-3 text-primary-600" />
-                  {t.requirements}
-                </h2>
-                <div className="prose prose-lg max-w-none text-neutral-600">
-                  <p>{currentLang === 'ar' ? program.requirementsAr : program.requirementsEn}</p>
-                </div>
-              </section>
-            )}
+            {/* Requirements section removed - properties not available in LegacyProgram interface */}
           </div>
         </div>
 
@@ -341,17 +308,7 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
                   {t.register}
                 </button>
                 
-                {program.brochureUrl && (
-                  <a
-                    href={program.brochureUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full btn-secondary flex items-center justify-center"
-                  >
-                    <Download className="w-5 h-5 mr-2" />
-                    {t.downloadBrochure}
-                  </a>
-                )}
+                {/* Brochure download removed - brochureUrl property not available in LegacyProgram interface */}
               </div>
             </div>
           </div>

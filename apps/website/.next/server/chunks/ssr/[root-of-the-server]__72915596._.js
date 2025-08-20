@@ -204,25 +204,25 @@ const Header = ({ currentLang, currentPage })=>{
         ar: {
             home: 'الرئيسية',
             about: 'عن المعهد',
-            programs: 'البرامج والخدمات',
+            programs: 'البرامج التدريبية',
             news: 'الأخبار',
             events: 'الفعاليات',
             partners: 'الشركاء',
             contact: 'اتصل بنا',
             faq: 'الأسئلة الشائعة',
-            register: 'سجّل الآن',
+            register: 'سجّل في البرامج',
             instituteTitle: 'المعهد الوطني للتطوير المهني التعليمي'
         },
         en: {
             home: 'Home',
             about: 'About Us',
-            programs: 'Programs & Services',
+            programs: 'Training Courses',
             news: 'News',
             events: 'Events',
             partners: 'Partners',
             contact: 'Contact Us',
             faq: 'FAQ',
-            register: 'Register Now',
+            register: 'Register for Courses',
             instituteTitle: 'National Institute for Professional Educational Development'
         }
     };
@@ -1303,8 +1303,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$building$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Building$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/building.js [app-ssr] (ecmascript) <export default as Building>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$external$2d$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ExternalLink$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/external-link.js [app-ssr] (ecmascript) <export default as ExternalLink>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$mail$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Mail$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/mail.js [app-ssr] (ecmascript) <export default as Mail>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$phone$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Phone$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/phone.js [app-ssr] (ecmascript) <export default as Phone>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$globe$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Globe$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/globe.js [app-ssr] (ecmascript) <export default as Globe>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$search$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Search$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/search.js [app-ssr] (ecmascript) <export default as Search>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$funnel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Filter$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/funnel.js [app-ssr] (ecmascript) <export default as Filter>");
@@ -1389,12 +1387,13 @@ const PartnersPage = ({ currentLang })=>{
         t.error
     ]);
     const getPartnerTypes = ()=>{
-        const types = Array.from(new Set(partners.map((partner)=>partner.type).filter(Boolean)));
-        return types;
+        // Partner type property not available in current interface
+        return [];
     };
     const filteredPartners = partners.filter((partner)=>{
-        const matchesSearch = searchTerm === '' || (currentLang === 'ar' ? partner.nameAr : partner.nameEn).toLowerCase().includes(searchTerm.toLowerCase()) || (currentLang === 'ar' ? partner.organizationAr : partner.organizationEn).toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesType = filterType === 'all' || filterType === 'featured' && partner.featured || partner.type?.toLowerCase() === filterType;
+        const matchesSearch = searchTerm === '' || (currentLang === 'ar' ? partner.nameAr : partner.nameEn).toLowerCase().includes(searchTerm.toLowerCase()) || (currentLang === 'ar' ? partner.descriptionAr || '' : partner.descriptionEn || '').toLowerCase().includes(searchTerm.toLowerCase());
+        // Type filtering disabled - properties not available in Partner interface
+        const matchesType = filterType === 'all';
         return matchesSearch && matchesType;
     });
     if (loading) {
@@ -1407,14 +1406,14 @@ const PartnersPage = ({ currentLang })=>{
                         className: "h-12 bg-neutral-200 rounded mb-4 w-1/2 mx-auto"
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 110,
+                        lineNumber: 109,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "h-6 bg-neutral-200 rounded mb-8 w-1/3 mx-auto"
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 111,
+                        lineNumber: 110,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1428,50 +1427,50 @@ const PartnersPage = ({ currentLang })=>{
                                         className: "h-16 w-16 bg-neutral-200 rounded-lg mb-4 mx-auto"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 115,
+                                        lineNumber: 114,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-6 bg-neutral-200 rounded mb-2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 116,
+                                        lineNumber: 115,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-4 bg-neutral-200 rounded mb-4 w-2/3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 117,
+                                        lineNumber: 116,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-4 bg-neutral-200 rounded w-1/2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 118,
+                                        lineNumber: 117,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, i, true, {
                                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                lineNumber: 114,
+                                lineNumber: 113,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)))
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 112,
+                        lineNumber: 111,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                lineNumber: 109,
+                lineNumber: 108,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-            lineNumber: 108,
+            lineNumber: 107,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0));
     }
@@ -1486,7 +1485,7 @@ const PartnersPage = ({ currentLang })=>{
                         children: error
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 131,
+                        lineNumber: 130,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1495,18 +1494,18 @@ const PartnersPage = ({ currentLang })=>{
                         children: currentLang === 'ar' ? 'إعادة المحاولة' : 'Try Again'
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 132,
+                        lineNumber: 131,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                lineNumber: 130,
+                lineNumber: 129,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-            lineNumber: 129,
+            lineNumber: 128,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0));
     }
@@ -1521,7 +1520,7 @@ const PartnersPage = ({ currentLang })=>{
                         children: t.title
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 147,
+                        lineNumber: 146,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1529,13 +1528,13 @@ const PartnersPage = ({ currentLang })=>{
                         children: t.subtitle
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 150,
+                        lineNumber: 149,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                lineNumber: 146,
+                lineNumber: 145,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1551,7 +1550,7 @@ const PartnersPage = ({ currentLang })=>{
                                         className: "absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 160,
+                                        lineNumber: 159,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1562,13 +1561,13 @@ const PartnersPage = ({ currentLang })=>{
                                         className: "w-full pl-10 pr-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 161,
+                                        lineNumber: 160,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                lineNumber: 159,
+                                lineNumber: 158,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1579,7 +1578,7 @@ const PartnersPage = ({ currentLang })=>{
                                         className: "w-5 h-5"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 175,
+                                        lineNumber: 174,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     t.filters,
@@ -1587,77 +1586,57 @@ const PartnersPage = ({ currentLang })=>{
                                         className: "w-4 h-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 177,
+                                        lineNumber: 176,
                                         columnNumber: 28
                                     }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                         className: "w-4 h-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 177,
+                                        lineNumber: 176,
                                         columnNumber: 64
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                lineNumber: 171,
+                                lineNumber: 170,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 157,
+                        lineNumber: 156,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     showFilters && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "mt-4 p-4 bg-neutral-50 rounded-lg",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex flex-wrap gap-2",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: ()=>setFilterType('all'),
-                                    className: `px-4 py-2 rounded-full text-sm font-medium transition-colors ${filterType === 'all' ? 'bg-primary-600 text-white' : 'bg-white text-neutral-700 hover:bg-neutral-100 border border-neutral-200'}`,
-                                    children: t.all
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 185,
-                                    columnNumber: 15
-                                }, ("TURBOPACK compile-time value", void 0)),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: ()=>setFilterType('featured'),
-                                    className: `px-4 py-2 rounded-full text-sm font-medium transition-colors ${filterType === 'featured' ? 'bg-primary-600 text-white' : 'bg-white text-neutral-700 hover:bg-neutral-100 border border-neutral-200'}`,
-                                    children: t.featured
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 195,
-                                    columnNumber: 15
-                                }, ("TURBOPACK compile-time value", void 0)),
-                                getPartnerTypes().map((type)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: ()=>setFilterType(type.toLowerCase()),
-                                        className: `px-4 py-2 rounded-full text-sm font-medium transition-colors ${filterType === type.toLowerCase() ? 'bg-primary-600 text-white' : 'bg-white text-neutral-700 hover:bg-neutral-100 border border-neutral-200'}`,
-                                        children: type
-                                    }, type, false, {
-                                        fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 206,
-                                        columnNumber: 17
-                                    }, ("TURBOPACK compile-time value", void 0)))
-                            ]
-                        }, void 0, true, {
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setFilterType('all'),
+                                className: `px-4 py-2 rounded-full text-sm font-medium transition-colors ${filterType === 'all' ? 'bg-primary-600 text-white' : 'bg-white text-neutral-700 hover:bg-neutral-100 border border-neutral-200'}`,
+                                children: t.all
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/pages/PartnersPage.tsx",
+                                lineNumber: 184,
+                                columnNumber: 15
+                            }, ("TURBOPACK compile-time value", void 0))
+                        }, void 0, false, {
                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                            lineNumber: 184,
+                            lineNumber: 183,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 183,
+                        lineNumber: 182,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                lineNumber: 156,
+                lineNumber: 155,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
-            filteredPartners.filter((partner)=>partner.featured).length > 0 && filterType === 'all' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            false && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "mb-12",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -1665,12 +1644,12 @@ const PartnersPage = ({ currentLang })=>{
                         children: t.featured
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 226,
+                        lineNumber: 204,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
-                        children: filteredPartners.filter((partner)=>partner.featured).map((partner)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        children: [].map((partner)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "card group hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-primary-50 to-white border-primary-200",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "p-6 text-center",
@@ -1683,12 +1662,12 @@ const PartnersPage = ({ currentLang })=>{
                                                 className: "w-full h-full object-contain p-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                                lineNumber: 234,
+                                                lineNumber: 212,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 233,
+                                            lineNumber: 211,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "w-20 h-20 mx-auto mb-4 rounded-lg bg-primary-100 flex items-center justify-center",
@@ -1696,12 +1675,12 @@ const PartnersPage = ({ currentLang })=>{
                                                 className: "w-10 h-10 text-primary-600"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                                lineNumber: 242,
+                                                lineNumber: 220,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 241,
+                                            lineNumber: 219,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1709,7 +1688,7 @@ const PartnersPage = ({ currentLang })=>{
                                             children: t.featured
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 247,
+                                            lineNumber: 225,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1717,7 +1696,7 @@ const PartnersPage = ({ currentLang })=>{
                                             children: currentLang === 'ar' ? partner.nameAr : partner.nameEn
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 252,
+                                            lineNumber: 230,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1725,7 +1704,7 @@ const PartnersPage = ({ currentLang })=>{
                                             children: currentLang === 'ar' ? partner.organizationAr : partner.organizationEn
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 257,
+                                            lineNumber: 235,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         partner.descriptionAr && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1733,7 +1712,7 @@ const PartnersPage = ({ currentLang })=>{
                                             children: currentLang === 'ar' ? partner.descriptionAr : partner.descriptionEn
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 263,
+                                            lineNumber: 241,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1748,41 +1727,41 @@ const PartnersPage = ({ currentLang })=>{
                                                         className: "w-4 h-4 mr-1"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                                        lineNumber: 277,
+                                                        lineNumber: 255,
                                                         columnNumber: 25
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     t.visitWebsite
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                                lineNumber: 271,
+                                                lineNumber: 249,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 269,
+                                            lineNumber: 247,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 230,
+                                    lineNumber: 208,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, partner.id, false, {
                                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                lineNumber: 229,
+                                lineNumber: 207,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)))
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 227,
+                        lineNumber: 205,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                lineNumber: 225,
+                lineNumber: 203,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             filteredPartners.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1792,7 +1771,7 @@ const PartnersPage = ({ currentLang })=>{
                         className: "w-16 h-16 text-neutral-300 mx-auto mb-4"
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 292,
+                        lineNumber: 270,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1800,17 +1779,18 @@ const PartnersPage = ({ currentLang })=>{
                         children: t.noPartners
                     }, void 0, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 293,
+                        lineNumber: 271,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                lineNumber: 291,
+                lineNumber: 269,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",
-                children: filteredPartners.filter((partner)=>filterType === 'all' ? !partner.featured : true).map((partner)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                children: filteredPartners// Featured filter removed - property not available in Partner interface
+                .map((partner)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "card group hover:shadow-lg transition-all duration-300",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "p-6 text-center",
@@ -1823,12 +1803,12 @@ const PartnersPage = ({ currentLang })=>{
                                         className: "w-full h-full object-contain p-2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 305,
+                                        lineNumber: 283,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 304,
+                                    lineNumber: 282,
                                     columnNumber: 19
                                 }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "w-16 h-16 mx-auto mb-4 rounded-lg bg-neutral-100 flex items-center justify-center",
@@ -1836,20 +1816,12 @@ const PartnersPage = ({ currentLang })=>{
                                         className: "w-8 h-8 text-neutral-400"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                        lineNumber: 313,
+                                        lineNumber: 291,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 312,
-                                    columnNumber: 19
-                                }, ("TURBOPACK compile-time value", void 0)),
-                                partner.type && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "inline-block px-2 py-1 bg-neutral-100 text-neutral-700 text-xs font-medium rounded mb-2",
-                                    children: partner.type
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 319,
+                                    lineNumber: 290,
                                     columnNumber: 19
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1857,72 +1829,16 @@ const PartnersPage = ({ currentLang })=>{
                                     children: currentLang === 'ar' ? partner.nameAr : partner.nameEn
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 325,
+                                    lineNumber: 297,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0)),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                (partner.descriptionAr || partner.descriptionEn) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "text-neutral-600 text-sm mb-3",
-                                    children: currentLang === 'ar' ? partner.organizationAr : partner.organizationEn
+                                    children: currentLang === 'ar' ? partner.descriptionAr : partner.descriptionEn
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 330,
-                                    columnNumber: 17
-                                }, ("TURBOPACK compile-time value", void 0)),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "space-y-2 mb-4",
-                                    children: [
-                                        partner.email && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex items-center justify-center text-xs text-neutral-500",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$mail$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Mail$3e$__["Mail"], {
-                                                    className: "w-3 h-3 mr-1"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                                    lineNumber: 338,
-                                                    columnNumber: 23
-                                                }, ("TURBOPACK compile-time value", void 0)),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "truncate",
-                                                    children: partner.email
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                                    lineNumber: 339,
-                                                    columnNumber: 23
-                                                }, ("TURBOPACK compile-time value", void 0))
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 337,
-                                            columnNumber: 21
-                                        }, ("TURBOPACK compile-time value", void 0)),
-                                        partner.phone && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex items-center justify-center text-xs text-neutral-500",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$phone$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Phone$3e$__["Phone"], {
-                                                    className: "w-3 h-3 mr-1"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                                    lineNumber: 344,
-                                                    columnNumber: 23
-                                                }, ("TURBOPACK compile-time value", void 0)),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    children: partner.phone
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                                    lineNumber: 345,
-                                                    columnNumber: 23
-                                                }, ("TURBOPACK compile-time value", void 0))
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 343,
-                                            columnNumber: 21
-                                        }, ("TURBOPACK compile-time value", void 0))
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 335,
-                                    columnNumber: 17
+                                    lineNumber: 303,
+                                    columnNumber: 19
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 partner.website ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
                                     href: partner.website,
@@ -1934,43 +1850,43 @@ const PartnersPage = ({ currentLang })=>{
                                             className: "w-4 h-4 mr-1"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                            lineNumber: 358,
+                                            lineNumber: 318,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         t.website
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 352,
+                                    lineNumber: 312,
                                     columnNumber: 19
                                 }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     className: "btn-secondary text-sm w-full",
                                     children: t.learnMore
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                                    lineNumber: 362,
+                                    lineNumber: 322,
                                     columnNumber: 19
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                            lineNumber: 301,
+                            lineNumber: 279,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0))
                     }, partner.id, false, {
                         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                        lineNumber: 300,
+                        lineNumber: 278,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0)))
             }, void 0, false, {
                 fileName: "[project]/src/components/pages/PartnersPage.tsx",
-                lineNumber: 296,
+                lineNumber: 274,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/pages/PartnersPage.tsx",
-        lineNumber: 144,
+        lineNumber: 143,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

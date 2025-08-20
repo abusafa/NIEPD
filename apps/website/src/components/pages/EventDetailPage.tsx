@@ -280,31 +280,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang, eventId 
               </section>
             )}
 
-            {/* Objectives */}
-            {(event.objectivesAr || event.objectivesEn) && (
-              <section>
-                <h2 className="text-2xl font-semibold text-secondary-700 mb-4 flex items-center">
-                  <Tag className="w-6 h-6 mr-3 text-primary-600" />
-                  {t.objectives}
-                </h2>
-                <div className="prose prose-lg max-w-none text-neutral-600">
-                  <p>{currentLang === 'ar' ? event.objectivesAr : event.objectivesEn}</p>
-                </div>
-              </section>
-            )}
+            {/* Objectives section removed - properties not available in LegacyEvent interface */}
 
-            {/* Agenda */}
-            {(event.agendaAr || event.agendaEn) && (
-              <section>
-                <h2 className="text-2xl font-semibold text-secondary-700 mb-4 flex items-center">
-                  <Clock className="w-6 h-6 mr-3 text-primary-600" />
-                  {t.agenda}
-                </h2>
-                <div className="prose prose-lg max-w-none text-neutral-600">
-                  <p>{currentLang === 'ar' ? event.agendaAr : event.agendaEn}</p>
-                </div>
-              </section>
-            )}
+            {/* Agenda section removed - properties not available in LegacyEvent interface */}
           </div>
         </div>
 
@@ -360,18 +338,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang, eventId 
                   </div>
                 )}
 
-                {/* Organizer */}
-                {(event.organizerAr || event.organizerEn) && (
-                  <div className="flex items-center">
-                    <Users className="w-5 h-5 mr-3 text-primary-600 flex-shrink-0" />
-                    <div>
-                      <div className="text-sm text-neutral-600">{t.organizer}</div>
-                      <div className="font-medium">
-                        {currentLang === 'ar' ? event.organizerAr : event.organizerEn}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                {/* Organizer section removed - properties not available in LegacyEvent interface */}
               </div>
 
               {/* Action Buttons */}
