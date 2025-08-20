@@ -315,6 +315,54 @@ export const typeDefs = `#graphql
     updatedAt: DateTime!
   }
 
+  enum ErrorType {
+    USER_REPORTED
+    JAVASCRIPT_ERROR
+    API_ERROR
+    UI_BUG
+  }
+
+  enum ErrorSeverity {
+    LOW
+    MEDIUM
+    HIGH
+    CRITICAL
+  }
+
+  enum ErrorStatus {
+    NEW
+    INVESTIGATING
+    IN_PROGRESS
+    RESOLVED
+    CLOSED
+  }
+
+  type ErrorReport {
+    id: String!
+    titleAr: String!
+    titleEn: String!
+    descriptionAr: String!
+    descriptionEn: String!
+    userEmail: String
+    userName: String
+    userPhone: String
+    pageUrl: String!
+    userAgent: String
+    ipAddress: String
+    browserInfo: JSON
+    errorStack: String
+    errorType: ErrorType!
+    severity: ErrorSeverity!
+    status: ErrorStatus!
+    assignedToId: String
+    assignedTo: User
+    resolutionNotesAr: String
+    resolutionNotesEn: String
+    resolvedAt: DateTime
+    createdAt: DateTime!
+    updatedAt: DateTime!
+  }
+
   type AuthPayload {
     user: User!
     token: String!
@@ -417,6 +465,30 @@ export const typeDefs = `#graphql
     nameEn: String!
   }
 
+  input ErrorReportInput {
+    titleAr: String!
+    titleEn: String!
+    descriptionAr: String!
+    descriptionEn: String!
+    userEmail: String
+    userName: String
+    userPhone: String
+    pageUrl: String!
+    userAgent: String
+    browserInfo: JSON
+    errorStack: String
+    errorType: ErrorType
+    severity: ErrorSeverity
+  }
+
+  input ErrorReportUpdateInput {
+    status: ErrorStatus
+    severity: ErrorSeverity
+    assignedToId: String
+    resolutionNotesAr: String
+    resolutionNotesEn: String
+  }
+
   # Queries
   type Query {
     # User queries
@@ -449,6 +521,10 @@ export const typeDefs = `#graphql
     siteSettings: [SiteSetting!]!
     organizationalStructure: [OrganizationalStructure!]!
     media: [Media!]!
+
+    # Error reports
+    errorReports: [ErrorReport!]!
+    errorReport(id: String!): ErrorReport
   }
 
   # Mutations
@@ -482,5 +558,10 @@ export const typeDefs = `#graphql
     publishContent(contentType: String!, id: String!): Boolean!
     unpublishContent(contentType: String!, id: String!): Boolean!
     submitForReview(contentType: String!, id: String!): Boolean!
+
+    # Error report mutations
+    createErrorReport(input: ErrorReportInput!): ErrorReport!
+    updateErrorReport(id: String!, input: ErrorReportUpdateInput!): ErrorReport!
+    deleteErrorReport(id: String!): Boolean!
   }
 `;

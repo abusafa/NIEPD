@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 import { NetworkStatusBanner } from './components/ErrorHandling';
+import { ErrorReportButton } from './components/ErrorReporting';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ProgramsPage from './pages/ProgramsPage';
@@ -219,6 +220,9 @@ function App() {
         </main>
         
         <Footer currentLang={currentLang} />
+        
+        {/* Floating Error Report Button */}
+        <ErrorReportButton variant="floating" />
       </div>
     </ErrorBoundary>
   );

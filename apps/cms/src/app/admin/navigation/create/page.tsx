@@ -56,7 +56,7 @@ const locationOptions = [
 ];
 
 const iconOptions = [
-  { value: '', label: 'No Icon' },
+  { value: 'none', label: 'No Icon' },
   { value: 'home', label: 'Home' },
   { value: 'info', label: 'Info' },
   { value: 'contact', label: 'Contact' },
@@ -79,7 +79,7 @@ export default function CreateNavigationPage() {
     sortOrder: 0,
     isActive: true,
     openInNewWindow: false,
-    icon: '',
+    icon: 'none',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -156,7 +156,7 @@ export default function CreateNavigationPage() {
           ...formData,
           url: formData.url.trim() || '#',
           parentId: formData.parentId && formData.parentId !== 'none' ? formData.parentId : null,
-          icon: formData.icon || null,
+          icon: formData.icon && formData.icon !== 'none' ? formData.icon : null,
         }),
       });
 

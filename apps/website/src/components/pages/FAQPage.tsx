@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { HelpCircle, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { FAQ } from '@/types';
+import PageHeader from '@/components/PageHeader';
 
 interface FAQPageProps {
   currentLang: 'ar' | 'en';
@@ -123,16 +124,16 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-secondary-700 mb-6">
-          {t.title}
-        </h1>
-        <p className="text-xl text-neutral-800 max-w-3xl mx-auto">
-          {t.subtitle}
-        </p>
-      </div>
+    <div dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
+      {/* Page Header */}
+      <PageHeader 
+        title={t.title}
+        subtitle={t.subtitle}
+        icon={HelpCircle}
+        currentLang={currentLang}
+      />
+      
+      <div className="container mx-auto px-4 py-16">
 
       {/* Search and Controls */}
       <div className="mb-8">
@@ -207,6 +208,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ currentLang }) => {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 };

@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Calendar, User, Eye, Share2, Search, Filter, ChevronDown, ChevronUp, Tag } from 'lucide-react';
+import { Calendar, User, Eye, Share2, Search, Filter, ChevronDown, ChevronUp, Tag, Newspaper } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyNewsItem as NewsItem } from '@/types';
+import PageHeader from '@/components/PageHeader';
 
 interface NewsPageProps {
   currentLang: 'ar' | 'en';
@@ -161,16 +162,16 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-secondary-700 mb-6">
-          {t.title}
-        </h1>
-        <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-          {t.subtitle}
-        </p>
-      </div>
+    <div>
+      {/* Page Header */}
+      <PageHeader 
+        title={t.title}
+        subtitle={t.subtitle}
+        icon={Newspaper}
+        currentLang={currentLang}
+      />
+      
+      <div className="container mx-auto px-4 py-16">
 
       {/* Search and Filters */}
       <div className="mb-8">
@@ -377,6 +378,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 };

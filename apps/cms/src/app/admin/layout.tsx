@@ -28,7 +28,8 @@ import {
   BarChart3,
   Contact,
   MessageSquare,
-  Languages
+  Languages,
+  Bug
 } from 'lucide-react';
 
 interface AuthUser {
@@ -94,6 +95,7 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
     { icon: Navigation, label: t('nav.navigation'), href: '/admin/navigation', roles: ['SUPER_ADMIN', 'ADMIN'] },
     { icon: Contact, label: t('nav.contactInfo'), href: '/admin/contact-info', roles: ['SUPER_ADMIN', 'ADMIN', 'EDITOR'] },
     { icon: MessageSquare, label: t('nav.contactMessages'), href: '/admin/contact-messages', roles: ['SUPER_ADMIN', 'ADMIN', 'EDITOR'] },
+    { icon: Bug, label: 'تقارير الأخطاء', href: '/admin/error-reports', roles: ['SUPER_ADMIN', 'ADMIN', 'EDITOR'] },
     
     // System Management
     { icon: Users, label: t('nav.users'), href: '/admin/users', roles: ['SUPER_ADMIN', 'ADMIN'] },

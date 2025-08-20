@@ -1,5 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, Home, Mail } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
+import { ErrorReportButton } from './ErrorReporting';
 
 interface Props {
   children: ReactNode;
@@ -64,24 +65,7 @@ class ErrorBoundary extends Component<Props, State> {
     window.location.href = '/';
   };
 
-  handleReportError = () => {
-    const { error, errorInfo } = this.state;
-    const errorReport = {
-      error: error?.toString(),
-      stack: error?.stack,
-      componentStack: errorInfo?.componentStack,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
-      url: window.location.href
-    };
 
-    // In a real app, you'd send this to your error reporting service
-    console.log('Error Report:', errorReport);
-    
-    // For now, just copy to clipboard
-    navigator.clipboard.writeText(JSON.stringify(errorReport, null, 2));
-    alert('Error details copied to clipboard. Please send this to support.');
-  };
 
   render() {
     if (this.state.hasError) {
@@ -156,13 +140,17 @@ class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Report Error Button */}
-            <button
-              onClick={this.handleReportError}
-              className="mt-4 text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200 flex items-center justify-center gap-2 mx-auto"
-            >
-              <Mail className="w-4 h-4" />
-              {isArabic ? 'الإبلاغ عن الخطأ' : 'Report Error'}
-            </button>
+            <div className="mt-4 flex justify-center">
+              <ErrorReportButton 
+                variant="link"
+                className="text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                errorInfo={{
+                  errorType: 'JAVASCRIPT_ERROR',
+                  errorStack: this.state.error?.stack || this.state.error?.toString(),
+                  pageUrl: window.location.href
+                }}
+              />
+            </div>
           </div>
         </div>
       );

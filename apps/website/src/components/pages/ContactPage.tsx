@@ -11,10 +11,17 @@ import {
   MessageSquare,
   CheckCircle,
   AlertCircle,
-  Loader
+  Loader,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Youtube
 } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import type { ContactInfo } from '@/types';
+import type { SocialLink } from '@/services/dataService';
+import PageHeader from '@/components/PageHeader';
 
 interface ContactPageProps {
   currentLang: 'ar' | 'en';
@@ -27,6 +34,8 @@ interface ContactFormData {
   subject: string;
   message: string;
 }
+
+// SocialLink interface is imported from dataService
 
 const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
@@ -68,6 +77,8 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
       office: 'المكتب الرئيسي',
       workingHours: 'ساعات العمل',
       workingHoursValue: 'الأحد - الخميس: 8:00 صباحاً - 5:00 مساءً',
+      socialMedia: 'وسائل التواصل الاجتماعي',
+      socialMediaDescription: 'تابعونا على منصات التواصل الاجتماعي للحصول على آخر الأخبار والتحديثات',
       loading: 'جاري تحميل معلومات التواصل...',
       errorLoading: 'حدث خطأ في تحميل معلومات التواصل',
     },
@@ -90,12 +101,89 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
       office: 'Main Office',
       workingHours: 'Working Hours',
       workingHoursValue: 'Sunday - Thursday: 8:00 AM - 5:00 PM',
+      socialMedia: 'Social Media',
+      socialMediaDescription: 'Follow us on social media for the latest news and updates',
       loading: 'Loading contact information...',
       errorLoading: 'Error loading contact information',
     }
   };
 
   const t = content[currentLang];
+
+  // Icon mapping for social media platforms
+  const getIconComponent = (iconName: string) => {
+    const icons: { [key: string]: any } = {
+      Facebook,
+      Twitter,
+      Linkedin,
+      Instagram,
+      Youtube
+    };
+    return icons[iconName] || Facebook;
+  };
+
+  // Parse social links from contact data
+  const getSocialLinks = (): SocialLink[] => {
+    try {
+      // Check if data service returned socialLinks from CMS
+      const data = dataService as any;
+      if (data._lastContactData?.socialLinks && Array.isArray(data._lastContactData.socialLinks)) {
+        return data._lastContactData.socialLinks;
+      }
+      
+      // First try to get from contactInfo.socialLinks if it exists and is a string
+      if (contactInfo?.socialLinks) {
+        if (Array.isArray(contactInfo.socialLinks)) {
+          return contactInfo.socialLinks;
+        } else if (typeof contactInfo.socialLinks === 'string') {
+          const parsed = JSON.parse(contactInfo.socialLinks);
+          return Array.isArray(parsed) ? parsed : [];
+        }
+      }
+      
+      // Default social links if none found in CMS
+      return [
+        { 
+          platform: 'facebook',
+          icon: 'Facebook', 
+          label: 'Facebook', 
+          url: 'https://facebook.com/NIEPD', 
+          color: 'hover:text-blue-600 hover:bg-blue-50' 
+        },
+        { 
+          platform: 'twitter',
+          icon: 'Twitter', 
+          label: 'Twitter', 
+          url: 'https://twitter.com/NIEPD', 
+          color: 'hover:text-blue-400 hover:bg-blue-50' 
+        },
+        { 
+          platform: 'linkedin',
+          icon: 'Linkedin', 
+          label: 'LinkedIn', 
+          url: 'https://linkedin.com/company/NIEPD', 
+          color: 'hover:text-blue-700 hover:bg-blue-50' 
+        },
+        { 
+          platform: 'instagram',
+          icon: 'Instagram', 
+          label: 'Instagram', 
+          url: 'https://instagram.com/NIEPD', 
+          color: 'hover:text-pink-600 hover:bg-pink-50' 
+        },
+        { 
+          platform: 'youtube',
+          icon: 'Youtube', 
+          label: 'YouTube', 
+          url: 'https://youtube.com/@NIEPD', 
+          color: 'hover:text-red-600 hover:bg-red-50' 
+        }
+      ];
+    } catch (error) {
+      console.warn('Error parsing social links:', error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     const fetchContactInfo = async () => {
@@ -326,7 +414,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-16" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
+    <div dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
       {/* Screen reader announcements */}
       <div 
         aria-live="polite" 
@@ -336,15 +424,15 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
         {announcements}
       </div>
       
-      {/* Header */}
-      <div className="text-center mb-16">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary-900 mb-6 animate-fadeInUp">
-          {t.title}
-        </h1>
-        <p className="text-lg md:text-xl text-neutral-800 max-w-3xl mx-auto animate-fadeInUp" style={{animationDelay: '0.1s'}}>
-          {t.subtitle}
-        </p>
-      </div>
+      {/* Page Header */}
+      <PageHeader 
+        title={t.title}
+        subtitle={t.subtitle}
+        icon={Mail}
+        currentLang={currentLang}
+      />
+      
+      <div className="container mx-auto px-4 py-8 md:py-16">
 
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
@@ -429,6 +517,33 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
                           {t.workingHoursValue}
                         </p>
                       </div>
+                    </div>
+                  </div>
+                  
+                  {/* Social Media Section */}
+                  <div className="border-t border-neutral-100 pt-6 mt-6">
+                    <h3 className="font-semibold text-secondary-900 mb-3">
+                      {t.socialMedia}
+                    </h3>
+                    <p className="text-neutral-600 text-sm mb-4">
+                      {t.socialMediaDescription}
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      {getSocialLinks().map((social) => {
+                        const Icon = getIconComponent(social.icon);
+                        return (
+                          <a
+                            key={social.platform}
+                            href={social.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`w-11 h-11 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-600 transition-all duration-300 transform hover:scale-105 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${social.color}`}
+                            aria-label={`${social.label} - ${currentLang === 'ar' ? 'يفتح في نافذة جديدة' : 'Opens in new window'}`}
+                          >
+                            <Icon className="w-5 h-5" />
+                          </a>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -791,6 +906,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

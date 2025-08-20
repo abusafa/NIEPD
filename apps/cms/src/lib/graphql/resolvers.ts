@@ -237,6 +237,47 @@ export const resolvers = {
         orderBy: { createdAt: 'desc' },
       });
     },
+
+    // Error report queries
+    errorReports: async (_: any, __: any, { user }: { user: any }) => {
+      if (!user || !['SUPER_ADMIN', 'ADMIN', 'EDITOR'].includes(user.role)) {
+        throw new Error('Not authorized');
+      }
+      return await prisma.errorReport.findMany({
+        include: {
+          assignedTo: {
+            select: {
+              id: true,
+              username: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+    },
+
+    errorReport: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+      if (!user || !['SUPER_ADMIN', 'ADMIN', 'EDITOR'].includes(user.role)) {
+        throw new Error('Not authorized');
+      }
+      return await prisma.errorReport.findUnique({
+        where: { id },
+        include: {
+          assignedTo: {
+            select: {
+              id: true,
+              username: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            }
+          }
+        },
+      });
+    },
   },
 
   Mutation: {
@@ -541,6 +582,83 @@ export const resolvers = {
           throw new Error('Invalid content type');
       }
       
+      return true;
+    },
+
+    // Error report mutations
+    createErrorReport: async (_: any, { input }: { input: any }) => {
+      // This is for public submissions, so no authentication required
+      const errorReport = await prisma.errorReport.create({
+        data: {
+          ...input,
+          userEmail: input.userEmail || null,
+          userName: input.userName || null,
+          userPhone: input.userPhone || null,
+          userAgent: input.userAgent || null,
+          browserInfo: input.browserInfo || undefined,
+          errorStack: input.errorStack || null,
+        },
+        include: {
+          assignedTo: {
+            select: {
+              id: true,
+              username: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            }
+          }
+        },
+      });
+      return errorReport;
+    },
+
+    updateErrorReport: async (_: any, { id, input }: { id: string; input: any }, { user }: { user: any }) => {
+      if (!user || !['SUPER_ADMIN', 'ADMIN', 'EDITOR'].includes(user.role)) {
+        throw new Error('Not authorized');
+      }
+      
+      const updateData: any = { ...input };
+      
+      // If status is being updated to RESOLVED, set resolvedAt timestamp
+      if (input.status === 'RESOLVED') {
+        updateData.resolvedAt = new Date();
+      }
+      
+      // If status is changed from RESOLVED to something else, clear resolvedAt
+      if (input.status && input.status !== 'RESOLVED') {
+        updateData.resolvedAt = null;
+      }
+      
+      const errorReport = await prisma.errorReport.update({
+        where: { id },
+        data: {
+          ...updateData,
+          assignedToId: input.assignedToId === '' ? null : input.assignedToId,
+          resolutionNotesAr: input.resolutionNotesAr === '' ? null : input.resolutionNotesAr,
+          resolutionNotesEn: input.resolutionNotesEn === '' ? null : input.resolutionNotesEn,
+        },
+        include: {
+          assignedTo: {
+            select: {
+              id: true,
+              username: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            }
+          }
+        },
+      });
+      return errorReport;
+    },
+
+    deleteErrorReport: async (_: any, { id }: { id: string }, { user }: { user: any }) => {
+      if (!user || !['SUPER_ADMIN', 'ADMIN'].includes(user.role)) {
+        throw new Error('Not authorized');
+      }
+      
+      await prisma.errorReport.delete({ where: { id } });
       return true;
     },
   },

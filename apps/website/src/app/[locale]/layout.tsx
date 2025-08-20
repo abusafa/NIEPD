@@ -4,6 +4,7 @@ import '../../index.css'
 import { AppProvider } from '@/contexts/AppContext'
 import { NetworkStatusBanner } from '@/components/ErrorHandling'
 import { CookieBanner } from '@/components/CookieBanner'
+import { ErrorReportButton } from '@/components/ErrorReporting'
 import { getLocaleConfig, isValidLocale, type Locale } from '@/lib/i18n'
 import { notFound } from 'next/navigation'
 
@@ -75,6 +76,9 @@ export default async function LocaleLayout({ children, params }: Props) {
             
             {/* Cookie Consent Banner */}
             <CookieBanner />
+            
+            {/* Floating Error Report Button */}
+            <ErrorReportButton variant="floating" />
           </div>
         </AppProvider>
       </body>

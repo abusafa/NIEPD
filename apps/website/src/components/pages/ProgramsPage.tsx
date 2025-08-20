@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { BookOpen, Clock, Users, Award, Star, Search, Filter, ChevronDown, ChevronUp, Tag } from 'lucide-react';
+import { BookOpen, Clock, Users, Award, Star, Search, Filter, ChevronDown, ChevronUp, Tag, GraduationCap } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyProgram as Program } from '@/types';
+import PageHeader from '@/components/PageHeader';
 
 interface ProgramsPageProps {
   currentLang: 'ar' | 'en';
@@ -192,16 +193,16 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-secondary-700 mb-6">
-          {t.title}
-        </h1>
-        <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-          {t.subtitle}
-        </p>
-      </div>
+    <div>
+      {/* Page Header */}
+      <PageHeader 
+        title={t.title}
+        subtitle={t.subtitle}
+        icon={GraduationCap}
+        currentLang={currentLang}
+      />
+      
+      <div className="container mx-auto px-4 py-16">
 
       {/* Search and Filters */}
       <div className="mb-8">
@@ -386,6 +387,7 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang }) => {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 };

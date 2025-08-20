@@ -177,9 +177,18 @@ export interface Department {
   phone: string;
 }
 
+export interface SocialLink {
+  platform: string;
+  icon: string;
+  label: string;
+  url: string;
+  color: string;
+}
+
 export interface ContactInfo {
   contactMethods: ContactMethod[];
   departments: Department[];
+  socialLinks?: SocialLink[];
 }
 
 // API functions
@@ -346,7 +355,14 @@ export const dataService = {
   async getContactInfo(): Promise<ContactInfo> {
     try {
       const response = await api.get('/contact-info.json');
-      return response.data;
+      const data = response.data;
+      
+      // Store social links for access in components
+      if (data.socialLinks) {
+        (dataService as any)._lastContactData = { socialLinks: data.socialLinks };
+      }
+      
+      return data;
     } catch (error) {
       console.error('Error fetching contact info:', error);
       throw error;

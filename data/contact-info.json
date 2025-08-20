@@ -34,6 +34,43 @@
       "extraValueEn": "Friday - Saturday: Closed"
     }
   ],
+  "socialLinks": [
+    {
+      "platform": "facebook",
+      "icon": "Facebook",
+      "label": "Facebook",
+      "url": "https://facebook.com/NIEPD",
+      "color": "hover:text-blue-600 hover:bg-blue-50"
+    },
+    {
+      "platform": "twitter",
+      "icon": "Twitter", 
+      "label": "Twitter",
+      "url": "https://twitter.com/NIEPD",
+      "color": "hover:text-blue-400 hover:bg-blue-50"
+    },
+    {
+      "platform": "linkedin",
+      "icon": "Linkedin",
+      "label": "LinkedIn", 
+      "url": "https://linkedin.com/company/NIEPD",
+      "color": "hover:text-blue-700 hover:bg-blue-50"
+    },
+    {
+      "platform": "instagram",
+      "icon": "Instagram",
+      "label": "Instagram",
+      "url": "https://instagram.com/NIEPD", 
+      "color": "hover:text-pink-600 hover:bg-pink-50"
+    },
+    {
+      "platform": "youtube",
+      "icon": "Youtube",
+      "label": "YouTube",
+      "url": "https://youtube.com/@NIEPD",
+      "color": "hover:text-red-600 hover:bg-red-50"
+    }
+  ],
   "departments": [
     {
       "nameAr": "الاستفسارات العامة",

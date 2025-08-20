@@ -1,9 +1,10 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Building, ExternalLink, Mail, Phone, Globe, Search, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { Building, ExternalLink, Mail, Phone, Globe, Search, Filter, ChevronDown, ChevronUp, Handshake } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { Partner } from '@/types';
+import PageHeader from '@/components/PageHeader';
 
 interface PartnersPageProps {
   currentLang: 'ar' | 'en';
@@ -140,16 +141,16 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-secondary-700 mb-6">
-          {t.title}
-        </h1>
-        <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-          {t.subtitle}
-        </p>
-      </div>
+    <div>
+      {/* Page Header */}
+      <PageHeader 
+        title={t.title}
+        subtitle={t.subtitle}
+        icon={Handshake}
+        currentLang={currentLang}
+      />
+      
+      <div className="container mx-auto px-4 py-16">
 
       {/* Search and Filters */}
       <div className="mb-8">
@@ -328,6 +329,7 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 };

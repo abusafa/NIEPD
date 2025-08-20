@@ -80,6 +80,7 @@ model User {
   pages       Page[]
   faqs        FAQ[]
   partners    Partner[]
+  assignedErrorReports ErrorReport[]
 
   @@map("users")
 }
@@ -457,4 +458,33 @@ model ContactMessage {
   updatedAt DateTime @updatedAt
 
   @@map("contact_messages")
+}
+
+// Error reports from website users
+model ErrorReport {
+  id                String   @id @default(cuid())
+  titleAr           String
+  titleEn           String
+  descriptionAr     String
+  descriptionEn     String
+  userEmail         String?
+  userName          String?
+  userPhone         String?
+  pageUrl           String
+  userAgent         String?
+  ipAddress         String?
+  browserInfo       Json?    // Browser, OS, screen resolution, etc.
+  errorStack        String?  // Technical error details if available
+  errorType         String   @default("USER_REPORTED") // "USER_REPORTED", "JAVASCRIPT_ERROR", "API_ERROR", "UI_BUG"
+  severity          String   @default("MEDIUM") // "LOW", "MEDIUM", "HIGH", "CRITICAL"
+  status            String   @default("NEW") // "NEW", "INVESTIGATING", "IN_PROGRESS", "RESOLVED", "CLOSED"
+  assignedToId      String?
+  assignedTo        User?    @relation(fields: [assignedToId], references: [id])
+  resolutionNotesAr String?
+  resolutionNotesEn String?
+  resolvedAt        DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("error_reports")
 }

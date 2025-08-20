@@ -1,5 +1,5 @@
 import React from 'react';
-import { Eye, Heart, Target, Sparkles, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Eye, Heart, Target, Sparkles, ArrowRight, Users } from 'lucide-react';
 
 interface VisionMissionProps {
   currentLang: 'ar' | 'en';
@@ -46,168 +46,107 @@ const VisionMission: React.FC<VisionMissionProps> = ({ currentLang }) => {
   };
 
   const t = content[currentLang];
-  const ArrowIcon = currentLang === 'ar' ? ArrowLeft : ArrowRight;
 
   const values = [
     {
-      icon: Sparkles,
-      title: t.excellence,
-      description: t.excellenceDesc,
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-      iconColor: 'text-blue-600'
-    },
-    {
-      icon: Target,
-      title: t.innovation,
-      description: t.innovationDesc,
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-50',
-      iconColor: 'text-purple-600'
+      icon: ArrowRight,
+      title: t.impact,
+      description: t.impactDesc
     },
     {
       icon: Heart,
       title: t.partnership,
-      description: t.partnershipDesc,
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50',
-      iconColor: 'text-green-600'
+      description: t.partnershipDesc
     },
     {
-      icon: ArrowRight,
-      title: t.impact,
-      description: t.impactDesc,
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-50',
-      iconColor: 'text-orange-600'
+      icon: Target,
+      title: t.innovation,
+      description: t.innovationDesc
+    },
+    {
+      icon: Sparkles,
+      title: t.excellence,
+      description: t.excellenceDesc
     }
   ];
 
   return (
-    <section className="section-spacing bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-primary-500 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary-500 rounded-full blur-3xl"></div>
-      </div>
-
-      <div className="container mx-auto px-4 relative">
+    <section className="py-16 px-4" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="container-width">
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold text-secondary-700 mb-6">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-secondary-700 mb-4">
             {t.sectionTitle}
           </h2>
-          <p className="text-xl text-secondary-600 leading-relaxed">
+          <p className="text-lg text-secondary-600 max-w-2xl mx-auto">
             {t.sectionSubtitle}
           </p>
         </div>
 
         {/* Vision & Mission Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           {/* Vision Card */}
-          <div className="group relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-primary-600 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-            <div className="relative bg-white rounded-3xl p-8 md:p-10 border border-gray-100 transition-all duration-300">
-              {/* Icon */}
-              <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                <Eye className="w-10 h-10 text-white" />
-              </div>
-              
-              {/* Title */}
-              <h3 className="text-3xl font-bold text-secondary-700 mb-6 group-hover:text-primary-600 transition-colors duration-300">
-                {t.vision}
-              </h3>
-              
-              {/* Content */}
-              <p className="text-lg text-secondary-600 leading-relaxed mb-8">
-                {t.visionText}
-              </p>
-              
-              {/* Decorative Element */}
-              <div className="flex items-center gap-2 text-primary-600 font-medium">
-                <div className="w-8 h-0.5 bg-gradient-to-r from-primary-500 to-transparent"></div>
-                <span className="text-sm">{currentLang === 'ar' ? 'رؤيتنا' : 'Our Vision'}</span>
-              </div>
+          <div className="card card-content">
+            <div className="w-16 h-16 bg-primary-600 rounded-xl flex items-center justify-center mb-6">
+              <Eye className="w-8 h-8 text-white" />
             </div>
+            
+            <h3 className="text-2xl font-bold text-secondary-700 mb-4">
+              {t.vision}
+            </h3>
+            
+            <p className="text-secondary-600 leading-relaxed">
+              {t.visionText}
+            </p>
           </div>
 
           {/* Mission Card */}
-          <div className="group relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-10"></div>
-            <div className="relative bg-white rounded-3xl p-8 md:p-10 border border-gray-100 transition-all duration-300">
-              {/* Icon */}
-              <div className="w-20 h-20 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                <Heart className="w-10 h-10 text-white" />
-              </div>
-              
-              {/* Title */}
-              <h3 className="text-3xl font-bold text-secondary-700 mb-6 group-hover:text-secondary-600 transition-colors duration-300">
-                {t.mission}
-              </h3>
-              
-              {/* Content */}
-              <p className="text-lg text-secondary-600 leading-relaxed mb-8">
-                {t.missionText}
-              </p>
-              
-              {/* Decorative Element */}
-              <div className="flex items-center gap-2 text-secondary-600 font-medium">
-                <div className="w-8 h-0.5 bg-gradient-to-r from-secondary-500 to-transparent"></div>
-                <span className="text-sm">{currentLang === 'ar' ? 'رسالتنا' : 'Our Mission'}</span>
-              </div>
+          <div className="card card-content">
+            <div className="w-16 h-16 bg-secondary-600 rounded-xl flex items-center justify-center mb-6">
+              <Heart className="w-8 h-8 text-white" />
             </div>
+            
+            <h3 className="text-2xl font-bold text-secondary-700 mb-4">
+              {t.mission}
+            </h3>
+            
+            <p className="text-secondary-600 leading-relaxed">
+              {t.missionText}
+            </p>
           </div>
         </div>
 
         {/* Values Section */}
-        <div className="max-w-6xl mx-auto">
-          {/* Values Header */}
-          <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-secondary-700 mb-4">
-              {t.values}
-            </h3>
-            <p className="text-lg text-secondary-600 max-w-2xl mx-auto">
-              {t.valuesSubtitle}
-            </p>
-          </div>
-
-          {/* Values Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => {
-              const Icon = value.icon;
-              return (
-                <div 
-                  key={index}
-                  className="group relative bg-white rounded-2xl p-6 transition-all duration-300 border border-gray-100 hover:border-gray-200"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  {/* Background Gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${value.color} rounded-2xl opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-                  
-                  {/* Icon */}
-                  <div className={`w-16 h-16 ${value.bgColor} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 relative`}>
-                    <Icon className={`w-8 h-8 ${value.iconColor}`} />
-                  </div>
-                  
-                  {/* Title */}
-                  <h4 className="text-xl font-bold text-secondary-700 mb-4 group-hover:text-primary-600 transition-colors duration-300">
-                    {value.title}
-                  </h4>
-                  
-                  {/* Description */}
-                  <p className="text-secondary-600 text-sm leading-relaxed">
-                    {value.description}
-                  </p>
-                  
-                  {/* Hover Effect */}
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-2xl"></div>
-                </div>
-              );
-            })}
-          </div>
+        <div className="text-center mb-12">
+          <h3 className="text-3xl font-bold text-secondary-700 mb-4">
+            {t.values}
+          </h3>
+          <p className="text-lg text-secondary-600 max-w-2xl mx-auto">
+            {t.valuesSubtitle}
+          </p>
         </div>
 
-   
+        {/* Values Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {values.map((value, index) => {
+            const Icon = value.icon;
+            return (
+              <div key={index} className="card card-content text-center">
+                <div className="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Icon className="w-7 h-7 text-primary-600" />
+                </div>
+                
+                <h4 className="text-lg font-bold text-secondary-700 mb-3">
+                  {value.title}
+                </h4>
+                
+                <p className="text-secondary-600 text-sm leading-relaxed">
+                  {value.description}
+                </p>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
