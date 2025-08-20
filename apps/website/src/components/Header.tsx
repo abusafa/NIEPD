@@ -67,14 +67,18 @@ const Header: React.FC<HeaderProps> = ({
         <div className="h-[80px] flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3 group">
-            <div className="transition-all duration-300 group-hover:scale-105">
+            <Link 
+              href={createLocalizedPath('/', currentLang)}
+              className="transition-all duration-300 group-hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 rounded-lg"
+              aria-label={currentLang === 'ar' ? 'الذهاب إلى الصفحة الرئيسية' : 'Go to homepage'}
+            >
               <Logo 
                 variant="horizontal" 
                 size="lg" 
                 currentLang={currentLang}
                 className="max-w-[280px] md:max-w-[320px]"
               />
-            </div>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
