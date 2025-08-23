@@ -20,7 +20,7 @@ const CMS_API_URL = process.env.NEXT_PUBLIC_CMS_API_URL || 'http://localhost:300
 
 // Create axios instance
 const api = axios.create({
-  baseURL: `${CMS_API_URL}/api`,
+  baseURL: `${CMS_API_URL}/api/public`,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -77,15 +77,15 @@ const transformProgramToLegacy = (program: Program): LegacyProgram => ({
   level: program.level,
   instructorAr: program.author?.firstName || '',
   instructorEn: program.author?.username || '',
-  rating: 4.5, // Default rating as it's not in CMS
-  participants: 0, // Default participants as it's not in CMS
+  rating: program.rating || 4.5,
+  participants: program.participants || 0,
   image: program.image || '',
-  partnerAr: '',
-  partnerEn: '',
-  featuresAr: [],
-  featuresEn: [],
-  targetAudienceAr: '',
-  targetAudienceEn: '',
+  partnerAr: program.partner?.nameAr || '',
+  partnerEn: program.partner?.nameEn || '',
+  featuresAr: program.featuresAr || [],
+  featuresEn: program.featuresEn || [],
+  targetAudienceAr: program.targetAudienceAr || '',
+  targetAudienceEn: program.targetAudienceEn || '',
   prerequisitesAr: program.prerequisites || '',
   prerequisitesEn: program.prerequisites || '',
   certification: program.isCertified ? 'معتمد' : 'غير معتمد',
@@ -121,16 +121,12 @@ export const cmsApi = {
     page?: number
     limit?: number
     search?: string
-    status?: string
     eventStatus?: string
     featured?: boolean
   }): Promise<Event[]> {
     try {
       const response = await api.get<PaginatedResponse<Event>>('/events', {
-        params: {
-          status: 'PUBLISHED',
-          ...params,
-        },
+        params,
       })
       return response.data.data || []
     } catch (error) {
@@ -158,16 +154,12 @@ export const cmsApi = {
     page?: number
     limit?: number
     search?: string
-    status?: string
     level?: string
     featured?: boolean
   }): Promise<Program[]> {
     try {
       const response = await api.get<PaginatedResponse<Program>>('/programs', {
-        params: {
-          status: 'PUBLISHED',
-          ...params,
-        },
+        params,
       })
       return response.data.data || []
     } catch (error) {
@@ -195,15 +187,11 @@ export const cmsApi = {
     page?: number
     limit?: number
     search?: string
-    status?: string
     featured?: boolean
   }): Promise<NewsItem[]> {
     try {
       const response = await api.get<PaginatedResponse<NewsItem>>('/news', {
-        params: {
-          status: 'PUBLISHED',
-          ...params,
-        },
+        params,
       })
       return response.data.data || []
     } catch (error) {
@@ -229,9 +217,7 @@ export const cmsApi = {
   // FAQ
   async getFAQs(): Promise<FAQ[]> {
     try {
-      const response = await api.get<PaginatedResponse<FAQ>>('/faq', {
-        params: { status: 'PUBLISHED' },
-      })
+      const response = await api.get<PaginatedResponse<FAQ>>('/faq')
       return response.data.data || []
     } catch (error) {
       console.error('Error fetching FAQs:', error)
@@ -242,9 +228,7 @@ export const cmsApi = {
   // Partners
   async getPartners(): Promise<Partner[]> {
     try {
-      const response = await api.get<PaginatedResponse<Partner>>('/partners', {
-        params: { status: 'PUBLISHED' },
-      })
+      const response = await api.get<PaginatedResponse<Partner>>('/partners')
       return response.data.data || []
     } catch (error) {
       console.error('Error fetching partners:', error)
@@ -253,27 +237,45 @@ export const cmsApi = {
   },
 
   // Contact Info
-  async getContactInfo(): Promise<ContactInfo | null> {
+  async getContactInfo(): Promise<any> {
     try {
-      const response = await api.get<PaginatedResponse<ContactInfo>>('/contact-info', {
-        params: { status: 'PUBLISHED' },
-      })
-      return response.data.data?.[0] || null
+      const response = await api.get('/contact-info')
+      return response.data.grouped || { phone: [], email: [], address: [], social: [] }
     } catch (error) {
       console.error('Error fetching contact info:', error)
-      return null
+      return { phone: [], email: [], address: [], social: [] }
     }
   },
 
   // Organizational Structure
   async getOrganizationalStructure(): Promise<OrganizationalStructureMember[]> {
     try {
-      const response = await api.get<PaginatedResponse<OrganizationalStructureMember>>('/organizational-structure', {
-        params: { status: 'PUBLISHED' },
-      })
+      const response = await api.get('/organizational-structure')
       return response.data.data || []
     } catch (error) {
       console.error('Error fetching organizational structure:', error)
+      return []
+    }
+  },
+
+  // Site Settings
+  async getSiteSettings(): Promise<any> {
+    try {
+      const response = await api.get('/site-settings')
+      return response.data.settings || {}
+    } catch (error) {
+      console.error('Error fetching site settings:', error)
+      return {}
+    }
+  },
+
+  // Navigation
+  async getNavigation(): Promise<any[]> {
+    try {
+      const response = await api.get('/navigation')
+      return response.data.data || []
+    } catch (error) {
+      console.error('Error fetching navigation:', error)
       return []
     }
   },
@@ -367,27 +369,45 @@ export const dataService = {
     const contactInfo = await cmsApi.getContactInfo()
     if (!contactInfo) return { contactMethods: [], departments: [] }
 
-    // Transform to legacy format
+    // Transform grouped contact info to legacy format
+    const contactMethods = []
+    
+    if (contactInfo.email && contactInfo.email.length > 0) {
+      contactMethods.push({
+        icon: 'Mail',
+        titleAr: contactInfo.email[0].labelAr || 'البريد الإلكتروني',
+        titleEn: contactInfo.email[0].labelEn || 'Email',
+        valueAr: contactInfo.email[0].valueAr || '',
+        valueEn: contactInfo.email[0].valueEn || '',
+        link: `mailto:${contactInfo.email[0].valueEn}`,
+      })
+    }
+
+    if (contactInfo.phone && contactInfo.phone.length > 0) {
+      contactMethods.push({
+        icon: 'Phone',
+        titleAr: contactInfo.phone[0].labelAr || 'الهاتف',
+        titleEn: contactInfo.phone[0].labelEn || 'Phone',
+        valueAr: contactInfo.phone[0].valueAr || '',
+        valueEn: contactInfo.phone[0].valueEn || '',
+        link: `tel:${contactInfo.phone[0].valueEn}`,
+      })
+    }
+
+    if (contactInfo.address && contactInfo.address.length > 0) {
+      contactMethods.push({
+        icon: 'MapPin',
+        titleAr: contactInfo.address[0].labelAr || 'العنوان',
+        titleEn: contactInfo.address[0].labelEn || 'Address',
+        valueAr: contactInfo.address[0].valueAr || '',
+        valueEn: contactInfo.address[0].valueEn || '',
+      })
+    }
+
     return {
-      contactMethods: [
-        {
-          icon: 'Mail',
-          titleAr: 'البريد الإلكتروني',
-          titleEn: 'Email',
-          valueAr: contactInfo.email || '',
-          valueEn: contactInfo.email || '',
-          link: `mailto:${contactInfo.email}`,
-        },
-        {
-          icon: 'Phone',
-          titleAr: 'الهاتف',
-          titleEn: 'Phone',
-          valueAr: contactInfo.phone || '',
-          valueEn: contactInfo.phone || '',
-          link: `tel:${contactInfo.phone}`,
-        },
-      ],
+      contactMethods,
       departments: [],
+      socialLinks: contactInfo.social || [],
     }
   },
 
@@ -426,21 +446,8 @@ export const dataService = {
   // Site settings
   async getSiteSettings(): Promise<SiteSettings | null> {
     try {
-      const response = await api.get('/site-settings');
-      const settings = response.data.rawSettings;
-      
-      if (settings && Array.isArray(settings)) {
-        const settingsMap: any = {};
-        settings.forEach((setting: any) => {
-          settingsMap[setting.key] = {
-            valueAr: setting.valueAr,
-            valueEn: setting.valueEn,
-            type: setting.type
-          };
-        });
-        return settingsMap;
-      }
-      return null;
+      const settings = await cmsApi.getSiteSettings();
+      return settings;
     } catch (error) {
       console.error('Error fetching site settings:', error);
       return null;
@@ -450,13 +457,11 @@ export const dataService = {
   // Statistics from CMS
   async getStatistics(): Promise<any> {
     try {
-      const response = await api.get('/site-settings');
-      const stats = response.data.rawSettings?.find(
-        (setting: any) => setting.key === 'institute_statistics'
-      );
+      const settings = await cmsApi.getSiteSettings();
+      const stats = settings.institute_statistics;
       
       if (stats) {
-        const statsData = JSON.parse(stats.valueEn);
+        const statsData = typeof stats.valueEn === 'string' ? JSON.parse(stats.valueEn) : stats.valueEn;
         return {
           trainedTeachers: statsData.trainedTeachers || '0',
           programs: statsData.programs || '0',

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import './lexical-editor.css';
-import { Label } from '@/components/ui/label';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
@@ -60,9 +59,23 @@ import {
   Outdent,
   Heading1,
   Heading2,
-  Heading3
+  Heading3,
+  Image,
+  Video,
+  Plus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ImageNode, $createImageNode } from './ImageNode';
+import { VideoNode, $createVideoNode } from './VideoNode';
+import MediaSelector from './MediaSelector';
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 
 // Lexical editor configuration
 const theme = {
@@ -148,6 +161,9 @@ function ToolbarPlugin() {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [blockType, setBlockType] = useState('paragraph');
+  const [isMediaSelectorOpen, setIsMediaSelectorOpen] = useState(false);
+  const [isVideoDialogOpen, setIsVideoDialogOpen] = useState(false);
+  const [videoUrl, setVideoUrl] = useState('');
 
   const updateToolbar = () => {
     const selection = $getSelection();
@@ -190,6 +206,45 @@ function ToolbarPlugin() {
 
   const formatElement = (format: 'left' | 'center' | 'right' | 'justify') => {
     activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, format);
+  };
+
+  const insertImage = (url: string) => {
+    activeEditor.update(() => {
+      const imageNode = $createImageNode({
+        src: url,
+        altText: 'Uploaded image',
+        maxWidth: 500,
+      });
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        selection.insertNodes([imageNode]);
+      } else {
+        const root = $getRoot();
+        root.append(imageNode);
+      }
+    });
+    setIsMediaSelectorOpen(false);
+  };
+
+  const insertVideo = () => {
+    if (!videoUrl.trim()) return;
+    
+    activeEditor.update(() => {
+      const videoNode = $createVideoNode({
+        src: videoUrl,
+        width: 560,
+        height: 315,
+      });
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        selection.insertNodes([videoNode]);
+      } else {
+        const root = $getRoot();
+        root.append(videoNode);
+      }
+    });
+    setVideoUrl('');
+    setIsVideoDialogOpen(false);
   };
 
   const insertLink = () => {
@@ -373,6 +428,61 @@ function ToolbarPlugin() {
       >
         <Link className="h-4 w-4" />
       </Button>
+
+      <div className="w-px h-6 bg-gray-300 mx-1" />
+
+      {/* Media Tools */}
+      <Dialog open={isMediaSelectorOpen} onOpenChange={setIsMediaSelectorOpen}>
+        <DialogTrigger asChild>
+          <Button variant="ghost" size="sm" type="button" title="Insert Image">
+            <Image className="w-4 h-4" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Select Image</DialogTitle>
+          </DialogHeader>
+          <MediaSelector
+            onImageSelect={insertImage}
+            label="Select an image to insert"
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isVideoDialogOpen} onOpenChange={setIsVideoDialogOpen}>
+        <DialogTrigger asChild>
+          <Button variant="ghost" size="sm" type="button" title="Insert Video">
+            <Video className="w-4 h-4" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Insert Video</DialogTitle>
+          </DialogHeader>
+                      <div className="space-y-4">
+              <div>
+                <label htmlFor="video-url" className="block text-sm font-medium">Video URL</label>
+              <Input
+                id="video-url"
+                placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                Supports YouTube, Vimeo, or direct video file URLs
+              </p>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsVideoDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={insertVideo} disabled={!videoUrl.trim()}>
+                Insert Video
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -476,6 +586,8 @@ export default function LexicalRichTextEditor({
       LinkNode,
       ListNode,
       ListItemNode,
+      ImageNode,
+      VideoNode,
     ],
   };
 

@@ -78,13 +78,8 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
         
         // If CMS data is not valid or empty, fall back to static JSON
         if (!hasValidData) {
-          console.log('CMS organizational data not available, falling back to static JSON');
-          const fallbackResponse = await fetch('/data/organizational-structure.json');
-          if (fallbackResponse.ok) {
-            data = await fallbackResponse.json();
-          } else {
-            throw new Error('Failed to load fallback organizational data');
-          }
+          console.log('CMS organizational data not available or empty');
+          throw new Error('Organizational structure data not available from CMS');
         }
         
         setOrganizationData(data);

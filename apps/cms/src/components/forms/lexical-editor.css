@@ -212,3 +212,34 @@
   left: auto;
   right: 15px;
 }
+
+/* Image styles */
+.lexical-image {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 16px 0;
+}
+
+.image-container {
+  text-align: center;
+  margin: 16px 0;
+}
+
+.image-caption {
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: #666;
+  font-style: italic;
+}
+
+/* Video styles */
+.video-container {
+  margin: 16px 0;
+  text-align: center;
+}
+
+.video-container iframe,
+.video-container video {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

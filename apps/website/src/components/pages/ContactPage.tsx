@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import type { ContactInfo } from '@/types';
-import type { SocialLink } from '@/services/dataService';
+// Social link type is now available from the API response
 import PageHeader from '@/components/PageHeader';
 
 interface ContactPageProps {
@@ -123,7 +123,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ currentLang }) => {
   };
 
   // Parse social links from contact data
-  const getSocialLinks = (): SocialLink[] => {
+  const getSocialLinks = (): any[] => {
     try {
       // Check if data service returned socialLinks from CMS
       const data = dataService as any;

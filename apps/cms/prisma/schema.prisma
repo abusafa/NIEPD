@@ -138,8 +138,6 @@ model News {
   contentAr   String
   contentEn   String
   slug        String        @unique
-  authorAr    String?
-  authorEn    String?
   image       String?
   featured    Boolean       @default(false)
   status      ContentStatus @default(DRAFT)
@@ -150,8 +148,8 @@ model News {
   // Relationships
   categoryId  String?
   category    Category?     @relation(fields: [categoryId], references: [id])
-  authorId    String?
-  author      User?         @relation(fields: [authorId], references: [id])
+  authorId    String
+  author      User          @relation(fields: [authorId], references: [id])
   tags        NewsTag[]
 
   @@map("news")
@@ -178,19 +176,14 @@ model Program {
   duration            Int
   durationType        DurationType
   level               ProgramLevel
-  instructorAr        String?
-  instructorEn        String?
   rating              Float?        @default(0)
   participants        Int           @default(0)
   image               String?
-  partnerAr           String?
-  partnerEn           String?
   featuresAr          Json?         // Array of features in Arabic
   featuresEn          Json?         // Array of features in English
   targetAudienceAr    String?
   targetAudienceEn    String?
-  prerequisitesAr     String?
-  prerequisitesEn     String?
+  prerequisites       String?       // Combined prerequisites field
   certification       String?
   featured            Boolean       @default(false)
   isFree              Boolean       @default(true)
@@ -204,8 +197,10 @@ model Program {
   // Relationships
   categoryId          String?
   category            Category?     @relation(fields: [categoryId], references: [id])
-  authorId            String?
-  author              User?         @relation(fields: [authorId], references: [id])
+  authorId            String
+  author              User          @relation(fields: [authorId], references: [id])
+  partnerId           String?
+  partner             Partner?      @relation(fields: [partnerId], references: [id])
   tags                ProgramTag[]
 
   @@map("programs")
@@ -233,8 +228,8 @@ model Event {
   slug                  String        @unique
   startDate             DateTime
   endDate               DateTime
-  startTime             String?
-  endTime               String?
+  startTime             DateTime?     // Changed to DateTime for proper time handling
+  endTime               DateTime?     // Changed to DateTime for proper time handling
   locationAr            String?
   locationEn            String?
   venueAr               String?
@@ -255,8 +250,8 @@ model Event {
   // Relationships
   categoryId            String?
   category              Category?     @relation(fields: [categoryId], references: [id])
-  authorId              String?
-  author                User?         @relation(fields: [authorId], references: [id])
+  authorId              String
+  author                User          @relation(fields: [authorId], references: [id])
   tags                  EventTag[]
 
   @@map("events")
@@ -349,6 +344,7 @@ model Partner {
   // Relationships
   authorId        String?
   author          User?         @relation(fields: [authorId], references: [id])
+  programs        Program[]     // Programs associated with this partner
 
   @@map("partners")
 }

@@ -121,7 +121,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ currentLang }) => {
           dataService.getSiteSettings(),
           dataService.getContactInfo(),
           dataService.getStatistics(),
-          fetch('/data/partners.json').then(res => res.json()).catch(() => [])
+          dataService.getPartners()
         ]);
         
         setSiteSettings(settingsData);

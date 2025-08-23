@@ -56,6 +56,8 @@ export interface Program {
   duration: number
   durationType: 'HOURS' | 'DAYS' | 'WEEKS' | 'MONTHS'
   level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'
+  rating?: number
+  participants?: number
   image?: string
   prerequisites?: string
   learningOutcomes?: string
@@ -68,10 +70,22 @@ export interface Program {
     nameEn: string
   }
   author?: {
+    id: string
     firstName: string
     lastName: string
     username: string
   }
+  partner?: {
+    id: string
+    nameAr: string
+    nameEn: string
+    logo?: string
+    website?: string
+  }
+  featuresAr?: string[]
+  featuresEn?: string[]
+  targetAudienceAr?: string
+  targetAudienceEn?: string
   tags?: Array<{
     tag: {
       nameAr: string
