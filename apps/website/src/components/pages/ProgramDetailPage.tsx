@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { BookOpen, Clock, Users, Award, Star, ArrowLeft, Calendar, Tag, ExternalLink, Download } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyProgram as Program } from '@/types';
@@ -224,11 +225,12 @@ const ProgramDetailPage: React.FC<ProgramDetailPageProps> = ({ currentLang, prog
 
           {/* Program Image */}
           {program.image && (
-            <div className="mb-8">
-              <img
+            <div className="mb-8 relative h-64 md:h-80 rounded-xl overflow-hidden shadow-lg">
+              <Image
                 src={program.image}
                 alt={currentLang === 'ar' ? program.titleAr : program.titleEn}
-                className="w-full h-64 md:h-80 object-cover rounded-xl shadow-lg"
+                fill
+                className="object-cover"
               />
             </div>
           )}

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { createDefaultAdmin } from '../src/lib/auth';
+import { createDefaultAdmin, hashPassword } from '../src/lib/auth';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -12,8 +12,18 @@ async function setupDatabase() {
     // Create default admin user
     await createDefaultAdmin();
 
+    // Get admin user ID for author references
+    const adminUser = await prisma.user.findFirst({
+      where: { role: 'SUPER_ADMIN' },
+      select: { id: true }
+    });
+
+    if (!adminUser) {
+      throw new Error('Default admin user not found');
+    }
+
     // Import existing data
-    await importData();
+    await importData(adminUser.id);
 
     console.log('Database setup completed successfully!');
   } catch (error) {
@@ -24,11 +34,35 @@ async function setupDatabase() {
   }
 }
 
-async function importData() {
+async function importData(adminUserId: string) {
   console.log('Importing data...');
 
   // Define data files and their corresponding models
   const dataFiles = [
+    {
+      file: 'users.json',
+      model: 'user',
+      skipDelete: true, // Don't delete existing users due to foreign key constraints
+      transform: async (data: any[]) => {
+        const transformedUsers = [];
+        for (const item of data) {
+          const hashedPassword = await hashPassword(item.password);
+          transformedUsers.push({
+            id: item.id.toString(),
+            email: item.email,
+            username: item.username,
+            password: hashedPassword,
+            firstName: item.firstName,
+            lastName: item.lastName,
+            role: item.role,
+            isActive: item.isActive,
+            createdAt: new Date(item.createdAt),
+            updatedAt: new Date(item.updatedAt),
+          });
+        }
+        return transformedUsers;
+      }
+    },
     {
       file: 'categories.json',
       model: 'category',
@@ -71,8 +105,7 @@ async function importData() {
         contentAr: item.contentAr,
         contentEn: item.contentEn,
         slug: item.titleEn?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `news-${item.id}`,
-        authorAr: item.authorAr,
-        authorEn: item.authorEn,
+        authorId: adminUserId,
         image: item.image,
         featured: item.featured || false,
         status: 'PUBLISHED' as const,
@@ -94,19 +127,15 @@ async function importData() {
         duration: item.duration || 0,
         durationType: (item.durationType?.toUpperCase() || 'HOURS') as any,
         level: (item.level?.toUpperCase() || 'BEGINNER') as any,
-        instructorAr: item.instructorAr,
-        instructorEn: item.instructorEn,
         rating: item.rating || 0,
         participants: item.participants || 0,
         image: item.image,
-        partnerAr: item.partnerAr,
-        partnerEn: item.partnerEn,
+        authorId: adminUserId,
         featuresAr: item.featuresAr,
         featuresEn: item.featuresEn,
         targetAudienceAr: item.targetAudienceAr,
         targetAudienceEn: item.targetAudienceEn,
-        prerequisitesAr: item.prerequisitesAr,
-        prerequisitesEn: item.prerequisitesEn,
+        prerequisites: item.prerequisitesEn || item.prerequisitesAr,
         certification: item.certification,
         featured: item.featured || false,
         isFree: item.isFree !== false,
@@ -132,8 +161,8 @@ async function importData() {
         slug: item.titleEn?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `event-${item.id}`,
         startDate: new Date(item.startDate),
         endDate: new Date(item.endDate),
-        startTime: item.startTime,
-        endTime: item.endTime,
+        startTime: item.startTime ? new Date(`${item.startDate}T${item.startTime}.000Z`) : null,
+        endTime: item.endTime ? new Date(`${item.startDate}T${item.endTime}.000Z`) : null,
         locationAr: item.locationAr,
         locationEn: item.locationEn,
         venueAr: item.venueAr,
@@ -147,6 +176,7 @@ async function importData() {
         featured: item.featured || false,
         eventStatus: (item.status?.toUpperCase() || 'UPCOMING') as any,
         status: 'PUBLISHED' as const,
+        authorId: adminUserId,
         publishedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -305,11 +335,11 @@ async function importData() {
           }
         }
         
-        // Import executive team if exists
-        if (data.executive) {
-          for (const member of data.executive) {
+        // Import management team
+        if (data.management) {
+          for (const member of data.management) {
             records.push({
-              id: `exec-${member.id}`,
+              id: `mgmt-${member.id}`,
               nameAr: member.nameAr,
               nameEn: member.nameEn,
               positionAr: member.titleAr || member.roleAr,
@@ -327,6 +357,23 @@ async function importData() {
         
         // Import departments if exists
         if (data.departments) {
+          for (const dept of data.departments) {
+            records.push({
+              id: `dept-${dept.id}`,
+              nameAr: dept.nameAr,
+              nameEn: dept.nameEn,
+              positionAr: dept.titleAr || dept.roleAr,
+              positionEn: dept.titleEn || dept.roleEn,
+              descriptionAr: dept.bioAr,
+              descriptionEn: dept.bioEn,
+              image: dept.icon ? `/icons/${dept.icon.toLowerCase()}.svg` : null,
+              sortOrder: dept.id,
+              isActive: true,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
+          }
+        } {
           for (const dept of data.departments) {
             if (dept.staff) {
               for (const member of dept.staff) {
@@ -351,6 +398,75 @@ async function importData() {
         
         return records;
       }
+    },
+    {
+      file: 'contact-messages.json',
+      model: 'contactMessage',
+      transform: (data: any[]) => data.map(item => ({
+        id: item.id.toString(),
+        name: item.name,
+        email: item.email,
+        phone: item.phone,
+        subject: item.subject,
+        message: item.message,
+        status: item.status,
+        ipAddress: item.ipAddress,
+        userAgent: item.userAgent,
+        createdAt: new Date(item.createdAt),
+        updatedAt: new Date(item.updatedAt),
+      }))
+    },
+    {
+      file: 'error-reports.json',
+      model: 'errorReport',
+      transform: (data: any[]) => data.map(item => ({
+        id: item.id.toString(),
+        titleAr: item.titleAr,
+        titleEn: item.titleEn,
+        descriptionAr: item.descriptionAr,
+        descriptionEn: item.descriptionEn,
+        userEmail: item.userEmail,
+        userName: item.userName,
+        userPhone: item.userPhone,
+        pageUrl: item.pageUrl,
+        userAgent: item.userAgent,
+        ipAddress: item.ipAddress,
+        browserInfo: item.browserInfo,
+        errorStack: item.errorStack,
+        errorType: item.errorType,
+        severity: item.severity,
+        status: item.status,
+        assignedToId: item.assignedToId,
+        resolutionNotesAr: item.resolutionNotesAr,
+        resolutionNotesEn: item.resolutionNotesEn,
+        resolvedAt: item.resolvedAt ? new Date(item.resolvedAt) : null,
+        createdAt: new Date(item.createdAt),
+        updatedAt: new Date(item.updatedAt),
+      }))
+    },
+    {
+      file: 'news-tags.json',
+      model: 'newsTag',
+      transform: (data: any[]) => data.map(item => ({
+        newsId: item.newsId.toString(),
+        tagId: item.tagId.toString(),
+      }))
+    },
+    {
+      file: 'program-tags.json',
+      model: 'programTag',
+      transform: (data: any[]) => data.map(item => ({
+        programId: item.programId.toString(),
+        tagId: item.tagId.toString(),
+      }))
+    },
+    {
+      file: 'event-tags.json',
+      model: 'eventTag',
+      transform: (data: any[]) => data.map(item => ({
+        eventId: item.eventId.toString(),
+        tagId: item.tagId.toString(),
+      }))
     }
   ];
 
@@ -367,7 +483,7 @@ async function importData() {
 
       const rawData = fs.readFileSync(filePath, 'utf8');
       const jsonData = JSON.parse(rawData);
-      const transformedData = transform(jsonData);
+      const transformedData = await transform(jsonData);
 
       console.log(`Importing ${transformedData.length} records from ${file}...`);
 

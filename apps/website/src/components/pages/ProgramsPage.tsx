@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { BookOpen, Clock, Users, Award, Star, Search, Filter, ChevronDown, ChevronUp, Tag, GraduationCap } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyProgram as Program } from '@/types';
@@ -288,11 +289,12 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ currentLang }) => {
             <div key={program.id} className="card group hover:shadow-lg transition-all duration-300">
               {/* Program Image */}
               {program.image && (
-                <div className="image-hover-zoom rounded-t-xl overflow-hidden mb-4">
-                  <img
+                <div className="image-hover-zoom rounded-t-xl overflow-hidden mb-4 relative h-48">
+                  <Image
                     src={program.image}
                     alt={currentLang === 'ar' ? program.titleAr : program.titleEn}
-                    className="w-full h-48 object-cover"
+                    fill
+                    className="object-cover"
                   />
                 </div>
               )}

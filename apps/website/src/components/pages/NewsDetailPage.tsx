@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Calendar, User, Eye, Share2, ArrowLeft, Tag, Clock } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyNewsItem as NewsItem } from '@/types';
@@ -221,11 +222,12 @@ const NewsDetailPage: React.FC<NewsDetailPageProps> = ({ currentLang, newsId }) 
 
           {/* News Image */}
           {newsItem.image && (
-            <div className="mb-8">
-              <img
+            <div className="mb-8 relative h-64 md:h-96 rounded-xl overflow-hidden shadow-lg">
+              <Image
                 src={newsItem.image}
                 alt={currentLang === 'ar' ? newsItem.titleAr : newsItem.titleEn}
-                className="w-full h-64 md:h-96 object-cover rounded-xl shadow-lg"
+                fill
+                className="object-cover"
               />
             </div>
           )}
@@ -269,11 +271,14 @@ const NewsDetailPage: React.FC<NewsDetailPageProps> = ({ currentLang, newsId }) 
                         onClick={() => router.push(`/news/${item.id}`)}
                       >
                         {item.image && (
-                          <img
-                            src={item.image}
-                            alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
-                            className="w-full h-24 object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity"
-                          />
+                          <div className="relative w-full h-24 rounded-lg overflow-hidden mb-2 group-hover:opacity-80 transition-opacity">
+                            <Image
+                              src={item.image}
+                              alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
                         )}
                         <h4 className="font-medium text-secondary-700 text-sm mb-1 group-hover:text-primary-600 transition-colors line-clamp-2">
                           {currentLang === 'ar' ? item.titleAr : item.titleEn}

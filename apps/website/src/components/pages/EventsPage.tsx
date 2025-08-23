@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Calendar, Clock, MapPin, Users, ExternalLink, Search } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyEvent as Event } from '@/types';
@@ -237,11 +238,12 @@ const EventsPage: React.FC<EventsPageProps> = ({ currentLang }) => {
                 <div key={event.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                   {/* Event Image */}
                   {event.image ? (
-                    <div className="h-48 overflow-hidden">
-                      <img
+                    <div className="h-48 overflow-hidden relative">
+                      <Image
                         src={event.image}
                         alt={currentLang === 'ar' ? event.titleAr : event.titleEn}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                   ) : (

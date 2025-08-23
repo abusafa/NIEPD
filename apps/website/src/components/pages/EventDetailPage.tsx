@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Calendar, Clock, MapPin, Users, ExternalLink, ArrowLeft, Tag, Share2 } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyEvent as Event } from '@/types';
@@ -256,11 +257,12 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang, eventId 
 
           {/* Event Image */}
           {event.image && (
-            <div className="mb-8">
-              <img
+            <div className="mb-8 relative h-64 md:h-80 rounded-xl overflow-hidden shadow-lg">
+              <Image
                 src={event.image}
                 alt={currentLang === 'ar' ? event.titleAr : event.titleEn}
-                className="w-full h-64 md:h-80 object-cover rounded-xl shadow-lg"
+                fill
+                className="object-cover"
               />
             </div>
           )}
@@ -381,11 +383,14 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ currentLang, eventId 
                         onClick={() => router.push(`/events/${item.id}`)}
                       >
                         {item.image && (
-                          <img
-                            src={item.image}
-                            alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
-                            className="w-full h-24 object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity"
-                          />
+                          <div className="relative w-full h-24 rounded-lg overflow-hidden mb-2 group-hover:opacity-80 transition-opacity">
+                            <Image
+                              src={item.image}
+                              alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
                         )}
                         <h4 className="font-medium text-secondary-700 text-sm mb-1 group-hover:text-primary-600 transition-colors line-clamp-2">
                           {currentLang === 'ar' ? item.titleAr : item.titleEn}

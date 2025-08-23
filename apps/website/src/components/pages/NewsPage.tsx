@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Calendar, User, Eye, Share2, Search, Filter, ChevronDown, ChevronUp, Tag, Newspaper } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { LegacyNewsItem as NewsItem } from '@/types';
@@ -250,11 +251,12 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
               <div key={item.id} className="card group hover:shadow-lg transition-all duration-300 lg:flex">
                 {/* News Image */}
                 {item.image && (
-                  <div className="image-hover-zoom lg:w-1/2 rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none overflow-hidden">
-                    <img
+                  <div className="image-hover-zoom lg:w-1/2 rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none overflow-hidden relative h-48 lg:h-full">
+                    <Image
                       src={item.image}
                       alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
-                      className="w-full h-48 lg:h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   </div>
                 )}
@@ -318,11 +320,12 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
                 <div key={item.id} className="card group hover:shadow-lg transition-all duration-300">
                   {/* News Image */}
                   {item.image && (
-                    <div className="image-hover-zoom rounded-t-xl overflow-hidden mb-4">
-                      <img
+                    <div className="image-hover-zoom rounded-t-xl overflow-hidden mb-4 relative h-48">
+                      <Image
                         src={item.image}
                         alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
-                        className="w-full h-48 object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                   )}

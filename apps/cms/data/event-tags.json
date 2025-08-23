@@ -1,0 +1,42 @@
+[
+  {
+    "eventId": "1",
+    "tagId": "2"
+  },
+  {
+    "eventId": "1",
+    "tagId": "4"
+  },
+  {
+    "eventId": "2",
+    "tagId": "1"
+  },
+  {
+    "eventId": "2",
+    "tagId": "3"
+  },
+  {
+    "eventId": "3",
+    "tagId": "1"
+  },
+  {
+    "eventId": "3",
+    "tagId": "2"
+  },
+  {
+    "eventId": "4",
+    "tagId": "3"
+  },
+  {
+    "eventId": "4",
+    "tagId": "4"
+  },
+  {
+    "eventId": "5",
+    "tagId": "2"
+  },
+  {
+    "eventId": "5",
+    "tagId": "4"
+  }
+]

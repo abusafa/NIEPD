@@ -415,31 +415,61 @@ export const dataService = {
   async getOrganizationalStructure(): Promise<any> {
     const members = await cmsApi.getOrganizationalStructure()
     
-    // Group members by department/role
-    const board = members.filter(m => m.department === 'board')
-    const management = members.filter(m => m.department === 'management')
-    const departments = members.filter(m => m.department === 'department')
+    // Group members by ID prefix (board-, mgmt-, dept-)
+    const board = members.filter(m => m.id.startsWith('board-'))
+    const management = members.filter(m => m.id.startsWith('mgmt-'))
+    const departments = members.filter(m => m.id.startsWith('dept-'))
 
     return {
       board: board.map(m => ({
         id: m.id,
         nameAr: m.nameAr,
         nameEn: m.nameEn,
-        titleAr: m.titleAr,
-        titleEn: m.titleEn,
-        roleAr: m.roleAr,
-        roleEn: m.roleEn,
-        bioAr: m.bioAr,
-        bioEn: m.bioEn,
-        photo: m.photo,
-        email: m.email,
-        phone: m.phone,
-        linkedin: m.linkedin,
-        twitter: m.twitter,
+        titleAr: m.positionAr,
+        titleEn: m.positionEn,
+        roleAr: m.positionAr,
+        roleEn: m.positionEn,
+        bioAr: m.descriptionAr,
+        bioEn: m.descriptionEn,
+        photo: m.image,
+        email: '',
+        phone: '',
+        linkedin: '',
+        twitter: '',
+        icon: 'User',
+        isChairman: m.id === 'board-1',
+      })),
+      management: management.map(m => ({
+        id: m.id,
+        nameAr: m.nameAr,
+        nameEn: m.nameEn,
+        titleAr: m.positionAr,
+        titleEn: m.positionEn,
+        roleAr: m.positionAr,
+        roleEn: m.positionEn,
+        bioAr: m.descriptionAr,
+        bioEn: m.descriptionEn,
+        photo: m.image,
+        email: '',
+        phone: '',
+        linkedin: '',
+        twitter: '',
         icon: 'User',
       })),
-      management,
-      departments,
+      departments: departments.map(m => ({
+        id: m.id,
+        nameAr: m.nameAr,
+        nameEn: m.nameEn,
+        titleAr: m.positionAr,
+        titleEn: m.positionEn,
+        roleAr: m.positionAr,
+        roleEn: m.positionEn,
+        bioAr: m.descriptionAr,
+        bioEn: m.descriptionEn,
+        photo: m.image,
+        icon: 'Building',
+        staffCount: 10, // Default value since not available from CMS
+      })),
     }
   },
 

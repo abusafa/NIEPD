@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Building, ExternalLink, Mail, Phone, Globe, Search, Filter, ChevronDown, ChevronUp, Handshake } from 'lucide-react';
 import { dataService } from '@/lib/api';
 import { Partner } from '@/types';
@@ -210,10 +211,12 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
                   {/* Partner Logo */}
                   {partner.logo ? (
                     <div className="w-20 h-20 mx-auto mb-4 rounded-lg overflow-hidden bg-white shadow-sm">
-                      <img
+                      <Image
                         src={partner.logo}
                         alt={currentLang === 'ar' ? partner.nameAr : partner.nameEn}
-                        className="w-full h-full object-contain p-2"
+                        width={80}
+                        height={80}
+                        className="object-contain p-2"
                       />
                     </div>
                   ) : (
@@ -281,10 +284,12 @@ const PartnersPage: React.FC<PartnersPageProps> = ({ currentLang }) => {
                 {/* Partner Logo */}
                 {partner.logo ? (
                   <div className="w-16 h-16 mx-auto mb-4 rounded-lg overflow-hidden bg-neutral-50">
-                    <img
+                    <Image
                       src={partner.logo}
                       alt={currentLang === 'ar' ? partner.nameAr : partner.nameEn}
-                      className="w-full h-full object-contain p-2"
+                      width={64}
+                      height={64}
+                      className="object-contain p-2"
                     />
                   </div>
                 ) : (

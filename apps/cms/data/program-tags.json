@@ -1,0 +1,50 @@
+[
+  {
+    "programId": "1",
+    "tagId": "1"
+  },
+  {
+    "programId": "1",
+    "tagId": "2"
+  },
+  {
+    "programId": "2",
+    "tagId": "1"
+  },
+  {
+    "programId": "2",
+    "tagId": "3"
+  },
+  {
+    "programId": "3",
+    "tagId": "2"
+  },
+  {
+    "programId": "3",
+    "tagId": "4"
+  },
+  {
+    "programId": "4",
+    "tagId": "1"
+  },
+  {
+    "programId": "4",
+    "tagId": "3"
+  },
+  {
+    "programId": "5",
+    "tagId": "2"
+  },
+  {
+    "programId": "5",
+    "tagId": "4"
+  },
+  {
+    "programId": "6",
+    "tagId": "1"
+  },
+  {
+    "programId": "6",
+    "tagId": "3"
+  }
+]

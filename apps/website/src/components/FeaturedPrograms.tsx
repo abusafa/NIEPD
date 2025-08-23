@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Clock, Users, Award, ArrowLeft, ArrowRight, ExternalLink, CheckCircle, Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { dataService } from '@/lib/api';
@@ -188,10 +189,11 @@ const FeaturedPrograms: React.FC<FeaturedProgramsProps> = ({ currentLang, onProg
 
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
-                  <img 
+                  <Image 
                     src={program.image}
                     alt={title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className={`absolute inset-0 bg-gradient-to-t ${program.color} opacity-80`}></div>
                   
