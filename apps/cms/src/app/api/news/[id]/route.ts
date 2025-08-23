@@ -77,7 +77,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { tagIds, categoryId, ...newsData } = body;
+    const { tagIds, categoryId, authorAr, authorEn, ...newsData } = body;
 
     // Check if news exists
     const existingNews = await prisma.news.findUnique({

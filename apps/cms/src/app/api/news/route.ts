@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { tagIds, ...newsData } = body;
+    const { tagIds, authorAr, authorEn, ...newsData } = body;
 
     const news = await prisma.news.create({
       data: {

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { BookOpen, Users, Award, TrendingUp, Calendar, ExternalLink, ArrowLeft, ArrowRight, Newspaper, HelpCircle, UserCheck, Globe, Heart, MessageCircle, GraduationCap, Building } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Hero from '../Hero';
@@ -576,9 +577,11 @@ const HomePage: React.FC<HomePageProps> = ({ currentLang }) => {
                   onClick={() => router.push(createLocalizedPath(`/news/${item.id}`, currentLang))}
                 >
                   <div className="relative overflow-hidden rounded-lg mb-6">
-                    <img 
+                    <Image 
                       src={item.image || '/images/news-placeholder.jpg'} 
                       alt={currentLang === 'ar' ? item.titleAr : item.titleEn}
+                      width={400}
+                      height={192}
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute top-4 right-4 bg-primary-600 text-white px-3 py-1 rounded-full text-sm">

@@ -65,6 +65,7 @@ import {
   Plus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { ImageNode, $createImageNode } from './ImageNode';
 import { VideoNode, $createVideoNode } from './VideoNode';
 import MediaSelector from './MediaSelector';

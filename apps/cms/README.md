@@ -1,6 +1,6 @@
 # NIEPD Headless CMS
 
-A modern headless Content Management System built with Next.js 15, TypeScript, Prisma, PostgreSQL, GraphQL, and ShadCN UI for the National Institute for Educational Professional Development (NIEPD) website.
+A modern headless Content Management System built with Next.js 15, TypeScript, Prisma, PostgreSQL, and ShadCN UI for the National Institute for Educational Professional Development (NIEPD) website.
 
 ## Features
 
@@ -8,7 +8,7 @@ A modern headless Content Management System built with Next.js 15, TypeScript, P
 - 🚀 **Next.js 15** with App Router and TypeScript
 - 🎨 **ShadCN UI** components for modern admin interface
 - 🗃️ **PostgreSQL** database with Prisma ORM
-- 🔗 **GraphQL API** with Apollo Server
+- 🔗 **REST API** with comprehensive endpoints
 - 🔐 **JWT Authentication** with role-based permissions
 - 📱 **Responsive Design** with mobile-first approach
 
@@ -32,7 +32,7 @@ A modern headless Content Management System built with Next.js 15, TypeScript, P
 ### Developer Experience
 - 🏗️ **Modular Architecture** with shared business logic
 - 🔧 **TypeScript** for type safety
-- 📚 **Comprehensive API** with REST and GraphQL
+- 📚 **Comprehensive REST API** for all content types
 - 🔄 **Auto-generated** database types
 - 🧪 **Validation Layer** with custom schemas
 - 📦 **Component Library** for rapid development
@@ -124,7 +124,7 @@ npm run dev
 
 The application will be available at:
 - **Admin Panel**: http://localhost:3000/admin
-- **GraphQL Playground**: http://localhost:3000/api/graphql
+- **API Documentation**: Available at `/api` endpoints
 
 ## Default Admin User
 
@@ -138,8 +138,8 @@ A default admin user is created during setup:
 
 ## API Endpoints
 
-### GraphQL API
-- **Endpoint**: `/api/graphql`
+### REST API
+- **Base URL**: `/api`
 - **Playground**: Available in development mode
 
 ### REST API
@@ -197,44 +197,33 @@ A default admin user is created during setup:
 - **Approval Process** - Role-based content approval system
 - **Activity Logs** - Comprehensive audit trail for all actions
 
-## GraphQL Schema
+## API Endpoints
 
-The API provides comprehensive queries and mutations for all content types:
+The API provides comprehensive REST endpoints for all content types:
 
-```graphql
-# Example queries
-query GetNews {
-  news {
-    id
-    titleAr
-    titleEn
-    contentAr
-    contentEn
-    status
-    featured
-    category {
-      nameAr
-      nameEn
-    }
-    tags {
-      nameAr
-      nameEn
-    }
-  }
-}
+```bash
+# Example REST API endpoints
 
-query GetPrograms {
-  programs {
-    id
-    titleAr
-    titleEn
-    level
-    duration
-    durationType
-    rating
-    participants
-  }
-}
+# Get all news
+GET /api/public/news
+
+# Get single news article
+GET /api/public/news/[id]
+
+# Get all programs
+GET /api/public/programs
+
+# Get single program
+GET /api/public/programs/[id]
+
+# Get events
+GET /api/public/events
+
+# Get site settings
+GET /api/public/site-settings
+
+# Get navigation menu
+GET /api/public/navigation
 ```
 
 ## Development
@@ -270,8 +259,8 @@ npm run db:studio
 ### Adding New Content Types
 
 1. Update the Prisma schema in `prisma/schema.prisma`
-2. Add GraphQL types in `src/lib/graphql/schema.ts`
-3. Add resolvers in `src/lib/graphql/resolvers.ts`
+2. Add API routes in `src/app/api/[resource]/route.ts`
+3. Add validation schemas in `src/lib/validation.ts`
 4. Create admin UI components
 5. Run migrations: `npm run db:migrate`
 
@@ -354,7 +343,7 @@ npm run start
 │   │       ├── users/         # Users API
 │   │       ├── site-settings/ # Settings API
 │   │       ├── dashboard/     # Dashboard stats API
-│   │       └── graphql/       # GraphQL endpoint
+│   │       └── public/        # Public API endpoints
 │   ├── components/            # React components
 │   │   ├── ui/               # ShadCN UI components
 │   │   ├── shared/           # Shared components
@@ -372,7 +361,7 @@ npm run start
 │   │   ├── auth.ts          # Authentication utilities
 │   │   ├── prisma.ts        # Database client
 │   │   ├── validation.ts    # Form validation schemas
-│   │   └── graphql/         # GraphQL schema & resolvers
+│   │   └── validation/      # Form validation schemas
 │   └── contexts/            # React contexts
 │       └── AppContext.tsx   # Global app state
 ├── prisma/                  # Database schema

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface LogoProps {
   variant?: 'default' | 'white' | 'horizontal' | 'horizontal-white';
@@ -32,10 +33,13 @@ const Logo: React.FC<LogoProps> = ({
     : 'National Institute for Professional Educational Development Logo';
 
   return (
-    <img 
+    <Image 
       src={logoVariants[variant]}
       alt={altText}
+      width={200}
+      height={200}
       className={`w-auto ${sizeClasses[size]} ${className}`}
+      priority
     />
   );
 };

@@ -6,7 +6,7 @@
 - **Media Library**: Upload and manage images and files with metadata
 - **Navigation Management**: Build hierarchical menus with targets and sort order
 - **Contact & Error Intake**: Store site contact messages and user error reports with statuses and assignment
-- **GraphQL & REST**: Flexible retrieval and mutation for integrations
+- **REST API**: Clean and flexible endpoints for integrations
 
 ### Performance & Operations
 

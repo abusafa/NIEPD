@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Building, Users, Award, Target, ChevronDown, ChevronUp, Mail, Phone, Linkedin, Twitter, User, Crown, Shield, Briefcase, GraduationCap, Globe } from 'lucide-react';
 import { dataService } from '@/lib/api';
 
@@ -167,9 +168,11 @@ const OrganizationalStructure: React.FC<OrganizationalStructureProps> = ({ curre
           <div className="relative">
             <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-primary-100 to-secondary-100 flex items-center justify-center">
               {person.photo ? (
-                <img 
+                <Image 
                   src={person.photo} 
                   alt={name}
+                  width={64}
+                  height={64}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;

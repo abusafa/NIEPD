@@ -4,15 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DataTable from '@/components/shared/DataTable';
 import { useCRUD } from '@/hooks/useCRUD';
-import { Badge } from '@/components/ui/badge';
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { MoreVertical, Edit, Eye, Trash2, Plus } from 'lucide-react';
+import FAQStatusBadge from '@/components/faq/FAQStatusBadge';
+import { Edit, Eye, Trash2, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface FAQ {
@@ -32,10 +25,7 @@ export default function FAQPage() {
   const router = useRouter();
   const { data: faqs, loading, error, deleteItem, refresh } = useCRUD<FAQ>('/api/faq');
 
-  const [filters, setFilters] = useState({
-    status: '',
-    search: '',
-  });
+
 
   const handleView = (faq: FAQ) => {
     router.push(`/admin/faq/${faq.id}`);
@@ -63,23 +53,35 @@ export default function FAQPage() {
     router.push('/admin/faq/create');
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'PUBLISHED':
-        return 'bg-green-100 text-green-800';
-      case 'DRAFT':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'REVIEW':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  // Calculate stats
+  const stats = [
+    {
+      label: 'Total FAQ',
+      value: faqs?.length ?? 0,
+      description: 'Total questions'
+    },
+    {
+      label: 'Published',
+      value: (faqs ?? []).filter(f => f.status === 'PUBLISHED').length,
+      description: 'Live questions'
+    },
+    {
+      label: 'Draft',
+      value: (faqs ?? []).filter(f => f.status === 'DRAFT').length,
+      description: 'Draft questions'
+    },
+    {
+      label: 'Under Review',
+      value: (faqs ?? []).filter(f => f.status === 'REVIEW').length,
+      description: 'Pending approval'
+    },
+  ];
 
   const columns = [
     {
       key: 'questionEn' as keyof FAQ,
-      label: 'Question (English)',
+      label: 'Question',
+      labelAr: 'السؤال',
       sortable: true,
       render: (_: unknown, faq: FAQ) => (
         <div>
@@ -91,6 +93,7 @@ export default function FAQPage() {
     {
       key: 'answerEn' as keyof FAQ,
       label: 'Answer Preview',
+      labelAr: 'معاينة الإجابة',
       render: (_: unknown, faq: FAQ) => (
         <div className="text-sm text-gray-600 line-clamp-2 max-w-xs">
           {faq.answerEn}
@@ -100,24 +103,24 @@ export default function FAQPage() {
     {
       key: 'status' as keyof FAQ,
       label: 'Status',
+      labelAr: 'الحالة',
       sortable: true,
-      render: (_: unknown, faq: FAQ) => (
-        <Badge className={getStatusColor(faq.status)}>
-          {faq.status}
-        </Badge>
-      ),
+      render: (_: unknown, faq: FAQ) => <FAQStatusBadge status={faq.status} />,
     },
     {
       key: 'sortOrder' as keyof FAQ,
       label: 'Order',
+      labelAr: 'الترتيب',
       sortable: true,
+      align: 'center' as const,
       render: (_: unknown, faq: FAQ) => (
-        <span className="text-sm text-gray-600">{faq.sortOrder}</span>
+        <span className="text-sm font-medium text-gray-700">{faq.sortOrder}</span>
       ),
     },
     {
       key: 'updatedAt' as keyof FAQ,
       label: 'Last Updated',
+      labelAr: 'آخر تحديث',
       sortable: true,
       render: (_: unknown, faq: FAQ) => (
         <span className="text-sm text-gray-500">
@@ -125,59 +128,41 @@ export default function FAQPage() {
         </span>
       ),
     },
+  ];
+
+  const actions = [
     {
-      key: 'actions' as keyof FAQ,
-      label: 'Actions',
-      render: (_: unknown, faq: FAQ) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleView(faq)}>
-              <Eye className="h-4 w-4 mr-2" />
-              View Details
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleEdit(faq)}>
-              <Edit className="h-4 w-4 mr-2" />
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => handleDelete(faq)}
-              className="text-red-600 hover:text-red-700"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
+      label: 'View Details',
+      labelAr: 'عرض التفاصيل',
+      icon: <Eye className="h-4 w-4" />,
+      onClick: handleView,
+    },
+    {
+      label: 'Edit',
+      labelAr: 'تعديل',
+      icon: <Edit className="h-4 w-4" />,
+      onClick: handleEdit,
+    },
+    {
+      label: 'Delete',
+      labelAr: 'حذف',
+      icon: <Trash2 className="h-4 w-4" />,
+      onClick: handleDelete,
+      variant: 'destructive' as const,
     },
   ];
 
-  const filteredFaqs = (faqs ?? []).filter(faq => {
-    const matchesSearch = !filters.search || 
-      faq.questionEn.toLowerCase().includes(filters.search.toLowerCase()) ||
-      faq.questionAr.includes(filters.search) ||
-      faq.answerEn.toLowerCase().includes(filters.search.toLowerCase()) ||
-      faq.answerAr.includes(filters.search);
 
-    const matchesStatus = !filters.status || faq.status === filters.status;
-
-    return matchesSearch && matchesStatus;
-  });
 
   const filterOptions = [
     {
       key: 'status',
       label: 'Status',
+      labelAr: 'الحالة',
       options: [
-        { label: 'All Status', value: '' },
-        { label: 'Published', value: 'PUBLISHED' },
-        { label: 'Draft', value: 'DRAFT' },
-        { label: 'Review', value: 'REVIEW' },
+        { label: 'Published', labelAr: 'منشور', value: 'PUBLISHED' },
+        { label: 'Draft', labelAr: 'مسودة', value: 'DRAFT' },
+        { label: 'Under Review', labelAr: 'قيد المراجعة', value: 'REVIEW' },
       ],
     },
   ];
@@ -195,73 +180,23 @@ export default function FAQPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">FAQ Management</h1>
-          <p className="text-gray-600">Manage frequently asked questions and answers</p>
-        </div>
-        
-        <Button onClick={handleCreateNew}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add FAQ
-        </Button>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-lg border">
-          <div className="flex items-center">
-            <div className="text-sm font-medium text-gray-500">Total FAQ</div>
-          </div>
-          <div className="mt-2 text-3xl font-bold text-gray-900">{faqs?.length ?? 0}</div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg border">
-          <div className="flex items-center">
-            <div className="text-sm font-medium text-gray-500">Published</div>
-          </div>
-          <div className="mt-2 text-3xl font-bold text-green-600">
-            {(faqs ?? []).filter(f => f.status === 'PUBLISHED').length}
-          </div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg border">
-          <div className="flex items-center">
-            <div className="text-sm font-medium text-gray-500">Draft</div>
-          </div>
-          <div className="mt-2 text-3xl font-bold text-yellow-600">
-            {(faqs ?? []).filter(f => f.status === 'DRAFT').length}
-          </div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg border">
-          <div className="flex items-center">
-            <div className="text-sm font-medium text-gray-500">Under Review</div>
-          </div>
-          <div className="mt-2 text-3xl font-bold text-blue-600">
-            {(faqs ?? []).filter(f => f.status === 'REVIEW').length}
-          </div>
-        </div>
-      </div>
-
-      {/* FAQ Table */}
-      <div className="bg-white rounded-lg border">
-        <DataTable<FAQ>
-          title="FAQ Management"
-          description="Manage frequently asked questions"
-          data={faqs}
-          columns={columns}
-          loading={loading}
-          onCreate={handleCreateNew}
-          createButtonText="New FAQ"
-          searchPlaceholder="Search FAQ..."
-          filters={filterOptions}
-          emptyMessage="No FAQ found"
-          emptyDescription="Get started by creating your first FAQ item."
-        />
-      </div>
-    </div>
+    <DataTable<FAQ>
+      title="FAQ Management"
+      description="Manage frequently asked questions and answers"
+      data={faqs ?? []}
+      columns={columns}
+      actions={actions}
+      loading={loading}
+      onCreate={handleCreateNew}
+      createButtonText="Add FAQ"
+      searchPlaceholder="Search questions and answers..."
+      filters={filterOptions}
+      stats={stats}
+      emptyMessage="No FAQ found"
+      emptyDescription="Get started by creating your first FAQ item."
+      showSearch={true}
+      showFilters={true}
+      showStats={true}
+    />
   );
 }

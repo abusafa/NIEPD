@@ -12,7 +12,7 @@ The NIEPD CMS is a secure, bilingual content platform powering the public websit
 - **Roles & workflow**: Multi-role users (super admin, admin, editor, author, viewer) with statuses (draft, review, published, archived)
 - **Bilingual fields**: `Ar` and `En` columns ensure parity and consistency
 - **Rich text**: Lexical editor with code, lists, markdown, and links support
-- **GraphQL API**: Strongly typed schema for flexible integration
+- **REST API**: Clean and consistent endpoints for integration
 
 ### Benefits to NIEPD
 

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Building, Users, Award, Target, Eye, Heart, Sparkles, Globe, Mail, Phone, MapPin, ExternalLink, ArrowRight, ArrowLeft, MessageSquare, Home, ChevronRight, Navigation, Share2, Facebook, Twitter, Linkedin, Instagram, Youtube } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { dataService, SiteSettings } from '@/lib/api';
@@ -443,9 +444,11 @@ const AboutPage: React.FC<AboutPageProps> = ({ currentLang }) => {
               <div key={partner.id} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 group">
                 <div className="flex items-start gap-4">
                   <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                    <img 
+                    <Image 
                       src={partner.logo} 
                       alt={currentLang === 'ar' ? partner.nameAr : partner.nameEn}
+                      width={64}
+                      height={64}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                   </div>
