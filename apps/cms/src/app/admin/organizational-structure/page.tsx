@@ -8,6 +8,7 @@ import OrganizationMemberStatusBadge from '@/components/organization/Organizatio
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Edit, Eye, Trash2, User, Building } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface OrganizationMember {
   id: string;
@@ -26,29 +27,30 @@ interface OrganizationMember {
 
 export default function OrganizationalStructurePage() {
   const router = useRouter();
+  const { currentLang, t, isRTL } = useLanguage();
   const { data: members, loading, error, deleteItem, refresh } = useCRUD<OrganizationMember>('/api/organizational-structure');
 
   // Calculate stats
   const stats = [
     {
-      label: 'Total Members',
+      label: currentLang === 'ar' ? 'إجمالي الأعضاء' : 'Total Members',
       value: members?.length ?? 0,
-      description: 'All organization members'
+      description: currentLang === 'ar' ? 'جميع أعضاء المنظمة' : 'All organization members'
     },
     {
-      label: 'Active',
+      label: currentLang === 'ar' ? 'نشط' : 'Active',
       value: (members ?? []).filter(m => m.isActive).length,
-      description: 'Active members'
+      description: currentLang === 'ar' ? 'الأعضاء النشطون' : 'Active members'
     },
     {
-      label: 'Board Members',
+      label: currentLang === 'ar' ? 'أعضاء المجلس' : 'Board Members',
       value: (members ?? []).filter(m => m.id.startsWith('board-')).length,
-      description: 'Board of directors'
+      description: currentLang === 'ar' ? 'مجلس الإدارة' : 'Board of directors'
     },
     {
-      label: 'Executive Team',
+      label: currentLang === 'ar' ? 'الفريق التنفيذي' : 'Executive Team',
       value: (members ?? []).filter(m => m.id.startsWith('exec-')).length,
-      description: 'Executive leadership'
+      description: currentLang === 'ar' ? 'القيادة التنفيذية' : 'Executive leadership'
     },
   ];
 
@@ -61,16 +63,21 @@ export default function OrganizationalStructurePage() {
   };
 
   const handleDelete = async (member: OrganizationMember) => {
-    if (!confirm(`Are you sure you want to delete "${member.nameEn}"? This action cannot be undone.`)) {
+    const memberName = currentLang === 'ar' ? member.nameAr : member.nameEn;
+    const confirmMessage = currentLang === 'ar' 
+      ? `هل أنت متأكد من حذف "${memberName}"؟ لا يمكن التراجع عن هذا الإجراء.`
+      : `Are you sure you want to delete "${memberName}"? This action cannot be undone.`;
+    
+    if (!confirm(confirmMessage)) {
       return;
     }
 
     try {
       await deleteItem(member.id);
-      toast.success('Member deleted successfully');
+      toast.success(currentLang === 'ar' ? 'تم حذف العضو بنجاح' : 'Member deleted successfully');
     } catch (error) {
       console.error('Error deleting member:', error);
-      toast.error('Failed to delete member');
+      toast.error(currentLang === 'ar' ? 'فشل في حذف العضو' : 'Failed to delete member');
     }
   };
 
@@ -79,10 +86,17 @@ export default function OrganizationalStructurePage() {
   };
 
   const getDepartmentFromId = (id: string) => {
-    if (id.startsWith('board-')) return 'Board';
-    if (id.startsWith('exec-')) return 'Executive';
-    if (id.startsWith('dept-')) return 'Department';
-    return 'General';
+    if (currentLang === 'ar') {
+      if (id.startsWith('board-')) return 'مجلس الإدارة';
+      if (id.startsWith('exec-')) return 'التنفيذي';
+      if (id.startsWith('dept-')) return 'الأقسام';
+      return 'عام';
+    } else {
+      if (id.startsWith('board-')) return 'Board';
+      if (id.startsWith('exec-')) return 'Executive';
+      if (id.startsWith('dept-')) return 'Department';
+      return 'General';
+    }
   };
 
   const columns = [
@@ -100,8 +114,12 @@ export default function OrganizationalStructurePage() {
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="font-medium text-gray-900">{member.nameEn}</div>
-            <div className="text-sm text-gray-500" dir="rtl">{member.nameAr}</div>
+            <div className="font-medium text-gray-900">
+              {currentLang === 'ar' ? member.nameAr : member.nameEn}
+            </div>
+            <div className="text-sm text-gray-500" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
+              {currentLang === 'ar' ? member.nameEn : member.nameAr}
+            </div>
           </div>
         </div>
       ),
@@ -113,8 +131,12 @@ export default function OrganizationalStructurePage() {
       sortable: true,
       render: (_: unknown, member: OrganizationMember) => (
         <div>
-          <div className="font-medium text-gray-900">{member.positionEn}</div>
-          <div className="text-sm text-gray-500" dir="rtl">{member.positionAr}</div>
+          <div className="font-medium text-gray-900">
+            {currentLang === 'ar' ? member.positionAr : member.positionEn}
+          </div>
+          <div className="text-sm text-gray-500" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
+            {currentLang === 'ar' ? member.positionEn : member.positionAr}
+          </div>
         </div>
       ),
     },
@@ -206,13 +228,15 @@ export default function OrganizationalStructurePage() {
     return (
       <div className="p-6">
         <div className="text-center py-12">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Members</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            {currentLang === 'ar' ? 'خطأ في تحميل الأعضاء' : 'Error Loading Members'}
+          </h2>
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={refresh}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            Try Again
+            {currentLang === 'ar' ? 'حاول مرة أخرى' : 'Try Again'}
           </button>
         </div>
       </div>
@@ -221,19 +245,19 @@ export default function OrganizationalStructurePage() {
 
   return (
     <DataTable<OrganizationMember>
-      title="Organizational Structure"
-      description="Manage board members, executive team, and staff"
+      title={currentLang === 'ar' ? 'الهيكل التنظيمي' : 'Organizational Structure'}
+      description={currentLang === 'ar' ? 'إدارة أعضاء مجلس الإدارة والفريق التنفيذي والموظفين' : 'Manage board members, executive team, and staff'}
       data={members ?? []}
       columns={columns}
       actions={actions}
       loading={loading}
       onCreate={handleCreateNew}
-      createButtonText="Add Member"
-      searchPlaceholder="Search members..."
+      createButtonText={currentLang === 'ar' ? 'إضافة عضو' : 'Add Member'}
+      searchPlaceholder={currentLang === 'ar' ? 'البحث في الأعضاء...' : 'Search members...'}
       filters={filterOptions}
       stats={stats}
-      emptyMessage="No members found"
-      emptyDescription="Get started by adding your first organization member."
+      emptyMessage={currentLang === 'ar' ? 'لم يتم العثور على أعضاء' : 'No members found'}
+      emptyDescription={currentLang === 'ar' ? 'ابدأ بإضافة أول عضو في المنظمة.' : 'Get started by adding your first organization member.'}
       showSearch={true}
       showFilters={true}
       showStats={true}

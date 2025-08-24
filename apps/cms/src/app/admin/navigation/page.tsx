@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Edit, Trash2, Plus, Menu, ChevronRight, Globe, ExternalLink, Eye, GripVertical } from 'lucide-react';
 import { useCRUD } from '@/hooks/useCRUD';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface NavigationItem {
   id: string;
@@ -31,10 +32,11 @@ interface NavigationItem {
 
 export default function NavigationPage() {
   const router = useRouter();
+  const { currentLang, t, isRTL } = useLanguage();
   const [selectedLocation, setSelectedLocation] = useState<string>('header');
   const [state, actions] = useCRUD<NavigationItem>({
     endpoint: '/api/navigation',
-    resourceName: 'Navigation Item',
+    resourceName: currentLang === 'ar' ? 'عنصر التنقل' : 'Navigation Item',
   });
 
   const handleCreate = () => {
@@ -67,6 +69,19 @@ export default function NavigationPage() {
     }
   };
 
+  const getLocationTranslation = (location: string) => {
+    switch (location) {
+      case 'header':
+        return currentLang === 'ar' ? 'الرأس' : 'Header';
+      case 'footer':
+        return currentLang === 'ar' ? 'التذييل' : 'Footer';
+      case 'sidebar':
+        return currentLang === 'ar' ? 'الشريط الجانبي' : 'Sidebar';
+      default:
+        return location;
+    }
+  };
+
   const NavigationItemCard = ({ item, level = 0 }: { item: NavigationItem; level?: number }) => (
     <Card key={item.id} className={`${level > 0 ? 'ml-8 mt-2 border-l-4 border-l-blue-200' : ''}`}>
       <CardContent className="p-4">
@@ -80,15 +95,23 @@ export default function NavigationPage() {
             
             <div className="flex-1 space-y-1">
               <div className="flex items-center gap-2">
-                <h3 className="font-medium text-sm">{item.labelEn}</h3>
-                <span className="text-sm text-gray-500" dir="rtl">({item.labelAr})</span>
-                {!item.isActive && <Badge variant="outline">Inactive</Badge>}
+                <h3 className="font-medium text-sm">
+                  {currentLang === 'ar' ? item.labelAr : item.labelEn}
+                </h3>
+                <span className="text-sm text-gray-500" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
+                  ({currentLang === 'ar' ? item.labelEn : item.labelAr})
+                </span>
+                {!item.isActive && (
+                  <Badge variant="outline">
+                    {currentLang === 'ar' ? 'غير نشط' : 'Inactive'}
+                  </Badge>
+                )}
                 {item.openInNewWindow && <ExternalLink className="h-3 w-3 text-gray-400" />}
               </div>
               
               <div className="flex items-center gap-4 text-xs text-gray-500">
                 <Badge className={getLocationColor(item.location)}>
-                  {item.location}
+                  {getLocationTranslation(item.location)}
                 </Badge>
                 
                 {item.url && (
@@ -98,7 +121,9 @@ export default function NavigationPage() {
                   </div>
                 )}
                 
-                <span>Order: {item.sortOrder}</span>
+                <span>
+                  {currentLang === 'ar' ? 'الترتيب' : 'Order'}: {item.sortOrder}
+                </span>
               </div>
             </div>
           </div>
@@ -142,12 +167,16 @@ export default function NavigationPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Navigation</h1>
-          <p className="text-gray-600">Manage site navigation menus and links</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {currentLang === 'ar' ? 'التنقل' : 'Navigation'}
+          </h1>
+          <p className="text-gray-600">
+            {currentLang === 'ar' ? 'إدارة قوائم وروابط التنقل بالموقع' : 'Manage site navigation menus and links'}
+          </p>
         </div>
         <Button onClick={handleCreate}>
           <Plus className="h-4 w-4 mr-2" />
-          New Menu Item
+          {currentLang === 'ar' ? 'عنصر قائمة جديد' : 'New Menu Item'}
         </Button>
       </div>
 
@@ -161,28 +190,28 @@ export default function NavigationPage() {
                 size="sm"
                 onClick={() => setSelectedLocation('all')}
               >
-                All Locations
+                {currentLang === 'ar' ? 'جميع المواقع' : 'All Locations'}
               </Button>
               <Button
                 variant={selectedLocation === 'header' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedLocation('header')}
               >
-                Header ({stats.header})
+                {currentLang === 'ar' ? 'رأس الصفحة' : 'Header'} ({stats.header})
               </Button>
               <Button
                 variant={selectedLocation === 'footer' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedLocation('footer')}
               >
-                Footer ({stats.footer})
+                {currentLang === 'ar' ? 'تذييل الصفحة' : 'Footer'} ({stats.footer})
               </Button>
               <Button
                 variant={selectedLocation === 'sidebar' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedLocation('sidebar')}
               >
-                Sidebar
+                {currentLang === 'ar' ? 'الشريط الجانبي' : 'Sidebar'}
               </Button>
             </div>
           </div>
@@ -194,25 +223,33 @@ export default function NavigationPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{stats.total}</div>
-            <p className="text-xs text-muted-foreground">Total Items</p>
+            <p className="text-xs text-muted-foreground">
+              {currentLang === 'ar' ? 'إجمالي العناصر' : 'Total Items'}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{stats.active}</div>
-            <p className="text-xs text-muted-foreground">Active Items</p>
+            <p className="text-xs text-muted-foreground">
+              {currentLang === 'ar' ? 'عناصر نشطة' : 'Active Items'}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{stats.header}</div>
-            <p className="text-xs text-muted-foreground">Header Menu</p>
+            <p className="text-xs text-muted-foreground">
+              {currentLang === 'ar' ? 'قائمة الرأس' : 'Header Menu'}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{stats.footer}</div>
-            <p className="text-xs text-muted-foreground">Footer Menu</p>
+            <p className="text-xs text-muted-foreground">
+              {currentLang === 'ar' ? 'قائمة التذييل' : 'Footer Menu'}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -222,8 +259,13 @@ export default function NavigationPage() {
         <CardHeader>
           <CardTitle>
             {selectedLocation === 'all' 
-              ? `All Navigation Items (${filteredItems.length})`
-              : `${selectedLocation.charAt(0).toUpperCase() + selectedLocation.slice(1)} Menu (${filteredItems.length})`
+              ? (currentLang === 'ar' 
+                  ? `جميع عناصر التنقل (${filteredItems.length})`
+                  : `All Navigation Items (${filteredItems.length})`)
+              : (currentLang === 'ar' 
+                  ? `قائمة ${getLocationTranslation(selectedLocation)} (${filteredItems.length})`
+                  : `${selectedLocation.charAt(0).toUpperCase() + selectedLocation.slice(1)} Menu (${filteredItems.length})`
+                )
             }
           </CardTitle>
         </CardHeader>
@@ -235,11 +277,15 @@ export default function NavigationPage() {
           ) : parentItems.length === 0 ? (
             <div className="text-center py-12">
               <Menu className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No menu items found</h3>
-              <p className="text-gray-600 mb-4">Create your first navigation item</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                {currentLang === 'ar' ? 'لم يتم العثور على عناصر قائمة' : 'No menu items found'}
+              </h3>
+              <p className="text-gray-600 mb-4">
+                {currentLang === 'ar' ? 'أنشئ أول عنصر تنقل خاص بك' : 'Create your first navigation item'}
+              </p>
               <Button onClick={handleCreate}>
                 <Plus className="h-4 w-4 mr-2" />
-                New Menu Item
+                {currentLang === 'ar' ? 'عنصر قائمة جديد' : 'New Menu Item'}
               </Button>
             </div>
           ) : (

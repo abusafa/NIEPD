@@ -181,7 +181,10 @@ export default function DataTable<T extends { id: string }>({
     }));
   };
 
-  const getNestedValue = (obj: Record<string, any>, path: string): any => {
+  const getNestedValue = (obj: Record<string, any>, path: string | undefined): any => {
+    if (!path || typeof path !== 'string') {
+      return undefined;
+    }
     return path.split('.').reduce((current: any, key: string) => {
       return current && typeof current === 'object' ? current[key] : undefined;
     }, obj);
@@ -377,9 +380,9 @@ export default function DataTable<T extends { id: string }>({
                         {/* Title Column */}
                         <div className="col-span-4 flex items-center">
                           {columns[0]?.render ? 
-                            columns[0].render(getNestedValue(item as Record<string, any>, columns[0].key as string), item) : 
+                            columns[0].render(getNestedValue(item as Record<string, any>, columns[0]?.key as string), item) : 
                             <div className="font-semibold text-slate-900 dark:text-gray-100 font-readex text-base">
-                              {String(getNestedValue(item as Record<string, any>, columns[0].key as string) || '')}
+                              {String(getNestedValue(item as Record<string, any>, columns[0]?.key as string) || '')}
                             </div>
                           }
                         </div>
@@ -387,9 +390,9 @@ export default function DataTable<T extends { id: string }>({
                         {/* Category Column */}
                         <div className="col-span-2 flex items-center">
                           {columns[1]?.render ? 
-                            columns[1].render(getNestedValue(item as Record<string, any>, columns[1].key as string), item) : 
+                            columns[1].render(getNestedValue(item as Record<string, any>, columns[1]?.key as string), item) : 
                             <div className="text-slate-600 dark:text-gray-300 font-readex">
-                              {String(getNestedValue(item as Record<string, any>, columns[1].key as string) || '')}
+                              {String(getNestedValue(item as Record<string, any>, columns[1]?.key as string) || '')}
                             </div>
                           }
                         </div>
@@ -397,9 +400,9 @@ export default function DataTable<T extends { id: string }>({
                         {/* Author Column */}
                         <div className="col-span-2 flex items-center">
                           {columns[2]?.render ? 
-                            columns[2].render(getNestedValue(item as Record<string, any>, columns[2].key as string), item) : 
+                            columns[2].render(getNestedValue(item as Record<string, any>, columns[2]?.key as string), item) : 
                             <div className="text-slate-600 dark:text-gray-300 font-readex">
-                              {String(getNestedValue(item as Record<string, any>, columns[2].key as string) || '')}
+                              {String(getNestedValue(item as Record<string, any>, columns[2]?.key as string) || '')}
                             </div>
                           }
                         </div>
@@ -407,9 +410,9 @@ export default function DataTable<T extends { id: string }>({
                         {/* Status Column */}
                         <div className="col-span-1 flex items-center justify-center">
                           {columns[3]?.render ? 
-                            columns[3].render(getNestedValue(item as Record<string, any>, columns[3].key as string), item) : 
+                            columns[3].render(getNestedValue(item as Record<string, any>, columns[3]?.key as string), item) : 
                             <div className="text-slate-600 dark:text-gray-300 font-readex">
-                              {String(getNestedValue(item as Record<string, any>, columns[3].key as string) || '')}
+                              {String(getNestedValue(item as Record<string, any>, columns[3]?.key as string) || '')}
                             </div>
                           }
                         </div>
@@ -417,9 +420,9 @@ export default function DataTable<T extends { id: string }>({
                         {/* Date Column */}
                         <div className="col-span-2 flex items-center">
                           {columns[4]?.render ? 
-                            columns[4].render(getNestedValue(item as Record<string, any>, columns[4].key as string), item) : 
+                            columns[4].render(getNestedValue(item as Record<string, any>, columns[4]?.key as string), item) : 
                             <div className="text-slate-600 dark:text-gray-300 font-readex">
-                              {String(getNestedValue(item as Record<string, any>, columns[4].key as string) || '')}
+                              {String(getNestedValue(item as Record<string, any>, columns[4]?.key as string) || '')}
                             </div>
                           }
                         </div>

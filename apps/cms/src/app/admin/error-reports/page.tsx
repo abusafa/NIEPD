@@ -320,32 +320,32 @@ const ErrorReportsPage = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'NEW':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300';
       case 'INVESTIGATING':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300';
       case 'IN_PROGRESS':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300';
       case 'RESOLVED':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300';
       case 'CLOSED':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     }
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'LOW':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300';
       case 'MEDIUM':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300';
       case 'HIGH':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300';
       case 'CRITICAL':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     }
   };
 
@@ -389,8 +389,8 @@ const ErrorReportsPage = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4" />
-          <p>جاري تحميل تقارير الأخطاء...</p>
+          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-gray-600 dark:text-gray-300" />
+          <p className="text-gray-600 dark:text-gray-300">جاري تحميل تقارير الأخطاء...</p>
         </div>
       </div>
     );
@@ -401,17 +401,17 @@ const ErrorReportsPage = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">تقارير الأخطاء</h1>
-          <p className="text-gray-600">إدارة ومتابعة تقارير الأخطاء من المستخدمين</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">تقارير الأخطاء</h1>
+          <p className="text-gray-600 dark:text-gray-300">إدارة ومتابعة تقارير الأخطاء من المستخدمين</p>
         </div>
         
         <div className="flex items-center gap-3">
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               autoRefresh 
-                ? 'bg-green-600 text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-green-600 text-white hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
             }`}
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
@@ -421,7 +421,7 @@ const ErrorReportsPage = () => {
           <button
             onClick={() => fetchReports()}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             تحديث
@@ -432,11 +432,11 @@ const ErrorReportsPage = () => {
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
         {statCards.map((stat, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-sm border">
+          <div key={index} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stat.value}</p>
               </div>
               <div className={`p-3 rounded-full ${stat.color} text-white`}>
                 {stat.icon}
@@ -447,23 +447,23 @@ const ErrorReportsPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border space-y-4">
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 space-y-4">
         <div className="flex items-center gap-4 flex-wrap">
           <div className="relative flex-1 min-w-64">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
             <input
               type="text"
               placeholder="البحث في التقارير..."
               value={filters.search}
               onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-              className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full pr-10 pl-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
           
           <select
             value={filters.status}
             onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">كل الحالات</option>
             <option value="NEW">جديد</option>
@@ -476,7 +476,7 @@ const ErrorReportsPage = () => {
           <select
             value={filters.severity}
             onChange={(e) => setFilters({ ...filters, severity: e.target.value })}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">كل المستويات</option>
             <option value="LOW">منخفض</option>
@@ -488,7 +488,7 @@ const ErrorReportsPage = () => {
           <select
             value={filters.errorType}
             onChange={(e) => setFilters({ ...filters, errorType: e.target.value })}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">كل الأنواع</option>
             <option value="USER_REPORTED">تقرير مستخدم</option>
@@ -500,7 +500,7 @@ const ErrorReportsPage = () => {
           <select
             value={filters.assignedTo}
             onChange={(e) => setFilters({ ...filters, assignedTo: e.target.value })}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">كل المخصص إليهم</option>
             <option value="">غير مخصص</option>
@@ -518,7 +518,7 @@ const ErrorReportsPage = () => {
             onClick={() => setFilters({
               status: '', severity: '', errorType: '', assignedTo: '', search: '', dateFrom: '', dateTo: ''
             })}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800"
+            className="px-4 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
           >
             مسح المرشحات
           </button>
@@ -526,51 +526,51 @@ const ErrorReportsPage = () => {
       </div>
 
       {/* Error Reports Table */}
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500">
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500 dark:text-gray-400">
                   العنوان
                 </th>
-                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500">
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500 dark:text-gray-400">
                   النوع
                 </th>
-                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500">
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500 dark:text-gray-400">
                   الحالة
                 </th>
-                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500">
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500 dark:text-gray-400">
                   الأولوية
                 </th>
-                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500">
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500 dark:text-gray-400">
                   المخصص إليه
                 </th>
-                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500">
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500 dark:text-gray-400">
                   التاريخ
                 </th>
-                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500">
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-500 dark:text-gray-400">
                   الإجراءات
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {reports.map((report) => (
-                <tr key={report.id} className="hover:bg-gray-50">
+                <tr key={report.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-4 py-3">
                     <div>
-                      <p className="font-medium text-gray-900 truncate max-w-48">
+                      <p className="font-medium text-gray-900 dark:text-gray-100 truncate max-w-48">
                         {report.titleAr}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         {report.userName || report.userEmail || 'مجهول'}
                       </p>
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      {getErrorTypeIcon(report.errorType)}
-                      <span className="text-sm text-gray-600">
+                      <span className="text-gray-600 dark:text-gray-400">{getErrorTypeIcon(report.errorType)}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
                         {report.errorType === 'USER_REPORTED' && 'تقرير مستخدم'}
                         {report.errorType === 'JAVASCRIPT_ERROR' && 'خطأ JS'}
                         {report.errorType === 'API_ERROR' && 'خطأ API'}
@@ -598,8 +598,8 @@ const ErrorReportsPage = () => {
                   <td className="px-4 py-3">
                     {report.assignedTo ? (
                       <div className="flex items-center gap-2">
-                        <UserCheck className="w-4 h-4 text-green-600" />
-                        <span className="text-sm text-gray-700">
+                        <UserCheck className="w-4 h-4 text-green-600 dark:text-green-400" />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
                           {report.assignedTo.firstName && report.assignedTo.lastName 
                             ? `${report.assignedTo.firstName} ${report.assignedTo.lastName}` 
                             : report.assignedTo.username
@@ -607,11 +607,11 @@ const ErrorReportsPage = () => {
                         </span>
                       </div>
                     ) : (
-                      <span className="text-sm text-gray-400">غير مخصص</span>
+                      <span className="text-sm text-gray-400 dark:text-gray-500">غير مخصص</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-1 text-sm text-gray-500">
+                    <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
                       <Calendar className="w-4 h-4" />
                       {formatDateTime(report.createdAt)}
                     </div>
@@ -623,7 +623,7 @@ const ErrorReportsPage = () => {
                           setSelectedReport(report);
                           setShowReportModal(true);
                         }}
-                        className="p-1 text-blue-600 hover:text-blue-800"
+                        className="p-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                         title="عرض التفاصيل"
                       >
                         <Eye className="w-4 h-4" />
@@ -632,7 +632,7 @@ const ErrorReportsPage = () => {
                       <select
                         value={report.status}
                         onChange={(e) => updateReportStatus(report.id, e.target.value)}
-                        className="text-xs px-2 py-1 border border-gray-300 rounded"
+                        className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       >
                         <option value="NEW">جديد</option>
                         <option value="INVESTIGATING">قيد التحقيق</option>
@@ -644,7 +644,7 @@ const ErrorReportsPage = () => {
                       <select
                         value={report.assignedToId || ''}
                         onChange={(e) => assignReport(report.id, e.target.value)}
-                        className="text-xs px-2 py-1 border border-gray-300 rounded"
+                        className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       >
                         <option value="">غير مخصص</option>
                         {users.map(user => (
@@ -659,7 +659,7 @@ const ErrorReportsPage = () => {
                       
                       <button
                         onClick={() => deleteReport(report.id)}
-                        className="p-1 text-red-600 hover:text-red-800"
+                        className="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors"
                         title="حذف"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -674,8 +674,8 @@ const ErrorReportsPage = () => {
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
-            <div className="text-sm text-gray-700">
+          <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <div className="text-sm text-gray-700 dark:text-gray-300">
               عرض {(pagination.page - 1) * pagination.limit + 1} إلى{' '}
               {Math.min(pagination.page * pagination.limit, pagination.total)} من{' '}
               {pagination.total} تقرير
@@ -685,19 +685,19 @@ const ErrorReportsPage = () => {
               <button
                 onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
                 disabled={pagination.page === 1}
-                className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50"
+                className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm disabled:opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
               >
                 السابق
               </button>
               
-              <span className="px-3 py-1 text-sm">
+              <span className="px-3 py-1 text-sm text-gray-700 dark:text-gray-300">
                 صفحة {pagination.page} من {pagination.totalPages}
               </span>
               
               <button
                 onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
                 disabled={pagination.page === pagination.totalPages}
-                className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50"
+                className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm disabled:opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
               >
                 التالي
               </button>
@@ -710,17 +710,17 @@ const ErrorReportsPage = () => {
       <Dialog open={showReportModal} onOpenChange={setShowReportModal}>
         <DialogContent className="max-w-4xl max-h-[90vh]" dir="rtl">
           <DialogHeader>
-            <DialogTitle className="text-right">تفاصيل تقرير الخطأ</DialogTitle>
+            <DialogTitle className="text-right text-gray-900 dark:text-gray-100">تفاصيل تقرير الخطأ</DialogTitle>
           </DialogHeader>
           
           <ScrollArea className="max-h-[70vh]">
           {selectedReport && (
             <div className="space-y-6">
               {/* Header Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">معلومات التقرير</h3>
-                  <div className="space-y-2 text-sm">
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">معلومات التقرير</h3>
+                  <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                     <p><span className="font-medium">الحالة:</span> 
                       <span className={`mr-2 px-2 py-1 rounded-full text-xs ${getStatusColor(selectedReport.status)}`}>
                         {selectedReport.status === 'NEW' && 'جديد'}
@@ -754,8 +754,8 @@ const ErrorReportsPage = () => {
                 </div>
                 
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">معلومات المستخدم</h3>
-                  <div className="space-y-2 text-sm">
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">معلومات المستخدم</h3>
+                  <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                     <p><span className="font-medium">الاسم:</span> {selectedReport.userName || 'غير محدد'}</p>
                     <p><span className="font-medium">البريد الإلكتروني:</span> {selectedReport.userEmail || 'غير محدد'}</p>
                     <p><span className="font-medium">الهاتف:</span> {selectedReport.userPhone || 'غير محدد'}</p>
@@ -773,47 +773,47 @@ const ErrorReportsPage = () => {
               {/* Report Content */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">عنوان التقرير (عربي)</h3>
-                  <p className="p-3 bg-gray-50 rounded-lg">{selectedReport.titleAr}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">عنوان التقرير (عربي)</h3>
+                  <p className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-gray-100">{selectedReport.titleAr}</p>
                 </div>
                 
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">عنوان التقرير (إنجليزي)</h3>
-                  <p className="p-3 bg-gray-50 rounded-lg" dir="ltr">{selectedReport.titleEn}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">عنوان التقرير (إنجليزي)</h3>
+                  <p className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-gray-100" dir="ltr">{selectedReport.titleEn}</p>
                 </div>
                 
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">وصف المشكلة (عربي)</h3>
-                  <p className="p-3 bg-gray-50 rounded-lg whitespace-pre-wrap">{selectedReport.descriptionAr}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">وصف المشكلة (عربي)</h3>
+                  <p className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg whitespace-pre-wrap text-gray-900 dark:text-gray-100">{selectedReport.descriptionAr}</p>
                 </div>
                 
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">وصف المشكلة (إنجليزي)</h3>
-                  <p className="p-3 bg-gray-50 rounded-lg whitespace-pre-wrap" dir="ltr">{selectedReport.descriptionEn}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">وصف المشكلة (إنجليزي)</h3>
+                  <p className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg whitespace-pre-wrap text-gray-900 dark:text-gray-100" dir="ltr">{selectedReport.descriptionEn}</p>
                 </div>
               </div>
 
               {/* Technical Details */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">التفاصيل التقنية</h3>
-                  <div className="space-y-2 text-sm">
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">التفاصيل التقنية</h3>
+                  <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                     <p><span className="font-medium">رابط الصفحة:</span> 
                       <a href={selectedReport.pageUrl} target="_blank" rel="noopener noreferrer" 
-                         className="mr-2 text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                         className="mr-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1">
                         {selectedReport.pageUrl}
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     </p>
                     <p><span className="font-medium">وكيل المستخدم:</span></p>
-                    <p className="text-xs bg-gray-100 p-2 rounded font-mono">{selectedReport.userAgent}</p>
+                    <p className="text-xs bg-gray-100 dark:bg-gray-700 p-2 rounded font-mono text-gray-900 dark:text-gray-100">{selectedReport.userAgent}</p>
                   </div>
                 </div>
 
                 {selectedReport.browserInfo && (
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">معلومات المتصفح</h3>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">معلومات المتصفح</h3>
+                    <div className="grid grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
                       {selectedReport.browserInfo.browser && (
                         <p><span className="font-medium">المتصفح:</span> {selectedReport.browserInfo.browser}</p>
                       )}
@@ -838,8 +838,8 @@ const ErrorReportsPage = () => {
 
                 {selectedReport.errorStack && (
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">تفاصيل الخطأ التقني</h3>
-                    <pre className="text-xs bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">تفاصيل الخطأ التقني</h3>
+                    <pre className="text-xs bg-gray-900 dark:bg-gray-800 text-gray-100 dark:text-gray-200 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap border border-gray-700 dark:border-gray-600">
                       {selectedReport.errorStack}
                     </pre>
                   </div>
@@ -851,8 +851,8 @@ const ErrorReportsPage = () => {
                 <div className="space-y-4">
                   {selectedReport.resolutionNotesAr && (
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-2">ملاحظات الحل (عربي)</h3>
-                      <p className="p-3 bg-green-50 border border-green-200 rounded-lg whitespace-pre-wrap">
+                      <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">ملاحظات الحل (عربي)</h3>
+                      <p className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg whitespace-pre-wrap text-gray-900 dark:text-gray-100">
                         {selectedReport.resolutionNotesAr}
                       </p>
                     </div>
@@ -860,8 +860,8 @@ const ErrorReportsPage = () => {
                   
                   {selectedReport.resolutionNotesEn && (
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-2">ملاحظات الحل (إنجليزي)</h3>
-                      <p className="p-3 bg-green-50 border border-green-200 rounded-lg whitespace-pre-wrap" dir="ltr">
+                      <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">ملاحظات الحل (إنجليزي)</h3>
+                      <p className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg whitespace-pre-wrap text-gray-900 dark:text-gray-100" dir="ltr">
                         {selectedReport.resolutionNotesEn}
                       </p>
                     </div>
@@ -870,10 +870,10 @@ const ErrorReportsPage = () => {
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t">
+              <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <button
                   onClick={() => updateReportStatus(selectedReport.id, 'IN_PROGRESS')}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
                 >
                   <Settings className="w-4 h-4" />
                   بدء العمل
@@ -881,7 +881,7 @@ const ErrorReportsPage = () => {
                 
                 <button
                   onClick={() => updateReportStatus(selectedReport.id, 'RESOLVED')}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 transition-colors"
                 >
                   <CheckCircle className="w-4 h-4" />
                   وضع علامة محلول
@@ -889,7 +889,7 @@ const ErrorReportsPage = () => {
                 
                 <button
                   onClick={() => updateReportStatus(selectedReport.id, 'CLOSED')}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-700 transition-colors"
                 >
                   <CheckSquare className="w-4 h-4" />
                   إغلاق
@@ -899,7 +899,7 @@ const ErrorReportsPage = () => {
                   href={selectedReport.pageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700 transition-colors"
                 >
                   <ExternalLink className="w-4 h-4" />
                   زيارة الصفحة
@@ -914,9 +914,9 @@ const ErrorReportsPage = () => {
       {/* Empty State */}
       {reports.length === 0 && !loading && (
         <div className="text-center py-12">
-          <Bug className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">لا توجد تقارير أخطاء</h3>
-          <p className="text-gray-500">لم يتم العثور على تقارير أخطاء مطابقة للمرشحات المحددة.</p>
+          <Bug className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">لا توجد تقارير أخطاء</h3>
+          <p className="text-gray-500 dark:text-gray-400">لم يتم العثور على تقارير أخطاء مطابقة للمرشحات المحددة.</p>
         </div>
       )}
     </div>

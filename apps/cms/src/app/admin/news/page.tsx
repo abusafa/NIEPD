@@ -71,13 +71,13 @@ export default function NewsPage() {
 
       if (response.ok) {
         actions.refresh?.(); // Refresh the list
-        toast.success(currentLang === 'ar' ? 'تم نشر المقال بنجاح' : 'Article published successfully');
+        toast.success(t('news.publishSuccess'));
       } else {
-        toast.error(currentLang === 'ar' ? 'فشل في نشر المقال' : 'Failed to publish article');
+        toast.error(t('news.publishError'));
       }
     } catch (error) {
       console.error('Error publishing article:', error);
-      toast.error(currentLang === 'ar' ? 'فشل في نشر المقال' : 'Failed to publish article');
+      toast.error(t('news.publishError'));
     }
   };
 
@@ -92,13 +92,13 @@ export default function NewsPage() {
 
       if (response.ok) {
         actions.refresh?.(); // Refresh the list
-        toast.success(currentLang === 'ar' ? 'تم إلغاء نشر المقال بنجاح' : 'Article unpublished successfully');
+        toast.success(t('news.unpublishSuccess'));
       } else {
-        toast.error(currentLang === 'ar' ? 'فشل في إلغاء نشر المقال' : 'Failed to unpublish article');
+        toast.error(t('news.unpublishError'));
       }
     } catch (error) {
       console.error('Error unpublishing article:', error);
-      toast.error(currentLang === 'ar' ? 'فشل في إلغاء نشر المقال' : 'Failed to unpublish article');
+      toast.error(t('news.unpublishError'));
     }
   };
 
@@ -113,13 +113,13 @@ export default function NewsPage() {
 
       if (response.ok) {
         actions.refresh?.(); // Refresh the list
-        toast.success(currentLang === 'ar' ? 'تم إرسال المقال للمراجعة بنجاح' : 'Article submitted for review successfully');
+        toast.success(t('news.submitReviewSuccess'));
       } else {
-        toast.error(currentLang === 'ar' ? 'فشل في إرسال المقال للمراجعة' : 'Failed to submit for review');
+        toast.error(t('news.submitReviewError'));
       }
     } catch (error) {
       console.error('Error submitting for review:', error);
-      toast.error(currentLang === 'ar' ? 'فشل في إرسال المقال للمراجعة' : 'Failed to submit for review');
+      toast.error(t('news.submitReviewError'));
     }
   };
 
@@ -163,7 +163,7 @@ export default function NewsPage() {
           {article.featured && (
             <Badge variant="outline" className="text-xs font-readex bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/50">
               <span className={`inline-block w-1.5 h-1.5 bg-amber-500 dark:bg-amber-400 rounded-full ${isRTL ? 'ml-1' : 'mr-1'}`}></span>
-              {currentLang === 'ar' ? 'مميز' : 'Featured'}
+              {t('content.featured')}
             </Badge>
           )}
         </div>
@@ -178,8 +178,8 @@ export default function NewsPage() {
         <div className={`text-sm font-readex ${isRTL ? 'text-right' : 'text-left'}`}>
           <div className="px-2 py-1 rounded-md bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-xs inline-block">
             {currentLang === 'ar' 
-              ? article.category?.nameAr || 'بدون تصنيف'
-              : article.category?.nameEn || 'No Category'
+              ? article.category?.nameAr || t('categories.noCategory')
+              : article.category?.nameEn || t('categories.noCategory')
             }
           </div>
         </div>
@@ -198,7 +198,7 @@ export default function NewsPage() {
           <span className="font-readex text-xs text-gray-600 truncate max-w-24">
             {article.author?.firstName && article.author?.lastName 
               ? `${article.author.firstName} ${article.author.lastName}`
-              : article.author?.username || (currentLang === 'ar' ? 'غير معروف' : 'Unknown')
+              : article.author?.username || t('users.unknown')
             }
           </span>
         </div>
@@ -235,41 +235,41 @@ export default function NewsPage() {
 
   const tableActions = [
     {
-      label: currentLang === 'ar' ? 'عرض' : 'View',
-      labelAr: 'عرض',
+      label: t('view'),
+      labelAr: t('view'),
       icon: <Eye className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: handleView,
     },
     {
-      label: currentLang === 'ar' ? 'تعديل' : 'Edit',
-      labelAr: 'تعديل',
+      label: t('edit'),
+      labelAr: t('edit'),
       icon: <Edit className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: handleEdit,
     },
     {
-      label: currentLang === 'ar' ? 'إرسال للمراجعة' : 'Submit for Review',
-      labelAr: 'إرسال للمراجعة',
+      label: t('news.submitForReview'),
+      labelAr: t('news.submitForReview'),
       icon: <Clock className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: (article: NewsItem) => handleSubmitForReview(article),
       show: (article: NewsItem) => article.status === 'DRAFT',
     },
     {
-      label: currentLang === 'ar' ? 'نشر' : 'Publish',
-      labelAr: 'نشر',
+      label: t('news.publish'),
+      labelAr: t('news.publish'),
       icon: <CheckCircle className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: (article: NewsItem) => handlePublish(article),
       show: (article: NewsItem) => article.status === 'REVIEW',
     },
     {
-      label: currentLang === 'ar' ? 'إلغاء النشر' : 'Unpublish',
-      labelAr: 'إلغاء النشر',
+      label: t('news.unpublish'),
+      labelAr: t('news.unpublish'),
       icon: <XCircle className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: (article: NewsItem) => handleUnpublish(article),
       show: (article: NewsItem) => article.status === 'PUBLISHED',
     },
     {
-      label: currentLang === 'ar' ? 'حذف' : 'Delete',
-      labelAr: 'حذف',
+      label: t('delete'),
+      labelAr: t('delete'),
       icon: <Trash2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: (article: NewsItem) => actions.deleteItem(article.id),
       variant: 'destructive' as const,
@@ -337,16 +337,16 @@ export default function NewsPage() {
   return (
     <DataTable
       title={t('news.title')}
-      description={currentLang === 'ar' ? 'إدارة المقالات الإخبارية والإعلانات' : 'Manage news articles and announcements'}
+      description={t('news.description')}
       data={state.items}
       columns={columns}
       actions={tableActions}
       loading={state.loading}
       onCreate={handleCreate}
-      createButtonText={currentLang === 'ar' ? 'مقال جديد' : 'New Article'}
-      searchPlaceholder={currentLang === 'ar' ? 'البحث في المقالات...' : 'Search articles...'}
-      emptyMessage={currentLang === 'ar' ? 'لم يتم العثور على مقالات' : 'No articles found'}
-      emptyDescription={currentLang === 'ar' ? 'أنشئ أول مقال إخباري' : 'Create your first news article'}
+      createButtonText={t('news.createNew')}
+      searchPlaceholder={t('news.searchPlaceholder')}
+      emptyMessage={t('news.emptyMessage')}
+      emptyDescription={t('news.emptyDescription')}
       filters={filterOptions}
       stats={stats}
     />

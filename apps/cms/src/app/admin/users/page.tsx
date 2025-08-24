@@ -10,10 +10,15 @@ import {
   ShieldCheck,
   User,
   Mail,
-  Calendar
+  Calendar,
+  Eye,
+  UserCheck,
+  UserX
 } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
 import { useCRUD } from '@/hooks/useCRUD';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { toast } from 'sonner';
 
 interface UserItem {
   id: string;
@@ -29,6 +34,7 @@ interface UserItem {
 
 export default function UsersPage() {
   const router = useRouter();
+  const { currentLang, t, isRTL } = useLanguage();
   const [state, actions] = useCRUD<UserItem>({
     endpoint: '/api/users',
     resourceName: 'User',
@@ -42,26 +48,62 @@ export default function UsersPage() {
     router.push(`/admin/users/${user.id}/edit`);
   };
 
+  const handleView = (user: UserItem) => {
+    router.push(`/admin/users/${user.id}`);
+  };
+
   const handleToggleActive = async (user: UserItem) => {
-    // Toggle user active status
-    console.log('Toggle active status for user:', user.id);
+    try {
+      const response = await fetch(`/api/users/${user.id}/toggle-active`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ isActive: !user.isActive }),
+      });
+
+      if (response.ok) {
+        actions.refresh?.(); // Refresh the list
+        toast.success(currentLang === 'ar' 
+          ? user.isActive ? 'تم إلغاء تفعيل المستخدم بنجاح' : 'تم تفعيل المستخدم بنجاح'
+          : user.isActive ? 'User deactivated successfully' : 'User activated successfully'
+        );
+      } else {
+        toast.error(t('users.toggleStatusError'));
+      }
+    } catch (error) {
+      console.error('Error toggling user status:', error);
+      toast.error(t('users.toggleStatusError'));
+    }
   };
 
   const getRoleColor = (role: string) => {
     switch (role) {
       case 'SUPER_ADMIN':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
       case 'ADMIN':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400';
       case 'EDITOR':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
       case 'AUTHOR':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
       case 'VIEWER':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
+  };
+
+  const getRoleText = (role: string) => {
+    const roleMap = {
+      'SUPER_ADMIN': { en: 'Super Admin', ar: 'مدير عام' },
+      'ADMIN': { en: 'Admin', ar: 'مدير' },
+      'EDITOR': { en: 'Editor', ar: 'محرر' },
+      'AUTHOR': { en: 'Author', ar: 'كاتب' },
+      'VIEWER': { en: 'Viewer', ar: 'مشاهد' }
+    };
+    return currentLang === 'ar' ? roleMap[role as keyof typeof roleMap]?.ar || role : roleMap[role as keyof typeof roleMap]?.en || role;
   };
 
   const getRoleIcon = (role: string) => {
@@ -79,23 +121,26 @@ export default function UsersPage() {
     }
   };
 
+  // Define columns with enhanced styling and RTL support
   const columns = [
     {
       key: 'user',
-      label: 'User',
+      label: t('users.user'),
+      labelAr: t('users.user'),
+      align: isRTL ? 'right' as const : 'left' as const,
       render: (_: unknown, user: UserItem) => (
-        <div className="space-y-1">
-          <div className="font-medium text-sm">
+        <div className={`space-y-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <div className="font-medium text-sm font-readex line-clamp-1">
             {user.firstName && user.lastName 
               ? `${user.firstName} ${user.lastName}`
               : user.username
             }
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Mail className="h-3 w-3" />
-            {user.email}
+          <div className={`flex items-center gap-2 text-sm text-gray-600 ${isRTL ? 'flex-row-reverse' : ''}`}>
+            <Mail className="h-3 w-3 text-gray-400" />
+            <span className="font-readex text-xs line-clamp-1">{user.email}</span>
           </div>
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-gray-500 font-readex">
             @{user.username}
           </div>
         </div>
@@ -103,42 +148,68 @@ export default function UsersPage() {
     },
     {
       key: 'role',
-      label: 'Role',
+      label: t('users.role'),
+      labelAr: t('users.role'),
+      align: 'center' as const,
       render: (_: unknown, user: UserItem) => (
-        <Badge className={getRoleColor(user.role)}>
-          <div className="flex items-center gap-1">
-            {getRoleIcon(user.role)}
-            {user.role.replace('_', ' ')}
-          </div>
-        </Badge>
+        <div className="flex justify-center">
+          <Badge className={`${getRoleColor(user.role)} font-readex text-xs`}>
+            <div className={`flex items-center gap-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              {getRoleIcon(user.role)}
+              {getRoleText(user.role)}
+            </div>
+          </Badge>
+        </div>
       ),
     },
     {
       key: 'isActive',
-      label: 'Status',
+      label: t('status'),
+      labelAr: t('status'),
+      align: 'center' as const,
       render: (_: unknown, user: UserItem) => (
-        <Badge variant={user.isActive ? "default" : "secondary"}>
-          {user.isActive ? 'Active' : 'Inactive'}
-        </Badge>
+        <div className="flex justify-center">
+          <Badge 
+            variant={user.isActive ? "default" : "secondary"}
+            className="font-readex text-xs"
+          >
+            <div className={`flex items-center gap-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              {user.isActive ? (
+                <UserCheck className="h-3 w-3" />
+              ) : (
+                <UserX className="h-3 w-3" />
+              )}
+              {user.isActive ? t('users.active') : t('users.inactive')}
+            </div>
+          </Badge>
+        </div>
       ),
     },
     {
       key: 'createdAt',
-      label: 'Created',
+      label: t('users.created'),
+      labelAr: t('users.created'),
+      align: isRTL ? 'right' as const : 'left' as const,
       render: (_: unknown, user: UserItem) => (
-        <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-gray-400" />
-          <span className="text-sm">{new Date(user.createdAt).toLocaleDateString()}</span>
+        <div className={`flex items-center gap-2 text-xs ${isRTL ? 'text-right flex-row-reverse' : 'text-left'}`}>
+          <Calendar className="h-3 w-3 text-gray-400" />
+          <span className="font-readex text-gray-600">
+            {new Date(user.createdAt).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
+          </span>
         </div>
       ),
     },
     {
       key: 'updatedAt',
-      label: 'Last Updated',
+      label: t('users.lastUpdated'),
+      labelAr: t('users.lastUpdated'),
+      align: isRTL ? 'right' as const : 'left' as const,
       render: (_: unknown, user: UserItem) => (
-        <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-gray-400" />
-          <span className="text-sm">{new Date(user.updatedAt).toLocaleDateString()}</span>
+        <div className={`flex items-center gap-2 text-xs ${isRTL ? 'text-right flex-row-reverse' : 'text-left'}`}>
+          <Calendar className="h-3 w-3 text-gray-400" />
+          <span className="font-readex text-gray-600">
+            {new Date(user.updatedAt).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
+          </span>
         </div>
       ),
     },
@@ -146,77 +217,101 @@ export default function UsersPage() {
 
   const tableActions = [
     {
-      label: 'Edit',
-      icon: <Edit className="mr-2 h-4 w-4" />,
+      label: t('view'),
+      labelAr: t('view'),
+      icon: <Eye className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
+      onClick: handleView,
+    },
+    {
+      label: t('edit'),
+      labelAr: t('edit'),
+      icon: <Edit className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: handleEdit,
     },
     {
-      label: 'Toggle Status',
-      icon: <Shield className="mr-2 h-4 w-4" />,
+      label: t('users.toggleStatus'),
+      labelAr: t('users.toggleStatus'),
+      icon: <Shield className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
       onClick: handleToggleActive,
     },
     {
-      label: 'Delete',
-      icon: <Trash2 className="mr-2 h-4 w-4" />,
-      onClick: (user: UserItem) => actions.deleteItem(user.id),
+      label: t('delete'),
+      labelAr: t('delete'),
+      icon: <Trash2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
+      onClick: (user: UserItem) => {
+        // Add confirmation for sensitive user deletion
+        if (user.role === 'SUPER_ADMIN') {
+          toast.error(t('users.cannotDeleteSuperAdmin'));
+          return;
+        }
+        actions.deleteItem(user.id);
+      },
       variant: 'destructive' as const,
+      show: (user: UserItem) => user.role !== 'SUPER_ADMIN',
     },
   ];
 
+  // Enhanced filter options
   const filterOptions = [
     {
       key: 'role',
-      label: 'Role',
+      label: t('users.roleFilter'),
+      labelAr: t('users.roleFilter'),
       options: [
-        { value: 'SUPER_ADMIN', label: 'Super Admin' },
-        { value: 'ADMIN', label: 'Admin' },
-        { value: 'EDITOR', label: 'Editor' },
-        { value: 'AUTHOR', label: 'Author' },
-        { value: 'VIEWER', label: 'Viewer' },
+        { value: 'SUPER_ADMIN', label: t('users.roles.SUPER_ADMIN'), labelAr: t('users.roles.SUPER_ADMIN') },
+        { value: 'ADMIN', label: t('users.roles.ADMIN'), labelAr: t('users.roles.ADMIN') },
+        { value: 'EDITOR', label: t('users.roles.EDITOR'), labelAr: t('users.roles.EDITOR') },
+        { value: 'AUTHOR', label: t('users.roles.AUTHOR'), labelAr: t('users.roles.AUTHOR') },
+        { value: 'VIEWER', label: t('users.roles.VIEWER'), labelAr: t('users.roles.VIEWER') },
       ],
     },
     {
       key: 'isActive',
-      label: 'Status',
+      label: t('users.statusFilter'),
+      labelAr: t('users.statusFilter'),
       options: [
-        { value: 'true', label: 'Active' },
-        { value: 'false', label: 'Inactive' },
+        { value: 'true', label: t('users.active'), labelAr: t('users.active') },
+        { value: 'false', label: t('users.inactive'), labelAr: t('users.inactive') },
       ],
     },
   ];
 
   const stats = [
     {
-      label: 'Total Users',
+      label: t('users.totalUsers'),
       value: state.items?.length ?? 0,
+      description: t('news.totalCount')
     },
     {
-      label: 'Active Users',
+      label: t('users.activeUsers'),
       value: (state.items ?? []).filter(u => u.isActive).length,
+      description: t('users.activeAccounts')
     },
     {
-      label: 'Administrators',
+      label: t('users.administrators'),
       value: (state.items ?? []).filter(u => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN').length,
+      description: t('users.systemAdministrators')
     },
     {
-      label: 'Content Creators',
+      label: t('users.contentCreators'),
       value: (state.items ?? []).filter(u => u.role === 'AUTHOR' || u.role === 'EDITOR').length,
+      description: t('users.authorsAndEditors')
     },
   ];
 
   return (
     <DataTable<UserItem>
-      title="User Management"
-      description="Manage system users and their permissions"
+      title={t('users.title')}
+      description={t('users.description')}
       data={state.items || []}
       columns={columns}
       actions={tableActions}
       loading={state.loading}
       onCreate={handleCreate}
-      createButtonText="New User"
-      searchPlaceholder="Search users..."
-      emptyMessage="No users found"
-      emptyDescription="Create your first user account"
+      createButtonText={t('users.createNew')}
+      searchPlaceholder={t('users.searchPlaceholder')}
+      emptyMessage={t('users.emptyMessage')}
+      emptyDescription={t('users.emptyDescription')}
       filters={filterOptions}
       stats={stats}
     />

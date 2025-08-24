@@ -29,6 +29,7 @@ import {
   GripVertical
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ContactInfoItem {
   id?: string;
@@ -45,24 +46,25 @@ interface ContactInfoItem {
 }
 
 const contactTypes = [
-  { value: 'PHONE', label: 'Phone', icon: Phone },
-  { value: 'EMAIL', label: 'Email', icon: Mail },
-  { value: 'ADDRESS', label: 'Address', icon: MapPin },
-  { value: 'HOURS', label: 'Business Hours', icon: Clock },
-  { value: 'FAX', label: 'Fax', icon: Printer },
-  { value: 'WEBSITE', label: 'Website', icon: Globe },
+  { value: 'PHONE', label: 'Phone', labelAr: 'هاتف', icon: Phone },
+  { value: 'EMAIL', label: 'Email', labelAr: 'البريد الإلكتروني', icon: Mail },
+  { value: 'ADDRESS', label: 'Address', labelAr: 'العنوان', icon: MapPin },
+  { value: 'HOURS', label: 'Business Hours', labelAr: 'ساعات العمل', icon: Clock },
+  { value: 'FAX', label: 'Fax', labelAr: 'فاكس', icon: Printer },
+  { value: 'WEBSITE', label: 'Website', labelAr: 'الموقع الإلكتروني', icon: Globe },
 ];
 
 const iconOptions = [
-  { value: 'phone', label: 'Phone' },
-  { value: 'mail', label: 'Email' },
-  { value: 'map-pin', label: 'Location' },
-  { value: 'clock', label: 'Clock' },
-  { value: 'fax', label: 'Fax' },
-  { value: 'globe', label: 'Website' },
+  { value: 'phone', label: 'Phone', labelAr: 'هاتف' },
+  { value: 'mail', label: 'Email', labelAr: 'بريد إلكتروني' },
+  { value: 'map-pin', label: 'Location', labelAr: 'موقع' },
+  { value: 'clock', label: 'Clock', labelAr: 'ساعة' },
+  { value: 'fax', label: 'Fax', labelAr: 'فاكس' },
+  { value: 'globe', label: 'Website', labelAr: 'موقع إلكتروني' },
 ];
 
 export default function ContactInfoPage() {
+  const { currentLang, t, isRTL } = useLanguage();
   const [contactInfo, setContactInfo] = useState<ContactInfoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -88,7 +90,7 @@ export default function ContactInfoPage() {
       }
     } catch (error) {
       console.error('Error fetching contact info:', error);
-      toast.error('Failed to load contact information');
+      toast.error(currentLang === 'ar' ? 'فشل في تحميل معلومات الاتصال' : 'Failed to load contact information');
     } finally {
       setLoading(false);
     }
@@ -136,18 +138,23 @@ export default function ContactInfoPage() {
       });
 
       if (response.ok) {
-        toast.success('Contact information saved successfully');
+        toast.success(currentLang === 'ar' ? 'تم حفظ معلومات الاتصال بنجاح' : 'Contact information saved successfully');
         fetchContactInfo(); // Refresh data
       } else {
         const error = await response.json();
-        toast.error(error.error || 'Failed to save contact information');
+        toast.error(error.error || (currentLang === 'ar' ? 'فشل في حفظ معلومات الاتصال' : 'Failed to save contact information'));
       }
     } catch (error) {
       console.error('Error saving contact info:', error);
-      toast.error('Failed to save contact information');
+      toast.error(currentLang === 'ar' ? 'فشل في حفظ معلومات الاتصال' : 'Failed to save contact information');
     } finally {
       setSaving(false);
     }
+  };
+
+  const getContactTypeLabel = (type: string) => {
+    const contactType = contactTypes.find(ct => ct.value === type);
+    return contactType ? (currentLang === 'ar' ? contactType.labelAr : contactType.label) : type;
   };
 
   // const getTypeIcon = (type: string) => {
@@ -173,8 +180,12 @@ export default function ContactInfoPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Contact Information</h1>
-          <p className="text-gray-600">Manage contact details displayed on your website</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {currentLang === 'ar' ? 'معلومات الاتصال' : 'Contact Information'}
+          </h1>
+          <p className="text-gray-600">
+            {currentLang === 'ar' ? 'إدارة تفاصيل الاتصال المعروضة على موقعك الإلكتروني' : 'Manage contact details displayed on your website'}
+          </p>
         </div>
         <Button onClick={handleSave} disabled={saving}>
           {saving ? (
@@ -182,7 +193,7 @@ export default function ContactInfoPage() {
           ) : (
             <Save className="h-4 w-4 mr-2" />
           )}
-          Save Changes
+          {currentLang === 'ar' ? 'حفظ التغييرات' : 'Save Changes'}
         </Button>
       </div>
 
@@ -191,25 +202,33 @@ export default function ContactInfoPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{contactInfo.length}</div>
-            <p className="text-xs text-muted-foreground">Total Items</p>
+            <p className="text-xs text-muted-foreground">
+              {currentLang === 'ar' ? 'إجمالي العناصر' : 'Total Items'}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{contactInfo.filter(c => c.isPublic).length}</div>
-            <p className="text-xs text-muted-foreground">Public Items</p>
+            <p className="text-xs text-muted-foreground">
+              {currentLang === 'ar' ? 'عناصر عامة' : 'Public Items'}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{contactInfo.filter(c => c.type === 'PHONE').length}</div>
-            <p className="text-xs text-muted-foreground">Phone Numbers</p>
+            <p className="text-xs text-muted-foreground">
+              {currentLang === 'ar' ? 'أرقام الهواتف' : 'Phone Numbers'}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{contactInfo.filter(c => c.type === 'EMAIL').length}</div>
-            <p className="text-xs text-muted-foreground">Email Addresses</p>
+            <p className="text-xs text-muted-foreground">
+              {currentLang === 'ar' ? 'عناوين بريدية' : 'Email Addresses'}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -222,7 +241,7 @@ export default function ContactInfoPage() {
             return (
               <TabsTrigger key={type.value} value={type.value} className="flex items-center gap-2">
                 <Icon className="h-4 w-4" />
-                {type.label}
+                {currentLang === 'ar' ? type.labelAr : type.label}
               </TabsTrigger>
             );
           })}
@@ -239,11 +258,11 @@ export default function ContactInfoPage() {
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
                       <Icon className="h-5 w-5" />
-                      {type.label} ({items.length})
+                      {currentLang === 'ar' ? type.labelAr : type.label} ({items.length})
                     </CardTitle>
                     <Button size="sm" onClick={() => handleAddItem(type.value as ContactInfoItem['type'])}>
                       <Plus className="h-4 w-4 mr-2" />
-                      Add {type.label}
+                      {currentLang === 'ar' ? `إضافة ${type.labelAr}` : `Add ${type.label}`}
                     </Button>
                   </div>
                 </CardHeader>
@@ -251,11 +270,15 @@ export default function ContactInfoPage() {
                   {items.length === 0 ? (
                     <div className="text-center py-8">
                       <Icon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">No {type.label.toLowerCase()} information</h3>
-                      <p className="text-gray-600 mb-4">Add your first {type.label.toLowerCase()} entry</p>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        {currentLang === 'ar' ? `لا توجد معلومات ${type.labelAr}` : `No ${type.label.toLowerCase()} information`}
+                      </h3>
+                      <p className="text-gray-600 mb-4">
+                        {currentLang === 'ar' ? `أضف أول إدخال ${type.labelAr} خاص بك` : `Add your first ${type.label.toLowerCase()} entry`}
+                      </p>
                       <Button onClick={() => handleAddItem(type.value as ContactInfoItem['type'])}>
                         <Plus className="h-4 w-4 mr-2" />
-                        Add {type.label}
+                        {currentLang === 'ar' ? `إضافة ${type.labelAr}` : `Add ${type.label}`}
                       </Button>
                     </div>
                   ) : (
@@ -270,56 +293,72 @@ export default function ContactInfoPage() {
                                   <GripVertical className="h-4 w-4 text-gray-400 cursor-grab" />
                                   <div className="flex items-center gap-2">
                                     {item.isPublic ? (
-                                      <Badge className="bg-green-100 text-green-800">Public</Badge>
+                                      <Badge className="bg-green-100 text-green-800">
+                                        {currentLang === 'ar' ? 'عام' : 'Public'}
+                                      </Badge>
                                     ) : (
-                                      <Badge variant="outline">Private</Badge>
+                                      <Badge variant="outline">
+                                        {currentLang === 'ar' ? 'خاص' : 'Private'}
+                                      </Badge>
                                     )}
                                   </div>
                                 </div>
                                 
                                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                                   <div>
-                                    <Label>Label (English)</Label>
+                                    <Label>
+                                      {currentLang === 'ar' ? 'التسمية (بالإنجليزية)' : 'Label (English)'}
+                                    </Label>
                                     <Input
                                       value={item.labelEn}
                                       onChange={(e) => handleUpdateItem(itemIndex, 'labelEn', e.target.value)}
-                                      placeholder="e.g., Main Office"
+                                      placeholder={currentLang === 'ar' ? 'مثال: Main Office' : 'e.g., Main Office'}
                                     />
                                   </div>
                                   <div>
-                                    <Label>Label (Arabic)</Label>
+                                    <Label>
+                                      {currentLang === 'ar' ? 'التسمية (بالعربية)' : 'Label (Arabic)'}
+                                    </Label>
                                     <Input
                                       value={item.labelAr}
                                       onChange={(e) => handleUpdateItem(itemIndex, 'labelAr', e.target.value)}
-                                      placeholder="مثال: المكتب الرئيسي"
+                                      placeholder={currentLang === 'ar' ? 'مثال: المكتب الرئيسي' : 'e.g., المكتب الرئيسي'}
                                       dir="rtl"
                                     />
                                   </div>
                                   <div>
-                                    <Label>Value (English)</Label>
+                                    <Label>
+                                      {currentLang === 'ar' ? 'القيمة (بالإنجليزية)' : 'Value (English)'}
+                                    </Label>
                                     {type.value === 'ADDRESS' ? (
                                       <Textarea
                                         value={item.valueEn}
                                         onChange={(e) => handleUpdateItem(itemIndex, 'valueEn', e.target.value)}
-                                        placeholder="Enter address in English"
+                                        placeholder={currentLang === 'ar' ? 'أدخل العنوان بالإنجليزية' : 'Enter address in English'}
                                         rows={2}
                                       />
                                     ) : (
                                       <Input
                                         value={item.valueEn}
                                         onChange={(e) => handleUpdateItem(itemIndex, 'valueEn', e.target.value)}
-                                        placeholder={type.value === 'EMAIL' ? 'email@example.com' : 'Enter value'}
+                                        placeholder={
+                                          type.value === 'EMAIL' 
+                                            ? 'email@example.com' 
+                                            : (currentLang === 'ar' ? 'أدخل القيمة' : 'Enter value')
+                                        }
                                         type={type.value === 'EMAIL' ? 'email' : type.value === 'WEBSITE' ? 'url' : 'text'}
                                       />
                                     )}
                                   </div>
                                   <div>
-                                    <Label>Value (Arabic)</Label>
+                                    <Label>
+                                      {currentLang === 'ar' ? 'القيمة (بالعربية)' : 'Value (Arabic)'}
+                                    </Label>
                                     {type.value === 'ADDRESS' ? (
                                       <Textarea
                                         value={item.valueAr}
                                         onChange={(e) => handleUpdateItem(itemIndex, 'valueAr', e.target.value)}
-                                        placeholder="أدخل العنوان بالعربية"
+                                        placeholder={currentLang === 'ar' ? 'أدخل العنوان بالعربية' : 'Enter address in Arabic'}
                                         rows={2}
                                         dir="rtl"
                                       />
@@ -327,32 +366,38 @@ export default function ContactInfoPage() {
                                       <Input
                                         value={item.valueAr}
                                         onChange={(e) => handleUpdateItem(itemIndex, 'valueAr', e.target.value)}
-                                        placeholder="أدخل القيمة"
+                                        placeholder={currentLang === 'ar' ? 'أدخل القيمة' : 'Enter value in Arabic'}
                                         dir="rtl"
                                       />
                                     )}
                                   </div>
                                   <div>
-                                    <Label>Icon</Label>
+                                    <Label>
+                                      {currentLang === 'ar' ? 'الأيقونة' : 'Icon'}
+                                    </Label>
                                     <Select 
                                       value={item.icon || 'none'} 
                                       onValueChange={(value) => handleUpdateItem(itemIndex, 'icon', value)}
                                     >
                                       <SelectTrigger>
-                                        <SelectValue placeholder="Select icon" />
+                                        <SelectValue placeholder={currentLang === 'ar' ? 'اختر أيقونة' : 'Select icon'} />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        <SelectItem value="none">No icon</SelectItem>
+                                        <SelectItem value="none">
+                                          {currentLang === 'ar' ? 'بدون أيقونة' : 'No icon'}
+                                        </SelectItem>
                                         {iconOptions.map(icon => (
                                           <SelectItem key={icon.value} value={icon.value}>
-                                            {icon.label}
+                                            {currentLang === 'ar' ? icon.labelAr : icon.label}
                                           </SelectItem>
                                         ))}
                                       </SelectContent>
                                     </Select>
                                   </div>
                                   <div>
-                                    <Label>Link (Optional)</Label>
+                                    <Label>
+                                      {currentLang === 'ar' ? 'الرابط (اختياري)' : 'Link (Optional)'}
+                                    </Label>
                                     <Input
                                       value={item.link || ''}
                                       onChange={(e) => handleUpdateItem(itemIndex, 'link', e.target.value)}
@@ -361,7 +406,9 @@ export default function ContactInfoPage() {
                                     />
                                   </div>
                                   <div>
-                                    <Label>Visibility</Label>
+                                    <Label>
+                                      {currentLang === 'ar' ? 'الرؤية' : 'Visibility'}
+                                    </Label>
                                     <Select 
                                       value={item.isPublic ? 'public' : 'private'} 
                                       onValueChange={(value) => handleUpdateItem(itemIndex, 'isPublic', value === 'public')}
@@ -370,13 +417,19 @@ export default function ContactInfoPage() {
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        <SelectItem value="public">Public (visible to visitors)</SelectItem>
-                                        <SelectItem value="private">Private (admin only)</SelectItem>
+                                        <SelectItem value="public">
+                                          {currentLang === 'ar' ? 'عام (مرئي للزوار)' : 'Public (visible to visitors)'}
+                                        </SelectItem>
+                                        <SelectItem value="private">
+                                          {currentLang === 'ar' ? 'خاص (للمشرف فقط)' : 'Private (admin only)'}
+                                        </SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
                                   <div>
-                                    <Label>Sort Order</Label>
+                                    <Label>
+                                      {currentLang === 'ar' ? 'ترتيب الفرز' : 'Sort Order'}
+                                    </Label>
                                     <Input
                                       type="number"
                                       value={item.sortOrder}
