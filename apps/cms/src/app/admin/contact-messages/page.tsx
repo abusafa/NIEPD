@@ -364,10 +364,10 @@ const ContactMessagesPage = () => {
 
   const getStatusBadge = (status: string) => {
     const badges = {
-      UNREAD: { color: 'bg-blue-100 text-blue-800', icon: Clock, label: 'غير مقروء' },
-      READ: { color: 'bg-green-100 text-green-800', icon: Eye, label: 'مقروء' },
-      REPLIED: { color: 'bg-purple-100 text-purple-800', icon: CheckCircle, label: 'تم الرد' },
-      ARCHIVED: { color: 'bg-gray-100 text-gray-800', icon: Archive, label: 'مؤرشف' },
+      UNREAD: { color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300', icon: Clock, label: 'غير مقروء' },
+      READ: { color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300', icon: Eye, label: 'مقروء' },
+      REPLIED: { color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300', icon: CheckCircle, label: 'تم الرد' },
+      ARCHIVED: { color: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300', icon: Archive, label: 'مؤرشف' },
     };
 
     const badge = badges[status as keyof typeof badges];
@@ -399,10 +399,10 @@ const ContactMessagesPage = () => {
     return (
       <div className="p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded"></div>
+              <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
             ))}
           </div>
         </div>
@@ -416,8 +416,8 @@ const ContactMessagesPage = () => {
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">رسائل التواصل</h1>
-            <p className="text-gray-600">إدارة رسائل التواصل الواردة من الموقع</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">رسائل التواصل</h1>
+            <p className="text-gray-600 dark:text-gray-300">إدارة رسائل التواصل الواردة من الموقع</p>
           </div>
           <div className="flex items-center gap-3 mt-4 sm:mt-0">
             {/* Auto-refresh toggle */}
@@ -425,8 +425,8 @@ const ContactMessagesPage = () => {
               onClick={() => setAutoRefresh(!autoRefresh)}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
                 autoRefresh 
-                  ? 'bg-green-50 border-green-200 text-green-700' 
-                  : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                  ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700 text-green-700 dark:text-green-300' 
+                  : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
               }`}
             >
               <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
@@ -437,7 +437,7 @@ const ContactMessagesPage = () => {
             <button
               onClick={exportMessages}
               disabled={messages.length === 0}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:bg-blue-600 dark:hover:bg-blue-700"
             >
               <Download className="w-4 h-4" />
               <span className="hidden sm:inline">تصدير</span>
@@ -447,7 +447,7 @@ const ContactMessagesPage = () => {
             <button
               onClick={() => fetchMessages()}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 transition-colors dark:bg-gray-600 dark:hover:bg-gray-700"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               <span className="hidden sm:inline">تحديث</span>
@@ -458,38 +458,38 @@ const ContactMessagesPage = () => {
 
       {/* Enhanced Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">إجمالي الرسائل</p>
-              <p className="text-2xl font-bold text-gray-900">{pagination.total}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">إجمالي الرسائل</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{pagination.total}</p>
             </div>
             <MessageCircle className="w-8 h-8 text-blue-500" />
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">غير مقروءة</p>
-              <p className="text-2xl font-bold text-blue-600">{getUnreadCount()}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">غير مقروءة</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{getUnreadCount()}</p>
             </div>
             <Clock className="w-8 h-8 text-blue-500" />
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">تم الرد عليها</p>
-              <p className="text-2xl font-bold text-green-600">{getRepliedCount()}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">تم الرد عليها</p>
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400">{getRepliedCount()}</p>
             </div>
             <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">مؤرشفة</p>
-              <p className="text-2xl font-bold text-gray-600">{getArchivedCount()}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">مؤرشفة</p>
+              <p className="text-2xl font-bold text-gray-600 dark:text-gray-400">{getArchivedCount()}</p>
             </div>
             <Archive className="w-8 h-8 text-gray-500" />
           </div>
@@ -497,18 +497,18 @@ const ContactMessagesPage = () => {
       </div>
 
       {/* Enhanced Filters */}
-      <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
         <div className="space-y-4">
           {/* First row - Search and Status */}
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="البحث في الرسائل..."
-                  className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                  className="w-full pr-10 pl-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-right bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                   value={filters.search}
                   onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
                 />
@@ -518,7 +518,7 @@ const ContactMessagesPage = () => {
             {/* Status Filter */}
             <div className="w-full lg:w-48">
               <select
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-right bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 value={filters.status}
                 onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
               >
@@ -536,10 +536,10 @@ const ContactMessagesPage = () => {
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Date From */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">من تاريخ</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">من تاريخ</label>
                 <input
                   type="date"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   value={filters.dateFrom}
                   onChange={(e) => setFilters(prev => ({ ...prev, dateFrom: e.target.value }))}
                 />
@@ -547,10 +547,10 @@ const ContactMessagesPage = () => {
 
               {/* Date To */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">إلى تاريخ</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">إلى تاريخ</label>
                 <input
                   type="date"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   value={filters.dateTo}
                   onChange={(e) => setFilters(prev => ({ ...prev, dateTo: e.target.value }))}
                 />
@@ -559,9 +559,9 @@ const ContactMessagesPage = () => {
 
             {/* Sort */}
             <div className="w-full lg:w-48">
-              <label className="block text-sm font-medium text-gray-700 mb-1">ترتيب حسب</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ترتيب حسب</label>
               <select
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-right bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 value={`${sortBy}-${sortOrder}`}
                 onChange={(e) => {
                   const [field, order] = e.target.value.split('-');
@@ -590,7 +590,7 @@ const ContactMessagesPage = () => {
                   priority: '',
                 });
               }}
-              className="text-sm text-gray-500 hover:text-gray-700 underline"
+              className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 underline transition-colors"
             >
               مسح جميع المرشحات
             </button>
@@ -600,14 +600,14 @@ const ContactMessagesPage = () => {
 
       {/* Bulk Actions */}
       {selectedMessages.size > 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <span className="text-sm text-blue-800">
+              <span className="text-sm text-blue-800 dark:text-blue-300">
                 تم تحديد {selectedMessages.size} رسالة
               </span>
               <select
-                className="px-3 py-1 border border-blue-300 rounded text-sm"
+                className="px-3 py-1 border border-blue-300 dark:border-blue-600 rounded text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 value={bulkAction}
                 onChange={(e) => setBulkAction(e.target.value)}
               >
@@ -621,14 +621,14 @@ const ContactMessagesPage = () => {
               <button
                 onClick={handleBulkAction}
                 disabled={!bulkAction}
-                className="px-4 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:bg-blue-600 dark:hover:bg-blue-700"
               >
                 تطبيق
               </button>
             </div>
             <button
               onClick={() => setSelectedMessages(new Set())}
-              className="text-sm text-blue-600 hover:text-blue-800"
+              className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
             >
               إلغاء التحديد
             </button>
@@ -637,15 +637,15 @@ const ContactMessagesPage = () => {
       )}
 
       {/* Enhanced Messages Table */}
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <ScrollArea>
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-right">
                   <button
                     onClick={toggleSelectAll}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
                   >
                     {selectedMessages.size === messages.length && messages.length > 0 ? (
                       <CheckSquare className="w-4 h-4" />
@@ -654,38 +654,38 @@ const ContactMessagesPage = () => {
                     )}
                   </button>
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   المرسل
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   الموضوع
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   الحالة
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   التاريخ
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   الإجراءات
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {messages.map((message) => (
                 <tr 
                   key={message.id} 
-                  className={`hover:bg-gray-50 transition-colors ${
-                    message.status === 'UNREAD' ? 'bg-blue-50' : ''
+                  className={`hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                    message.status === 'UNREAD' ? 'bg-blue-50 dark:bg-blue-900/10' : ''
                   }`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
                       onClick={() => toggleMessageSelection(message.id)}
-                      className="text-gray-500 hover:text-gray-700"
+                      className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
                     >
                       {selectedMessages.has(message.id) ? (
-                        <CheckSquare className="w-4 h-4 text-blue-600" />
+                        <CheckSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       ) : (
                         <Square className="w-4 h-4" />
                       )}
@@ -694,22 +694,22 @@ const ContactMessagesPage = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                          <User className="h-5 w-5 text-blue-600" />
+                        <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                          <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                         </div>
                       </div>
                       <div className="mr-4">
                         <div className={`text-sm font-medium ${
-                          message.status === 'UNREAD' ? 'text-gray-900 font-semibold' : 'text-gray-700'
+                          message.status === 'UNREAD' ? 'text-gray-900 dark:text-gray-100 font-semibold' : 'text-gray-700 dark:text-gray-300'
                         }`}>
                           {message.name}
                         </div>
-                        <div className="text-sm text-gray-500 flex items-center gap-1">
+                        <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                           <Mail className="w-3 h-3" />
                           {message.email}
                         </div>
                         {message.phone && (
-                          <div className="text-sm text-gray-500 flex items-center gap-1">
+                          <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                             <Phone className="w-3 h-3" />
                             {message.phone}
                           </div>
@@ -719,17 +719,17 @@ const ContactMessagesPage = () => {
                   </td>
                   <td className="px-6 py-4 max-w-xs">
                     <div className={`text-sm font-medium truncate ${
-                      message.status === 'UNREAD' ? 'text-gray-900 font-semibold' : 'text-gray-700'
+                      message.status === 'UNREAD' ? 'text-gray-900 dark:text-gray-100 font-semibold' : 'text-gray-700 dark:text-gray-300'
                     }`}>
                       {message.subject}
                     </div>
-                    <div className="text-sm text-gray-500 line-clamp-2">
+                    <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
                       {message.message.substring(0, 100)}
                       {message.message.length > 100 && '...'}
                     </div>
                     <button
                       onClick={() => viewMessage(message)}
-                      className="text-xs text-blue-600 hover:text-blue-800 mt-1"
+                      className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mt-1 transition-colors"
                     >
                       عرض كامل
                     </button>
@@ -737,7 +737,7 @@ const ContactMessagesPage = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getStatusBadge(message.status)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       {formatDate(message.createdAt)}
@@ -748,7 +748,7 @@ const ContactMessagesPage = () => {
                       {/* Quick view */}
                       <button
                         onClick={() => viewMessage(message)}
-                        className="text-blue-600 hover:text-blue-900 p-1"
+                        className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 transition-colors"
                         title="عرض"
                       >
                         <Eye className="w-4 h-4" />
@@ -756,7 +756,7 @@ const ContactMessagesPage = () => {
                       
                       {/* Status Update Dropdown */}
                       <select
-                        className="text-xs border border-gray-200 rounded px-2 py-1"
+                        className="text-xs border border-gray-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         value={message.status}
                         onChange={(e) => updateMessageStatus(message.id, e.target.value)}
                       >
@@ -769,7 +769,7 @@ const ContactMessagesPage = () => {
                       {/* Delete Button */}
                       <button
                         onClick={() => deleteMessage(message.id)}
-                        className="text-red-600 hover:text-red-900 p-1"
+                        className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1 transition-colors"
                         title="حذف"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -785,10 +785,10 @@ const ContactMessagesPage = () => {
 
         {/* Enhanced Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200">
+          <div className="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700">
             <div className="flex-1 flex justify-between items-center">
               <div>
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-gray-700 dark:text-gray-300">
                   عرض {((pagination.page - 1) * pagination.limit) + 1} إلى{' '}
                   {Math.min(pagination.page * pagination.limit, pagination.total)} من {pagination.total} نتيجة
                 </p>
@@ -797,31 +797,31 @@ const ContactMessagesPage = () => {
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: 1 }))}
                   disabled={pagination.page === 1}
-                  className="px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+                  className="px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 text-gray-900 dark:text-gray-100 transition-colors"
                 >
                   الأولى
                 </button>
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: Math.max(1, prev.page - 1) }))}
                   disabled={pagination.page === 1}
-                  className="px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+                  className="px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 text-gray-900 dark:text-gray-100 transition-colors"
                 >
                   السابق
                 </button>
-                <span className="px-3 py-2 text-sm bg-blue-50 border border-blue-200 rounded-md">
+                <span className="px-3 py-2 text-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-md text-gray-900 dark:text-gray-100">
                   {pagination.page} من {pagination.totalPages}
                 </span>
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: Math.min(prev.totalPages, prev.page + 1) }))}
                   disabled={pagination.page === pagination.totalPages}
-                  className="px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+                  className="px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 text-gray-900 dark:text-gray-100 transition-colors"
                 >
                   التالي
                 </button>
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: prev.totalPages }))}
                   disabled={pagination.page === pagination.totalPages}
-                  className="px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+                  className="px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 text-gray-900 dark:text-gray-100 transition-colors"
                 >
                   الأخيرة
                 </button>
@@ -836,10 +836,10 @@ const ContactMessagesPage = () => {
         <DialogContent className="max-w-4xl max-h-[90vh]">
           <ScrollArea className="max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-right">
+            <DialogTitle className="text-xl font-bold text-right text-gray-900 dark:text-gray-100">
               تفاصيل الرسالة
             </DialogTitle>
-            <DialogDescription className="text-right">
+            <DialogDescription className="text-right text-gray-600 dark:text-gray-300">
               عرض تفاصيل رسالة التواصل كاملة
             </DialogDescription>
           </DialogHeader>
@@ -847,25 +847,25 @@ const ContactMessagesPage = () => {
           {selectedMessage && (
             <div className="space-y-6" dir="rtl">
               {/* Message Header */}
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">معلومات المرسل</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">معلومات المرسل</h3>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-gray-500" />
-                        <span className="font-medium">{selectedMessage.name}</span>
+                        <User className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <span className="font-medium text-gray-800 dark:text-gray-200">{selectedMessage.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4 text-gray-500" />
-                        <a href={`mailto:${selectedMessage.email}`} className="text-blue-600 hover:text-blue-800">
+                        <Mail className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <a href={`mailto:${selectedMessage.email}`} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
                           {selectedMessage.email}
                         </a>
                       </div>
                       {selectedMessage.phone && (
                         <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-gray-500" />
-                          <a href={`tel:${selectedMessage.phone}`} className="text-blue-600 hover:text-blue-800">
+                          <Phone className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                          <a href={`tel:${selectedMessage.phone}`} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
                             {selectedMessage.phone}
                           </a>
                         </div>
@@ -873,18 +873,18 @@ const ContactMessagesPage = () => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">معلومات الرسالة</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">معلومات الرسالة</h3>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-gray-500" />
-                        <span>{formatDate(selectedMessage.createdAt)}</span>
+                        <Calendar className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <span className="text-gray-800 dark:text-gray-200">{formatDate(selectedMessage.createdAt)}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span>الحالة:</span>
+                        <span className="text-gray-800 dark:text-gray-200">الحالة:</span>
                         {getStatusBadge(selectedMessage.status)}
                       </div>
                       {selectedMessage.ipAddress && (
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                           <span>IP:</span>
                           <span>{selectedMessage.ipAddress}</span>
                         </div>
@@ -896,30 +896,30 @@ const ContactMessagesPage = () => {
 
               {/* Subject */}
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">الموضوع</h3>
-                <p className="text-lg text-gray-800 bg-gray-50 p-3 rounded-lg">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">الموضوع</h3>
+                <p className="text-lg text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
                   {selectedMessage.subject}
                 </p>
               </div>
 
               {/* Message Content */}
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">محتوى الرسالة</h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">محتوى الرسالة</h3>
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                  <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
                     {selectedMessage.message}
                   </p>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t">
+              <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <button
                   onClick={() => {
                     updateMessageStatus(selectedMessage.id, 'REPLIED');
                     setShowMessageModal(false);
                   }}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 transition-colors"
                 >
                   <CheckCircle className="w-4 h-4" />
                   وضع علامة كتم الرد
@@ -930,7 +930,7 @@ const ContactMessagesPage = () => {
                     updateMessageStatus(selectedMessage.id, 'ARCHIVED');
                     setShowMessageModal(false);
                   }}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Archive className="w-4 h-4" />
                   أرشفة
@@ -938,7 +938,7 @@ const ContactMessagesPage = () => {
 
                 <a
                   href={`mailto:${selectedMessage.email}?subject=رد على: ${selectedMessage.subject}`}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
                 >
                   <Reply className="w-4 h-4" />
                   رد عبر البريد
@@ -953,9 +953,9 @@ const ContactMessagesPage = () => {
       {/* Empty State */}
       {messages.length === 0 && !loading && (
         <div className="text-center py-12">
-          <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">لا توجد رسائل</h3>
-          <p className="text-gray-500">لم يتم العثور على رسائل تواصل مطابقة للمرشحات المحددة.</p>
+          <MessageCircle className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">لا توجد رسائل</h3>
+          <p className="text-gray-500 dark:text-gray-400">لم يتم العثور على رسائل تواصل مطابقة للمرشحات المحددة.</p>
         </div>
       )}
     </div>
