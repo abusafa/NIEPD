@@ -19,6 +19,7 @@ import PublicationSettings from '@/components/forms/PublicationSettings';
 import { toast } from 'sonner';
 import { generateSlug } from '@/lib/validation';
 import { useCRUD } from '@/hooks/useCRUD';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FormData {
   titleAr: string;
@@ -44,22 +45,11 @@ interface FormData {
   isCertified: boolean;
 }
 
-const levels = [
-  { value: 'BEGINNER', label: 'Beginner' },
-  { value: 'INTERMEDIATE', label: 'Intermediate' },
-  { value: 'ADVANCED', label: 'Advanced' },
-  { value: 'EXPERT', label: 'Expert' },
-];
-
-const durationTypes = [
-  { value: 'HOURS', label: 'Hours' },
-  { value: 'DAYS', label: 'Days' },
-  { value: 'WEEKS', label: 'Weeks' },
-  { value: 'MONTHS', label: 'Months' },
-];
+// These will be translated in the component using currentLang
 
 export default function CreateProgramPage() {
   const router = useRouter();
+  const { currentLang, t } = useLanguage();
 
   const [formData, setFormData] = useState<FormData>({
     titleAr: '',
@@ -88,6 +78,21 @@ export default function CreateProgramPage() {
   const [saving, setSaving] = useState(false);
   const [requirementInput, setRequirementInput] = useState('');
   const [objectiveInput, setObjectiveInput] = useState('');
+
+  // Dynamic translation arrays
+  const levels = [
+    { value: 'BEGINNER', label: currentLang === 'ar' ? 'مبتدئ' : 'Beginner' },
+    { value: 'INTERMEDIATE', label: currentLang === 'ar' ? 'متوسط' : 'Intermediate' },
+    { value: 'ADVANCED', label: currentLang === 'ar' ? 'متقدم' : 'Advanced' },
+    { value: 'EXPERT', label: currentLang === 'ar' ? 'خبير' : 'Expert' },
+  ];
+
+  const durationTypes = [
+    { value: 'HOURS', label: currentLang === 'ar' ? 'ساعة' : 'Hours' },
+    { value: 'DAYS', label: currentLang === 'ar' ? 'يوم' : 'Days' },
+    { value: 'WEEKS', label: currentLang === 'ar' ? 'أسبوع' : 'Weeks' },
+    { value: 'MONTHS', label: currentLang === 'ar' ? 'شهر' : 'Months' },
+  ];
 
   // Auto-generate slug from English title
   useEffect(() => {
@@ -140,22 +145,22 @@ export default function CreateProgramPage() {
   const handleSave = async () => {
     // Basic validation
     if (!formData.titleAr.trim() || !formData.titleEn.trim()) {
-      toast.error('Please provide titles in both languages');
+      toast.error(currentLang === 'ar' ? 'يرجى إدخال العناوين بكلا اللغتين' : 'Please provide titles in both languages');
       return;
     }
 
     if (!formData.descriptionAr.trim() || !formData.descriptionEn.trim()) {
-      toast.error('Please provide descriptions in both languages');
+      toast.error(currentLang === 'ar' ? 'يرجى إدخال الأوصاف بكلا اللغتين' : 'Please provide descriptions in both languages');
       return;
     }
 
     if (!formData.duration || parseInt(formData.duration) <= 0) {
-      toast.error('Please provide a valid duration');
+      toast.error(currentLang === 'ar' ? 'يرجى إدخال مدة صالحة' : 'Please provide a valid duration');
       return;
     }
 
     if (!formData.slug.trim()) {
-      toast.error('Please provide a URL slug');
+      toast.error(currentLang === 'ar' ? 'يرجى إدخال رابط URL' : 'Please provide a URL slug');
       return;
     }
 
@@ -177,8 +182,9 @@ export default function CreateProgramPage() {
           durationType: formData.durationType,
           level: formData.level,
           image: formData.featuredImage,
-          prerequisites: formData.requirements,
-          learningOutcomes: formData.objectives,
+          prerequisites: formData.requirements.length > 0 ? formData.requirements.join('\n') : null,
+          rating: formData.rating ? parseFloat(formData.rating) : null,
+          participants: formData.participants ? parseInt(formData.participants) : null,
           featured: formData.featured,
           isFree: formData.isFree,
           isCertified: formData.isCertified,
@@ -190,28 +196,28 @@ export default function CreateProgramPage() {
 
       if (response.ok) {
         const createdProgram = await response.json();
-        toast.success('Program created successfully');
+        toast.success(currentLang === 'ar' ? 'تم إنشاء البرنامج بنجاح' : 'Program created successfully');
         router.push(`/admin/programs/${createdProgram.id}`);
       } else {
         const error = await response.json();
-        toast.error(error.error || 'Failed to create program');
+        toast.error(error.error || (currentLang === 'ar' ? 'فشل في إنشاء البرنامج' : 'Failed to create program'));
       }
     } catch (error) {
       console.error('Error creating program:', error);
-      toast.error('Failed to create program');
+      toast.error(currentLang === 'ar' ? 'فشل في إنشاء البرنامج' : 'Failed to create program');
     } finally {
       setSaving(false);
     }
   };
 
   const handleBack = () => {
-    router.push('/admin/programs');
+    router.back(); // Navigate to previous page in browser history
   };
 
   return (
     <FormLayout
-      title="Create New Program"
-      description="Add a new training program to the system"
+      title={currentLang === 'ar' ? 'إنشاء برنامج جديد' : 'Create New Program'}
+      description={currentLang === 'ar' ? 'إضافة برنامج تدريبي جديد إلى النظام' : 'Add a new training program to the system'}
       onBack={handleBack}
       onSave={handleSave}
       loading={saving}
@@ -232,16 +238,16 @@ export default function CreateProgramPage() {
           onSummaryEnChange={(value) => handleInputChange('summaryEn', value)}
           onContentArChange={(value) => handleInputChange('descriptionAr', value)}
           onContentEnChange={(value) => handleInputChange('descriptionEn', value)}
-          titleLabel="Program Title"
-          summaryLabel="Program Summary"
-          contentLabel="Program Description"
+          titleLabel={currentLang === 'ar' ? 'عنوان البرنامج' : 'Program Title'}
+          summaryLabel={currentLang === 'ar' ? 'ملخص البرنامج' : 'Program Summary'}
+          contentLabel={currentLang === 'ar' ? 'وصف البرنامج' : 'Program Description'}
           contentRows={6}
         />
 
         {/* Program Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="level">Level *</Label>
+            <Label htmlFor="level">{currentLang === 'ar' ? 'المستوى *' : 'Level *'}</Label>
             <Select value={formData.level} onValueChange={(value) => handleInputChange('level', value)}>
               <SelectTrigger>
                 <SelectValue />
@@ -258,7 +264,7 @@ export default function CreateProgramPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label htmlFor="duration">Duration *</Label>
+              <Label htmlFor="duration">{currentLang === 'ar' ? 'المدة *' : 'Duration *'}</Label>
               <Input
                 id="duration"
                 type="number"
@@ -270,7 +276,7 @@ export default function CreateProgramPage() {
               />
             </div>
             <div>
-              <Label htmlFor="durationType">Type</Label>
+              <Label htmlFor="durationType">{currentLang === 'ar' ? 'النوع' : 'Type'}</Label>
               <Select value={formData.durationType} onValueChange={(value) => handleInputChange('durationType', value)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -287,7 +293,7 @@ export default function CreateProgramPage() {
           </div>
 
           <div>
-            <Label htmlFor="rating">Rating (1-5)</Label>
+            <Label htmlFor="rating">{currentLang === 'ar' ? 'التقييم (1-5)' : 'Rating (1-5)'}</Label>
             <Input
               id="rating"
               type="number"
@@ -301,7 +307,7 @@ export default function CreateProgramPage() {
           </div>
 
           <div>
-            <Label htmlFor="participants">Total Participants</Label>
+            <Label htmlFor="participants">{currentLang === 'ar' ? 'إجمالي المشاركين' : 'Total Participants'}</Label>
             <Input
               id="participants"
               type="number"
@@ -315,13 +321,13 @@ export default function CreateProgramPage() {
 
         {/* Program Requirements */}
         <div>
-          <Label>Program Requirements</Label>
+          <Label>{currentLang === 'ar' ? 'متطلبات البرنامج' : 'Program Requirements'}</Label>
           <div className="space-y-3 mt-2">
             <div className="flex gap-2">
               <Input
                 value={requirementInput}
                 onChange={(e) => setRequirementInput(e.target.value)}
-                placeholder="Enter a program requirement"
+                placeholder={currentLang === 'ar' ? 'أدخل متطلباً للبرنامج' : 'Enter a program requirement'}
                 onKeyPress={(e) => e.key === 'Enter' && addRequirement()}
               />
               <button
@@ -329,7 +335,7 @@ export default function CreateProgramPage() {
                 onClick={addRequirement}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
-                Add
+                {currentLang === 'ar' ? 'إضافة' : 'Add'}
               </button>
             </div>
             {formData.requirements.length > 0 && (
@@ -342,7 +348,7 @@ export default function CreateProgramPage() {
                       onClick={() => removeRequirement(index)}
                       className="text-red-600 hover:text-red-800 text-sm"
                     >
-                      Remove
+                      {currentLang === 'ar' ? 'إزالة' : 'Remove'}
                     </button>
                   </div>
                 ))}
@@ -353,13 +359,13 @@ export default function CreateProgramPage() {
 
         {/* Learning Objectives */}
         <div>
-          <Label>Learning Objectives</Label>
+          <Label>{currentLang === 'ar' ? 'الأهداف التعليمية' : 'Learning Objectives'}</Label>
           <div className="space-y-3 mt-2">
             <div className="flex gap-2">
               <Input
                 value={objectiveInput}
                 onChange={(e) => setObjectiveInput(e.target.value)}
-                placeholder="Enter a learning objective"
+                placeholder={currentLang === 'ar' ? 'أدخل هدفاً تعليمياً' : 'Enter a learning objective'}
                 onKeyPress={(e) => e.key === 'Enter' && addObjective()}
               />
               <button
@@ -367,7 +373,7 @@ export default function CreateProgramPage() {
                 onClick={addObjective}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
               >
-                Add
+                {currentLang === 'ar' ? 'إضافة' : 'Add'}
               </button>
             </div>
             {formData.objectives.length > 0 && (
@@ -380,7 +386,7 @@ export default function CreateProgramPage() {
                       onClick={() => removeObjective(index)}
                       className="text-red-600 hover:text-red-800 text-sm"
                     >
-                      Remove
+                      {currentLang === 'ar' ? 'إزالة' : 'Remove'}
                     </button>
                   </div>
                 ))}
@@ -394,21 +400,24 @@ export default function CreateProgramPage() {
           selectedImage={formData.featuredImage}
           onImageSelect={(url) => handleInputChange('featuredImage', url)}
           onImageRemove={() => handleInputChange('featuredImage', '')}
-          label="Program Featured Image"
+          label={currentLang === 'ar' ? 'صورة البرنامج المميزة' : 'Program Featured Image'}
         />
 
         {/* URL Slug */}
         <div>
-          <Label htmlFor="slug">URL Slug *</Label>
+          <Label htmlFor="slug">{currentLang === 'ar' ? 'رابط URL *' : 'URL Slug *'}</Label>
           <Input
             id="slug"
             value={formData.slug}
             onChange={(e) => handleInputChange('slug', e.target.value)}
-            placeholder="program-url-slug"
+            placeholder={currentLang === 'ar' ? 'رابط-البرنامج' : 'program-url-slug'}
             required
           />
           <p className="text-xs text-gray-500 mt-1">
-            Used in URLs. Use lowercase letters, numbers, and hyphens only.
+            {currentLang === 'ar' 
+              ? 'يُستخدم في الروابط. استخدم الأحرف الصغيرة والأرقام والشرطات فقط.'
+              : 'Used in URLs. Use lowercase letters, numbers, and hyphens only.'
+            }
           </p>
         </div>
 

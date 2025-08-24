@@ -255,11 +255,11 @@ export default function AdminDashboard() {
       case 'DRAFT':
         return t('content.draft');
       case 'REVIEW':
-        return 'Under Review'; // Add to translations if needed
+        return currentLang === 'ar' ? 'تحت المراجعة' : 'Under Review';
       case 'UNREAD':
-        return 'Unread'; // Add to translations if needed
+        return currentLang === 'ar' ? 'غير مقروء' : 'Unread';
       case 'READ':
-        return 'Read'; // Add to translations if needed
+        return currentLang === 'ar' ? 'مقروء' : 'Read';
       default:
         return status;
     }
@@ -335,7 +335,7 @@ export default function AdminDashboard() {
     <div className={`space-y-6 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with Welcome and Quick Stats */}
       <div className="bg-gradient-to-r from-[#00808A]/10 to-[#00234E]/10 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-lg p-6">
-        <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
+        <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between ${isRTL ? 'sm:' : ''}`}>
           <div>
             <h1 className="text-2xl font-bold text-[#00234E] dark:text-gray-100 font-readex">{t('dashboard_page.title')}</h1>
             <p className="text-gray-600 dark:text-gray-400 font-readex">{t('dashboard_page.welcome')}</p>
@@ -545,7 +545,7 @@ export default function AdminDashboard() {
               <div className="space-y-4">
                 {recentContent.map((content, index) => (
                 <div key={`${content.type}-${content.id}-${index}`} className={`flex items-start justify-between p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-start gap-3 ${isRTL ? '' : ''}`}>
                     {getTypeIcon(content.type)}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium text-sm truncate font-readex">{currentLang === 'ar' ? content.titleAr : content.title}</h4>
@@ -553,7 +553,7 @@ export default function AdminDashboard() {
                         {currentLang === 'ar' ? 'بواسطة' : 'by'} {content.author} • {new Date(content.updatedAt).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
                       </p>
                       {content.featured && (
-                        <div className={`flex items-center gap-1 mt-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className={`flex items-center gap-1 mt-1 ${isRTL ? '' : ''}`}>
                           <Star className="h-3 w-3 text-yellow-400 fill-current" />
                           <span className="text-xs text-yellow-600 font-readex">{currentLang === 'ar' ? 'مميز' : 'Featured'}</span>
                         </div>
@@ -585,12 +585,12 @@ export default function AdminDashboard() {
                 upcomingEvents.map((event) => (
                   <div key={event.id} className={`p-3 border rounded-lg ${isRTL ? 'text-right' : 'text-left'}`}>
                     <h4 className="font-medium text-sm font-readex">{currentLang === 'ar' ? event.titleAr : event.titleEn}</h4>
-                    <div className={`flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className={`flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400 ${isRTL ? '' : ''}`}>
                       <Calendar className="h-3 w-3" />
                       <span className="font-readex">{new Date(event.startDate).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}</span>
                     </div>
                     {(event.locationEn || event.locationAr) && (
-                      <div className={`flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <div className={`flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400 ${isRTL ? '' : ''}`}>
                         <MapPin className="h-3 w-3" />
                         <span className="font-readex">{currentLang === 'ar' ? event.locationAr : event.locationEn}</span>
                       </div>
@@ -607,7 +607,7 @@ export default function AdminDashboard() {
 
         {/* Recent Contact Messages */}
         <Card>
-          <CardHeader className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <CardHeader className={`flex items-center justify-between ${isRTL ? '' : ''}`}>
             <CardTitle className="flex items-center gap-2 font-readex">
               <MessageSquare className="h-5 w-5" />
               {currentLang === 'ar' ? 'رسائل التواصل' : 'Contact Messages'}
@@ -627,7 +627,7 @@ export default function AdminDashboard() {
                 {recentContacts.length > 0 ? (
                 recentContacts.map((contact) => (
                   <div key={contact.id} className={`p-3 border rounded-lg ${isRTL ? 'text-right' : 'text-left'}`}>
-                    <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className={`flex items-center justify-between ${isRTL ? '' : ''}`}>
                       <h4 className="font-medium text-sm font-readex">{contact.name}</h4>
                       <Badge className={getStatusColor(contact.status)} variant="secondary">
                         <span className="font-readex">{getStatusText(contact.status)}</span>
@@ -657,14 +657,14 @@ export default function AdminDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className={`font-medium mb-4 flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <h3 className={`font-medium mb-4 flex items-center gap-2 font-readex ${isRTL ? '' : ''}`}>
                 <FileText className="h-4 w-4" />
                 {t('stats.totalNews')}
               </h3>
               <div className="space-y-3">
-                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex justify-between items-center ${isRTL ? '' : ''}`}>
                   <span className="text-sm font-readex">{t('content.published')}</span>
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? '' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-green-500 h-2 rounded-full" 
@@ -674,9 +674,9 @@ export default function AdminDashboard() {
                     <span className={`text-sm font-medium text-green-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.news.published}</span>
                   </div>
                 </div>
-                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex justify-between items-center ${isRTL ? '' : ''}`}>
                   <span className="text-sm font-readex">{currentLang === 'ar' ? 'تحت المراجعة' : 'Under Review'}</span>
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? '' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-blue-500 h-2 rounded-full" 
@@ -686,9 +686,9 @@ export default function AdminDashboard() {
                     <span className={`text-sm font-medium text-blue-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.news.review}</span>
                   </div>
                 </div>
-                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex justify-between items-center ${isRTL ? '' : ''}`}>
                   <span className="text-sm font-readex">{t('content.draft')}</span>
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? '' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-yellow-500 h-2 rounded-full" 
@@ -702,14 +702,14 @@ export default function AdminDashboard() {
             </div>
             
             <div>
-              <h3 className={`font-medium mb-4 flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <h3 className={`font-medium mb-4 flex items-center gap-2 font-readex ${isRTL ? '' : ''}`}>
                 <BookOpen className="h-4 w-4" />
                 {t('stats.totalPrograms')}
               </h3>
               <div className="space-y-3">
-                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex justify-between items-center ${isRTL ? '' : ''}`}>
                   <span className="text-sm font-readex">{t('content.published')}</span>
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? '' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-green-500 h-2 rounded-full" 
@@ -719,9 +719,9 @@ export default function AdminDashboard() {
                     <span className={`text-sm font-medium text-green-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.programs.published}</span>
                   </div>
                 </div>
-                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex justify-between items-center ${isRTL ? '' : ''}`}>
                   <span className="text-sm font-readex">{currentLang === 'ar' ? 'تحت المراجعة' : 'Under Review'}</span>
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? '' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-blue-500 h-2 rounded-full" 
@@ -731,9 +731,9 @@ export default function AdminDashboard() {
                     <span className={`text-sm font-medium text-blue-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.programs.review}</span>
                   </div>
                 </div>
-                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex justify-between items-center ${isRTL ? '' : ''}`}>
                   <span className="text-sm font-readex">{t('content.draft')}</span>
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? '' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-yellow-500 h-2 rounded-full" 
@@ -747,14 +747,14 @@ export default function AdminDashboard() {
             </div>
             
             <div>
-              <h3 className={`font-medium mb-4 flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <h3 className={`font-medium mb-4 flex items-center gap-2 font-readex ${isRTL ? '' : ''}`}>
                 <Calendar className="h-4 w-4" />
                 {t('stats.totalEvents')}
               </h3>
               <div className="space-y-3">
-                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex justify-between items-center ${isRTL ? '' : ''}`}>
                   <span className="text-sm font-readex">{currentLang === 'ar' ? 'قادمة' : 'Upcoming'}</span>
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? '' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-blue-500 h-2 rounded-full" 
@@ -764,9 +764,9 @@ export default function AdminDashboard() {
                     <span className={`text-sm font-medium text-blue-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.events.upcoming}</span>
                   </div>
                 </div>
-                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex justify-between items-center ${isRTL ? '' : ''}`}>
                   <span className="text-sm font-readex">{t('content.published')}</span>
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? '' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-green-500 h-2 rounded-full" 
@@ -776,9 +776,9 @@ export default function AdminDashboard() {
                     <span className={`text-sm font-medium text-green-600 w-8 font-readex ${isRTL ? 'text-left' : 'text-right'}`}>{stats?.events.published}</span>
                   </div>
                 </div>
-                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex justify-between items-center ${isRTL ? '' : ''}`}>
                   <span className="text-sm font-readex">{t('content.draft')}</span>
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? '' : ''}`}>
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-yellow-500 h-2 rounded-full" 

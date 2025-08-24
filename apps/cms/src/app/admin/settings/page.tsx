@@ -118,7 +118,9 @@ export default function SettingsPage() {
         const mergedSettings = { ...settings };
         Object.keys(data.settings).forEach(key => {
           if (key in mergedSettings) {
-            mergedSettings[key as keyof SettingsData] = data.settings[key].value;
+            // Use valueEn if available, fallback to valueAr or empty string
+            const value = data.settings[key].valueEn || data.settings[key].valueAr || '';
+            mergedSettings[key as keyof SettingsData] = value;
           }
         });
         setSettings(mergedSettings);
@@ -140,6 +142,25 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     setSaving(true);
+    
+    // Validate required fields
+    const requiredFields = ['site.name.ar', 'site.name.en', 'contact.email'];
+    const missingFields = requiredFields.filter(field => !settings[field as keyof SettingsData]?.trim());
+    
+    if (missingFields.length > 0) {
+      toast.error(currentLang === 'ar' ? 'يرجى ملء جميع الحقول المطلوبة' : 'Please fill all required fields');
+      setSaving(false);
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (settings['contact.email'] && !emailRegex.test(settings['contact.email'])) {
+      toast.error(currentLang === 'ar' ? 'يرجى إدخال بريد إلكتروني صحيح' : 'Please enter a valid email address');
+      setSaving(false);
+      return;
+    }
+
     try {
       const response = await fetch('/api/site-settings', {
         method: 'PUT',
@@ -151,14 +172,16 @@ export default function SettingsPage() {
       });
 
       if (response.ok) {
-        toast.success(t('messages.saveSuccess'));
+        toast.success(currentLang === 'ar' ? 'تم حفظ الإعدادات بنجاح' : 'Settings saved successfully');
+        // Refresh the data to ensure consistency
+        await fetchSettings();
       } else {
         const error = await response.json();
-        toast.error(error.error || t('messages.error'));
+        toast.error(error.error || (currentLang === 'ar' ? 'فشل في حفظ الإعدادات' : 'Failed to save settings'));
       }
     } catch (error) {
       console.error('Error saving settings:', error);
-      toast.error(t('messages.error'));
+      toast.error(currentLang === 'ar' ? 'حدث خطأ أثناء حفظ الإعدادات' : 'An error occurred while saving settings');
     } finally {
       setSaving(false);
     }
@@ -166,72 +189,199 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-64">
-        <div className="flex flex-col items-center gap-3">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 p-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
           <Loader2 className="h-12 w-12 animate-spin text-[#00808A]" />
-          <p className="text-sm text-gray-600 font-readex">{t('loading')}</p>
+          <div className="text-center space-y-2">
+            <p className="text-lg font-medium text-gray-900 dark:text-white font-readex">
+              {currentLang === 'ar' ? 'جاري تحميل الإعدادات...' : 'Loading Settings...'}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-readex">
+              {currentLang === 'ar' ? 'يرجى الانتظار' : 'Please wait'}
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`space-y-6 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Header */}
-      <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-        <div>
-          <h1 className="text-2xl font-bold text-[#00234E] font-readex">{currentLang === 'ar' ? 'إعدادات الموقع' : 'Site Settings'}</h1>
-          <p className="text-gray-600 font-readex">{currentLang === 'ar' ? 'تكوين إعدادات الموقع والتفضيلات' : 'Configure your website settings and preferences'}</p>
-        </div>
-        <Button onClick={handleSave} disabled={saving} className="bg-gradient-to-r from-[#00808A] to-[#006b74] hover:from-[#006b74] hover:to-[#00808A] font-readex">
-          {saving ? (
-            <Loader2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'} animate-spin`} />
-          ) : (
-            <Save className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-          )}
-          {t('save')}
-        </Button>
-      </div>
-
-      <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 font-readex">
-          <TabsTrigger value="general" className="font-readex">{currentLang === 'ar' ? 'عام' : 'General'}</TabsTrigger>
-          <TabsTrigger value="contact" className="font-readex">{currentLang === 'ar' ? 'التواصل' : 'Contact'}</TabsTrigger>
-          <TabsTrigger value="social" className="font-readex">{currentLang === 'ar' ? 'وسائل التواصل' : 'Social'}</TabsTrigger>
-          <TabsTrigger value="branding" className="font-readex">{currentLang === 'ar' ? 'العلامة التجارية' : 'Branding'}</TabsTrigger>
-          <TabsTrigger value="seo" className="font-readex">SEO</TabsTrigger>
-        </TabsList>
-
-        {/* General Settings */}
-        <TabsContent value="general">
-          <Card className="border-2 border-[#00808A]/10">
-            <CardHeader>
-              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <Settings className="h-5 w-5 text-[#00808A]" />
-                {currentLang === 'ar' ? 'الإعدادات العامة' : 'General Settings'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="p-6 space-y-6">
+        {/* Header Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4`}>
+            <div className="space-y-1">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#00808A] to-[#006b74] rounded-lg flex items-center justify-center">
+                  <Settings className="h-5 w-5 text-white" />
+                </div>
                 <div>
-                  <Label htmlFor="site.name.en" className="font-readex">{currentLang === 'ar' ? 'اسم الموقع (إنجليزي)' : 'Site Name (English)'}</Label>
+                  <h1 className="text-2xl font-bold text-[#00234E] dark:text-white font-readex">
+                    {currentLang === 'ar' ? 'إعدادات الموقع' : 'Site Settings'}
+                  </h1>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 font-readex">
+                    {currentLang === 'ar' ? 'تكوين إعدادات الموقع والتفضيلات' : 'Configure your website settings and preferences'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <Button 
+              onClick={handleSave} 
+              disabled={saving} 
+              size="lg"
+              className="bg-gradient-to-r from-[#00808A] to-[#006b74] hover:from-[#006b74] hover:to-[#00808A] text-white font-readex shadow-lg hover:shadow-xl transition-all duration-200"
+            >
+              {saving ? (
+                <Loader2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'} animate-spin`} />
+              ) : (
+                <Save className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+              )}
+              {saving ? (currentLang === 'ar' ? 'جاري الحفظ...' : 'Saving...') : (currentLang === 'ar' ? 'حفظ الإعدادات' : 'Save Settings')}
+            </Button>
+          </div>
+        </div>
+
+        {/* Settings Overview Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[
+            {
+              title: currentLang === 'ar' ? 'إعدادات عامة' : 'General Settings',
+              value: Object.values(settings).filter(val => val.toString().length > 0).length,
+              total: Object.keys(settings).length,
+              icon: Settings,
+              color: 'bg-blue-500'
+            },
+            {
+              title: currentLang === 'ar' ? 'معلومات التواصل' : 'Contact Info',
+              value: [settings['contact.email'], settings['contact.phone'], settings['contact.address.ar'], settings['contact.address.en']].filter(val => val.length > 0).length,
+              total: 4,
+              icon: Phone,
+              color: 'bg-green-500'
+            },
+            {
+              title: currentLang === 'ar' ? 'وسائل التواصل' : 'Social Media',
+              value: [settings['social.twitter'], settings['social.linkedin'], settings['social.facebook'], settings['social.instagram'], settings['social.youtube']].filter(val => val.length > 0).length,
+              total: 5,
+              icon: Globe,
+              color: 'bg-purple-500'
+            },
+            {
+              title: currentLang === 'ar' ? 'العلامة التجارية' : 'Branding',
+              value: [settings['branding.logo'], settings['branding.favicon'], settings['branding.colors.primary'], settings['branding.colors.secondary']].filter(val => val.length > 0).length,
+              total: 4,
+              icon: Palette,
+              color: 'bg-orange-500'
+            }
+          ].map((stat, index) => {
+            const Icon = stat.icon;
+            const percentage = Math.round((stat.value / stat.total) * 100);
+            return (
+              <Card key={index} className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow duration-200">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400 font-readex">
+                        {stat.title}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white font-readex">
+                          {stat.value}/{stat.total}
+                        </p>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          percentage >= 75 ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400' :
+                          percentage >= 50 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400' :
+                          'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400'
+                        } font-readex`}>
+                          {percentage}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className={`w-12 h-12 ${stat.color} rounded-lg flex items-center justify-center`}>
+                      <Icon className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Settings Tabs */}
+        <Tabs defaultValue="general" className="space-y-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-2">
+            <TabsList className="grid w-full grid-cols-5 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+              <TabsTrigger 
+                value="general" 
+                className="font-readex data-[state=active]:bg-white dark:data-[state=active]:bg-gray-600 data-[state=active]:text-[#00234E] dark:data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
+                {currentLang === 'ar' ? 'عام' : 'General'}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="contact" 
+                className="font-readex data-[state=active]:bg-white dark:data-[state=active]:bg-gray-600 data-[state=active]:text-[#00234E] dark:data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
+                {currentLang === 'ar' ? 'التواصل' : 'Contact'}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="social" 
+                className="font-readex data-[state=active]:bg-white dark:data-[state=active]:bg-gray-600 data-[state=active]:text-[#00234E] dark:data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
+                {currentLang === 'ar' ? 'وسائل التواصل' : 'Social'}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="branding" 
+                className="font-readex data-[state=active]:bg-white dark:data-[state=active]:bg-gray-600 data-[state=active]:text-[#00234E] dark:data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
+                {currentLang === 'ar' ? 'العلامة التجارية' : 'Branding'}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="seo" 
+                className="font-readex data-[state=active]:bg-white dark:data-[state=active]:bg-gray-600 data-[state=active]:text-[#00234E] dark:data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
+                SEO
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          {/* General Settings */}
+          <TabsContent value="general" className="space-y-0">
+            <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+              <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+                <CardTitle className={`flex items-center gap-3 font-readex text-lg`}>
+                  <div className="w-8 h-8 bg-gradient-to-r from-[#00808A] to-[#006b74] rounded-lg flex items-center justify-center">
+                    <Settings className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-[#00234E] dark:text-white">
+                    {currentLang === 'ar' ? 'الإعدادات العامة' : 'General Settings'}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="site.name.en" className="text-sm font-medium text-gray-700 dark:text-gray-300 font-readex">
+                    {currentLang === 'ar' ? 'اسم الموقع (إنجليزي)' : 'Site Name (English)'}
+                  </Label>
                   <Input
                     id="site.name.en"
                     value={settings['site.name.en']}
                     onChange={(e) => handleInputChange('site.name.en', e.target.value)}
                     placeholder="National Institute for Educational Professional Development"
-                    className="font-readex"
+                    className="font-readex border-gray-300 dark:border-gray-600 focus:border-[#00808A] focus:ring-[#00808A] bg-white dark:bg-gray-700"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="site.name.ar" className="font-readex">{currentLang === 'ar' ? 'اسم الموقع (عربي)' : 'Site Name (Arabic)'}</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="site.name.ar" className="text-sm font-medium text-gray-700 dark:text-gray-300 font-readex">
+                    {currentLang === 'ar' ? 'اسم الموقع (عربي)' : 'Site Name (Arabic)'}
+                  </Label>
                   <Input
                     id="site.name.ar"
                     value={settings['site.name.ar']}
                     onChange={(e) => handleInputChange('site.name.ar', e.target.value)}
                     placeholder="المعهد الوطني للتطوير المهني التعليمي"
                     dir="rtl"
-                    className="font-readex text-right"
+                    className="font-readex text-right border-gray-300 dark:border-gray-600 focus:border-[#00808A] focus:ring-[#00808A] bg-white dark:bg-gray-700"
                   />
                 </div>
               </div>
@@ -289,16 +439,20 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
 
-        {/* Contact Settings */}
-        <TabsContent value="contact">
-          <Card className="border-2 border-[#00808A]/10">
-            <CardHeader>
-              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <Phone className="h-5 w-5 text-[#00808A]" />
-                {currentLang === 'ar' ? 'معلومات التواصل' : 'Contact Information'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
+          {/* Contact Settings */}
+          <TabsContent value="contact" className="space-y-0">
+            <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+              <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+                <CardTitle className={`flex items-center gap-3 font-readex text-lg`}>
+                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                    <Phone className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-[#00234E] dark:text-white">
+                    {currentLang === 'ar' ? 'معلومات التواصل' : 'Contact Information'}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="contact.email" className="font-readex">{currentLang === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}</Label>
@@ -363,16 +517,20 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
 
-        {/* Social Media */}
-        <TabsContent value="social">
-          <Card className="border-2 border-[#00808A]/10">
-            <CardHeader>
-              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <Globe className="h-5 w-5 text-[#00808A]" />
-                {currentLang === 'ar' ? 'روابط وسائل التواصل الاجتماعي' : 'Social Media Links'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          {/* Social Media */}
+          <TabsContent value="social" className="space-y-0">
+            <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+              <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+                <CardTitle className={`flex items-center gap-3 font-readex text-lg`}>
+                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <Globe className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-[#00234E] dark:text-white">
+                    {currentLang === 'ar' ? 'روابط وسائل التواصل الاجتماعي' : 'Social Media Links'}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 p-6">
               {[
                 { key: 'social.twitter', label: 'Twitter', labelAr: 'تويتر', placeholder: 'https://twitter.com/niepd' },
                 { key: 'social.linkedin', label: 'LinkedIn', labelAr: 'لينكد إن', placeholder: 'https://linkedin.com/company/niepd' },
@@ -396,16 +554,20 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
 
-        {/* Branding */}
-        <TabsContent value="branding">
-          <Card className="border-2 border-[#00808A]/10">
-            <CardHeader>
-              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <Palette className="h-5 w-5 text-[#00808A]" />
-                {currentLang === 'ar' ? 'العلامة التجارية والتصميم' : 'Branding & Design'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
+          {/* Branding */}
+          <TabsContent value="branding" className="space-y-0">
+            <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+              <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+                <CardTitle className={`flex items-center gap-3 font-readex text-lg`}>
+                  <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                    <Palette className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-[#00234E] dark:text-white">
+                    {currentLang === 'ar' ? 'العلامة التجارية والتصميم' : 'Branding & Design'}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="branding.logo" className="font-readex">{currentLang === 'ar' ? 'رابط الشعار' : 'Logo URL'}</Label>
@@ -434,7 +596,7 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="branding.colors.primary" className="font-readex">{currentLang === 'ar' ? 'اللون الأساسي' : 'Primary Color'}</Label>
-                  <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex gap-2`}>
                     <Input
                       id="branding.colors.primary"
                       type="color"
@@ -452,7 +614,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <Label htmlFor="branding.colors.secondary" className="font-readex">{currentLang === 'ar' ? 'اللون الثانوي' : 'Secondary Color'}</Label>
-                  <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex gap-2`}>
                     <Input
                       id="branding.colors.secondary"
                       type="color"
@@ -473,16 +635,20 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
 
-        {/* SEO */}
-        <TabsContent value="seo">
-          <Card className="border-2 border-[#00808A]/10">
-            <CardHeader>
-              <CardTitle className={`flex items-center gap-2 font-readex ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <Search className="h-5 w-5 text-[#00808A]" />
-                {currentLang === 'ar' ? 'تحسين محركات البحث والعلامات الوصفية' : 'SEO & Meta Tags'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
+          {/* SEO */}
+          <TabsContent value="seo" className="space-y-0">
+            <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+              <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+                <CardTitle className={`flex items-center gap-3 font-readex text-lg`}>
+                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                    <Search className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-[#00234E] dark:text-white">
+                    {currentLang === 'ar' ? 'تحسين محركات البحث والعلامات الوصفية' : 'SEO & Meta Tags'}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="seo.default_meta_title.en" className="font-readex">{currentLang === 'ar' ? 'العنوان الافتراضي (إنجليزي)' : 'Default Meta Title (English)'}</Label>
@@ -535,7 +701,8 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         </TabsContent>
-      </Tabs>
+        </Tabs>
+      </div>
     </div>
   );
 }

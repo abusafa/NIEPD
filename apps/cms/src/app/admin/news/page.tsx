@@ -145,21 +145,24 @@ export default function NewsPage() {
     return currentLang === 'ar' ? statusMap[status as keyof typeof statusMap]?.ar || status : statusMap[status as keyof typeof statusMap]?.en || status;
   };
 
+  // Define columns in the exact order requested: العنوان، التصنيف، الكاتب، الحالة، آخر تحديث
   const columns = [
     {
       key: 'title',
       label: currentLang === 'ar' ? 'العنوان' : 'Title',
       labelAr: 'العنوان',
+      align: isRTL ? 'right' as const : 'left' as const,
       render: (_: unknown, article: NewsItem) => (
         <div className={`space-y-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-          <div className="font-medium text-sm font-readex">
+          <div className="font-medium text-sm font-readex line-clamp-1">
             {currentLang === 'ar' ? article.titleAr : article.titleEn}
           </div>
-          <div className="text-sm text-gray-600 font-readex" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
+          <div className="text-xs text-gray-500 font-readex line-clamp-1" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
             {currentLang === 'ar' ? article.titleEn : article.titleAr}
           </div>
           {article.featured && (
-            <Badge variant="outline" className="text-xs font-readex">
+            <Badge variant="outline" className="text-xs font-readex bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/50">
+              <span className={`inline-block w-1.5 h-1.5 bg-amber-500 dark:bg-amber-400 rounded-full ${isRTL ? 'ml-1' : 'mr-1'}`}></span>
               {currentLang === 'ar' ? 'مميز' : 'Featured'}
             </Badge>
           )}
@@ -170,33 +173,29 @@ export default function NewsPage() {
       key: 'category',
       label: currentLang === 'ar' ? 'التصنيف' : 'Category',
       labelAr: 'التصنيف',
+      align: isRTL ? 'right' as const : 'left' as const,
       render: (_: unknown, article: NewsItem) => (
-        <div className="text-sm font-readex">
-          {currentLang === 'ar' 
-            ? article.category?.nameAr || 'بدون تصنيف'
-            : article.category?.nameEn || 'No Category'
-          }
+        <div className={`text-sm font-readex ${isRTL ? 'text-right' : 'text-left'}`}>
+          <div className="px-2 py-1 rounded-md bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-xs inline-block">
+            {currentLang === 'ar' 
+              ? article.category?.nameAr || 'بدون تصنيف'
+              : article.category?.nameEn || 'No Category'
+            }
+          </div>
         </div>
-      ),
-    },
-    {
-      key: 'status',
-      label: currentLang === 'ar' ? 'الحالة' : 'Status',
-      labelAr: 'الحالة',
-      render: (_: unknown, article: NewsItem) => (
-        <Badge className={`${getStatusColor(article.status)} font-readex`}>
-          {getStatusText(article.status)}
-        </Badge>
       ),
     },
     {
       key: 'author',
       label: currentLang === 'ar' ? 'الكاتب' : 'Author',
       labelAr: 'الكاتب',
+      align: isRTL ? 'right' as const : 'left' as const,
       render: (_: unknown, article: NewsItem) => (
-        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-          <User className="h-4 w-4 text-gray-400" />
-          <span className="text-sm font-readex">
+        <div className={`flex items-center gap-2 text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
+          <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+            <User className="h-3 w-3 text-gray-500" />
+          </div>
+          <span className="font-readex text-xs text-gray-600 truncate max-w-24">
             {article.author?.firstName && article.author?.lastName 
               ? `${article.author.firstName} ${article.author.lastName}`
               : article.author?.username || (currentLang === 'ar' ? 'غير معروف' : 'Unknown')
@@ -206,13 +205,27 @@ export default function NewsPage() {
       ),
     },
     {
+      key: 'status',
+      label: currentLang === 'ar' ? 'الحالة' : 'Status',
+      labelAr: 'الحالة',
+      align: 'center' as const,
+      render: (_: unknown, article: NewsItem) => (
+        <div className="flex justify-center">
+          <Badge className={`${getStatusColor(article.status)} font-readex text-xs`}>
+            {getStatusText(article.status)}
+          </Badge>
+        </div>
+      ),
+    },
+    {
       key: 'updatedAt',
       label: currentLang === 'ar' ? 'آخر تحديث' : 'Updated',
       labelAr: 'آخر تحديث',
+      align: isRTL ? 'right' as const : 'left' as const,
       render: (_: unknown, article: NewsItem) => (
-        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-          <Calendar className="h-4 w-4 text-gray-400" />
-          <span className="text-sm font-readex">
+        <div className={`flex items-center gap-2 text-xs ${isRTL ? 'text-right' : 'text-left'}`}>
+          <Calendar className="h-3 w-3 text-gray-400" />
+          <span className="font-readex text-gray-600">
             {new Date(article.updatedAt).toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US')}
           </span>
         </div>
@@ -263,6 +276,7 @@ export default function NewsPage() {
     },
   ];
 
+  // Enhanced filter options
   const filterOptions = [
     {
       key: 'status',
@@ -272,6 +286,27 @@ export default function NewsPage() {
         { value: 'PUBLISHED', label: 'Published', labelAr: 'منشور' },
         { value: 'REVIEW', label: 'Under Review', labelAr: 'تحت المراجعة' },
         { value: 'DRAFT', label: 'Draft', labelAr: 'مسودة' },
+      ],
+    },
+    {
+      key: 'featured',
+      label: currentLang === 'ar' ? 'المميزة' : 'Featured',
+      labelAr: 'المميزة',
+      options: [
+        { value: 'true', label: 'Featured Only', labelAr: 'المميزة فقط' },
+        { value: 'false', label: 'Non-Featured', labelAr: 'غير مميزة' },
+      ],
+    },
+    {
+      key: 'category',
+      label: currentLang === 'ar' ? 'التصنيف' : 'Category',
+      labelAr: 'التصنيف',
+      options: [
+        { value: 'programs', label: 'Programs', labelAr: 'البرامج' },
+        { value: 'events', label: 'Events', labelAr: 'الفعاليات' },
+        { value: 'partnerships', label: 'Partnerships', labelAr: 'الشراكات' },
+        { value: 'achievements', label: 'Achievements', labelAr: 'الإنجازات' },
+        { value: 'announcements', label: 'Announcements', labelAr: 'الإعلانات' },
       ],
     },
   ];

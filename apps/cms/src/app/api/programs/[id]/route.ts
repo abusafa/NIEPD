@@ -86,7 +86,8 @@ export async function PUT(
       level,
       image,
       prerequisites,
-      learningOutcomes,
+      rating,
+      participants,
       featured,
       isFree,
       isCertified,
@@ -115,7 +116,11 @@ export async function PUT(
         durationType,
         level,
         image,
-        prerequisites: body.prerequisites || body.prerequisitesAr || body.prerequisitesEn,
+        rating: rating ? parseFloat(rating) : null,
+        participants: participants ? parseInt(participants) : null,
+        prerequisites: Array.isArray(prerequisites) 
+          ? prerequisites.join('\n') 
+          : (prerequisites || null),
         featured: Boolean(featured),
         isFree: Boolean(isFree),
         isCertified: Boolean(isCertified),

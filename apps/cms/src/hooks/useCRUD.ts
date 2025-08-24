@@ -8,6 +8,7 @@ interface CRUDOptions {
   resourceName?: string;
   onSuccess?: (action: string, data?: unknown) => void;
   onError?: (action: string, error: unknown) => void;
+  customDeleteConfirm?: (item: any) => Promise<boolean>;
 }
 
 interface CRUDState<T> {
@@ -23,7 +24,7 @@ interface CRUDActions<T> {
   fetchItems: (params?: URLSearchParams) => Promise<void>;
   createItem: (data: Partial<T>) => Promise<T | null>;
   updateItem: (id: string, data: Partial<T>) => Promise<T | null>;
-  deleteItem: (id: string) => Promise<boolean>;
+  deleteItem: (id: string, item?: any) => Promise<boolean>;
   refresh: () => Promise<void>;
   reset: () => void;
 }
@@ -51,7 +52,7 @@ export function useCRUD<T extends { id: string }>(
     ? { endpoint: optionsOrEndpoint, resourceName: 'item' }
     : optionsOrEndpoint;
     
-  const { endpoint, resourceName = 'item', onSuccess, onError } = options;
+  const { endpoint, resourceName = 'item', onSuccess, onError, customDeleteConfirm } = options;
   
   const [state, setState] = useState<CRUDState<T>>({
     items: [],
@@ -162,8 +163,16 @@ export function useCRUD<T extends { id: string }>(
     }
   };
 
-  const deleteItem = async (id: string): Promise<boolean> => {
-    if (!confirm(`Are you sure you want to delete this ${resourceName}?`)) {
+  const deleteItem = async (id: string, item?: any): Promise<boolean> => {
+    let confirmed = false;
+    
+    if (customDeleteConfirm && item) {
+      confirmed = await customDeleteConfirm(item);
+    } else {
+      confirmed = confirm(`Are you sure you want to delete this ${resourceName}?`);
+    }
+    
+    if (!confirmed) {
       return false;
     }
 

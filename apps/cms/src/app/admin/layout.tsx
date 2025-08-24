@@ -124,20 +124,22 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
     <div className={`min-h-screen bg-background ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Sidebar */}
       <div className={`fixed inset-y-0 ${isRTL ? 'right-0' : 'left-0'} z-50 w-64 bg-card shadow-lg transform transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : (isRTL ? 'translate-x-full' : '-translate-x-full')} flex flex-col`}>
-        <div className={`flex items-center justify-between p-4 border-b border-border flex-shrink-0 ${isRTL ? 'flex-row-reverse' : ''}`}>
-          <h1 className="text-sm font-bold text-foreground font-readex">المعهد الوطني للتطوير المهني التعليمي</h1>
+        <div className="flex items-center justify-between p-4 border-b border-border flex-shrink-0">
+          <h1 className={`text-sm font-bold text-foreground font-readex ${isRTL ? 'text-right' : 'text-left'} flex-1`}>
+            {currentLang === 'ar' ? 'المعهد الوطني للتطوير المهني التعليمي' : 'NIEPD - Content Management'}
+          </h1>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden"
+            className="lg:hidden flex-shrink-0"
           >
             <Menu className="h-4 w-4" />
           </Button>
         </div>
         
         <ScrollArea className="flex-1 py-4 overflow-hidden">
-          <div className={`px-2 ${isRTL ? 'pr-4' : 'pl-4'}`}>
+          <div className="px-2">
             <nav className="space-y-1">
             {filteredMenuItems.map((item) => {
               const isActive = item.exact 
@@ -148,12 +150,12 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
                 <button
                   key={item.href}
                   onClick={() => router.push(item.href)}
-                  className={`w-full flex items-center py-3 text-sm font-medium transition-colors duration-150 ease-in-out hover:bg-accent hover:text-accent-foreground font-readex rounded-md ${isRTL ? 'flex-row-reverse justify-start pr-4' : 'justify-start pl-4'} ${
-                    isActive ? `bg-accent text-accent-foreground ${isRTL ? 'border-l-2' : 'border-r-2'} border-primary` : 'text-muted-foreground'
-                  }`}
+                  className={`w-full flex items-center py-3 px-4 text-sm font-medium transition-colors duration-150 ease-in-out hover:bg-accent hover:text-accent-foreground font-readex rounded-md justify-start ${
+                    isActive ? `bg-accent text-accent-foreground ${isRTL ? 'border-l-4' : 'border-r-4'} border-primary` : 'text-muted-foreground'
+                  } ${isRTL ? 'text-right' : 'text-left'}`}
                 >
-                  <item.icon className={`${isRTL ? 'ml-4' : 'mr-4'} h-5 w-5 flex-shrink-0`} />
-                  <span className={`${isRTL ? 'text-right' : 'text-left'}`}>{item.label}</span>
+                  <item.icon className={`${isRTL ? 'ml-3' : 'mr-3'} h-5 w-5 flex-shrink-0`} />
+                  <span className="flex-1">{item.label}</span>
                 </button>
               );
             })}
@@ -163,7 +165,7 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
         
         {/* User info and logout */}
         <div className="flex-shrink-0 p-4 border-t border-border bg-muted">
-          <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div className={`flex items-center justify-between mb-3`}>
             <div className={`flex flex-col ${isRTL ? 'text-right' : 'text-left'}`}>
               <span className="text-sm font-medium text-foreground font-readex">
                 {user.firstName} {user.lastName}
@@ -174,7 +176,7 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
               variant="ghost"
               size="sm"
               onClick={handleLogout}
-              className="text-red-600 hover:text-red-700"
+              className="text-red-600 hover:text-red-700 flex-shrink-0"
               title={t('logout')}
             >
               <LogOut className="h-4 w-4" />
@@ -187,9 +189,9 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
               variant="ghost"
               size="sm"
               onClick={() => setLanguage(currentLang === 'ar' ? 'en' : 'ar')}
-              className={`w-full text-xs bg-accent hover:bg-accent/80 flex items-center ${isRTL ? 'flex-row-reverse justify-start' : 'justify-start'}`}
+              className="w-full text-xs bg-accent hover:bg-accent/80 flex items-center justify-center gap-2"
             >
-              <Languages className={`h-3 w-3 ${isRTL ? 'mr-3' : 'ml-3'}`} />
+              <Languages className="h-3 w-3" />
               <span className="font-readex">
                 {currentLang === 'ar' ? 'English' : 'العربية'}
               </span>
@@ -202,7 +204,7 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
       <div className={`transition-all duration-200 ease-in-out ${sidebarOpen ? (isRTL ? 'mr-64' : 'ml-64') : (isRTL ? 'mr-0' : 'ml-0')}`}>
         {/* Header */}
         <header className="bg-card shadow-sm border-b border-border">
-          <div className={`flex items-center justify-between px-6 py-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div className="flex items-center justify-between px-6 py-4">
             <Button
               variant="ghost"
               size="sm"
@@ -212,12 +214,12 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
               <Menu className="h-4 w-4" />
             </Button>
             
-            <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-4' : 'space-x-4'}`}>
-              <ThemeToggle />
-              <NotificationCenter />
-              <span className="text-sm text-muted-foreground font-readex">
+            <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <span className={`text-sm text-muted-foreground font-readex ${isRTL ? 'order-first' : 'order-last'}`}>
                 {t('welcomeBack')}, {user.firstName || user.username}
               </span>
+              <NotificationCenter />
+              <ThemeToggle />
             </div>
           </div>
         </header>

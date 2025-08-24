@@ -87,22 +87,7 @@ const NewsDetailPage: React.FC<NewsDetailPageProps> = ({ currentLang, newsId }) 
     }
   }, [newsId, t.error, t.newsNotFound]);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return currentLang === 'ar' 
-      ? date.toLocaleDateString('ar-SA', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric',
-          weekday: 'long'
-        })
-      : date.toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric',
-          weekday: 'long'
-        });
-  };
+
 
   const estimateReadingTime = (text: string) => {
     const wordsPerMinute = currentLang === 'ar' ? 200 : 250;
@@ -202,7 +187,7 @@ const NewsDetailPage: React.FC<NewsDetailPageProps> = ({ currentLang, newsId }) 
               </div>
               <div className="flex items-center">
                 <Calendar className="w-4 h-4 mr-2" />
-                <span>{formatDate(currentLang === 'ar' ? newsItem.dateAr : newsItem.dateEn)}</span>
+                <span>{currentLang === 'ar' ? newsItem.dateAr : newsItem.dateEn}</span>
               </div>
               {readingTime > 0 && (
                 <div className="flex items-center">
@@ -284,7 +269,7 @@ const NewsDetailPage: React.FC<NewsDetailPageProps> = ({ currentLang, newsId }) 
                           {currentLang === 'ar' ? item.titleAr : item.titleEn}
                         </h4>
                         <p className="text-xs text-neutral-500">
-                          {formatDate(currentLang === 'ar' ? item.dateAr : item.dateEn)}
+                          {currentLang === 'ar' ? item.dateAr : item.dateEn}
                         </p>
                       </div>
                     </div>

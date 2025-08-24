@@ -18,6 +18,7 @@ import MediaSelector from '@/components/forms/MediaSelector';
 import PublicationSettings from '@/components/forms/PublicationSettings';
 import { toast } from 'sonner';
 import { generateSlug } from '@/lib/validation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FormData {
   titleAr: string;
@@ -41,24 +42,13 @@ interface FormData {
   selectedTags: string[];
 }
 
-const levels = [
-  { value: 'BEGINNER', label: 'Beginner' },
-  { value: 'INTERMEDIATE', label: 'Intermediate' },
-  { value: 'ADVANCED', label: 'Advanced' },
-  { value: 'EXPERT', label: 'Expert' },
-];
-
-const durationTypes = [
-  { value: 'HOURS', label: 'Hours' },
-  { value: 'DAYS', label: 'Days' },
-  { value: 'WEEKS', label: 'Weeks' },
-  { value: 'MONTHS', label: 'Months' },
-];
+// These will be translated in the component using currentLang
 
 export default function EditProgramPage() {
   const router = useRouter();
   const params = useParams();
   const programId = params.id as string;
+  const { currentLang, t } = useLanguage();
 
   const [formData, setFormData] = useState<FormData>({
     titleAr: '',
@@ -86,6 +76,21 @@ export default function EditProgramPage() {
   const [saving, setSaving] = useState(false);
   const [requirementInput, setRequirementInput] = useState('');
   const [objectiveInput, setObjectiveInput] = useState('');
+
+  // Dynamic translation arrays
+  const levels = [
+    { value: 'BEGINNER', label: currentLang === 'ar' ? 'مبتدئ' : 'Beginner' },
+    { value: 'INTERMEDIATE', label: currentLang === 'ar' ? 'متوسط' : 'Intermediate' },
+    { value: 'ADVANCED', label: currentLang === 'ar' ? 'متقدم' : 'Advanced' },
+    { value: 'EXPERT', label: currentLang === 'ar' ? 'خبير' : 'Expert' },
+  ];
+
+  const durationTypes = [
+    { value: 'HOURS', label: currentLang === 'ar' ? 'ساعة' : 'Hours' },
+    { value: 'DAYS', label: currentLang === 'ar' ? 'يوم' : 'Days' },
+    { value: 'WEEKS', label: currentLang === 'ar' ? 'أسبوع' : 'Weeks' },
+    { value: 'MONTHS', label: currentLang === 'ar' ? 'شهر' : 'Months' },
+  ];
 
   useEffect(() => {
     if (programId) {
@@ -124,18 +129,18 @@ export default function EditProgramPage() {
           status: program.status || 'DRAFT',
           featured: program.featured || false,
           featuredImage: program.image || '',
-          requirements: [], // TODO: Add to schema if needed
-          objectives: [], // TODO: Add to schema if needed
+          requirements: program.prerequisites ? program.prerequisites.split('\n').filter(Boolean) : [],
+          objectives: [], // Not stored in database yet
           slug: program.slug || '',
           categoryId: program.categoryId || '',
           selectedTags: program.tags ? program.tags.map((t: { tag: { id: string } }) => t.tag.id) : [],
         });
       } else {
-        toast.error('Failed to load program data');
+        toast.error(currentLang === 'ar' ? 'فشل في تحميل بيانات البرنامج' : 'Failed to load program data');
       }
     } catch (error) {
       console.error('Error fetching program:', error);
-      toast.error('Failed to load program');
+      toast.error(currentLang === 'ar' ? 'فشل في تحميل البرنامج' : 'Failed to load program');
     } finally {
       setLoading(false);
     }
@@ -182,17 +187,17 @@ export default function EditProgramPage() {
   const handleSave = async () => {
     // Basic validation
     if (!formData.titleAr.trim() || !formData.titleEn.trim()) {
-      toast.error('Please provide titles in both languages');
+      toast.error(currentLang === 'ar' ? 'يرجى إدخال العناوين بكلا اللغتين' : 'Please provide titles in both languages');
       return;
     }
 
     if (!formData.descriptionAr.trim() || !formData.descriptionEn.trim()) {
-      toast.error('Please provide descriptions in both languages');
+      toast.error(currentLang === 'ar' ? 'يرجى إدخال الأوصاف بكلا اللغتين' : 'Please provide descriptions in both languages');
       return;
     }
 
     if (!formData.duration || parseInt(formData.duration) <= 0) {
-      toast.error('Please provide a valid duration');
+      toast.error(currentLang === 'ar' ? 'يرجى إدخال مدة صالحة' : 'Please provide a valid duration');
       return;
     }
 
@@ -206,30 +211,45 @@ export default function EditProgramPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
+          titleAr: formData.titleAr,
+          titleEn: formData.titleEn,
+          descriptionAr: formData.descriptionAr,
+          descriptionEn: formData.descriptionEn,
+          slug: formData.slug,
           duration: parseInt(formData.duration),
+          durationType: formData.durationType,
+          level: formData.level,
+          image: formData.featuredImage,
+          prerequisites: formData.requirements.length > 0 ? formData.requirements.join('\n') : null,
           rating: formData.rating ? parseFloat(formData.rating) : null,
           participants: formData.participants ? parseInt(formData.participants) : null,
+          featured: formData.featured,
+          isFree: true, // Default value
+          isCertified: true, // Default value
+          status: formData.status,
+          categoryId: formData.categoryId || null,
+          tagIds: formData.selectedTags,
         }),
       });
 
       if (response.ok) {
-        toast.success('Program updated successfully');
-        router.push(`/admin/programs/${programId}`);
+        toast.success(currentLang === 'ar' ? 'تم تحديث البرنامج بنجاح' : 'Program updated successfully');
+        router.back(); // Navigate to previous page like news edit
       } else {
         const error = await response.json();
-        toast.error(error.error || 'Failed to update program');
+        console.error('API Error:', error);
+        toast.error(error.error || (currentLang === 'ar' ? 'فشل في تحديث البرنامج' : 'Failed to update program'));
       }
     } catch (error) {
       console.error('Error updating program:', error);
-      toast.error('Failed to update program');
+      toast.error(currentLang === 'ar' ? 'فشل في تحديث البرنامج' : 'Failed to update program');
     } finally {
       setSaving(false);
     }
   };
 
   const handleBack = () => {
-    router.push(`/admin/programs/${programId}`);
+    router.back(); // Navigate to previous page in browser history
   };
 
   if (loading) {
@@ -242,8 +262,8 @@ export default function EditProgramPage() {
 
   return (
     <FormLayout
-      title="Edit Program"
-      description="Update training program information and details"
+      title={currentLang === 'ar' ? 'تعديل البرنامج' : 'Edit Program'}
+      description={currentLang === 'ar' ? 'تحديث معلومات وتفاصيل البرنامج التدريبي' : 'Update training program information and details'}
       onBack={handleBack}
       onSave={handleSave}
       loading={saving}
@@ -264,16 +284,16 @@ export default function EditProgramPage() {
           onSummaryEnChange={(value) => handleInputChange('summaryEn', value)}
           onContentArChange={(value) => handleInputChange('descriptionAr', value)}
           onContentEnChange={(value) => handleInputChange('descriptionEn', value)}
-          titleLabel="Program Title"
-          summaryLabel="Program Summary"
-          contentLabel="Program Description"
+          titleLabel={currentLang === 'ar' ? 'عنوان البرنامج' : 'Program Title'}
+          summaryLabel={currentLang === 'ar' ? 'ملخص البرنامج' : 'Program Summary'}
+          contentLabel={currentLang === 'ar' ? 'وصف البرنامج' : 'Program Description'}
           contentRows={6}
         />
 
         {/* Program Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="level">Level *</Label>
+            <Label htmlFor="level">{currentLang === 'ar' ? 'المستوى *' : 'Level *'}</Label>
             <Select value={formData.level} onValueChange={(value) => handleInputChange('level', value)}>
               <SelectTrigger>
                 <SelectValue />
@@ -290,7 +310,7 @@ export default function EditProgramPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label htmlFor="duration">Duration *</Label>
+              <Label htmlFor="duration">{currentLang === 'ar' ? 'المدة *' : 'Duration *'}</Label>
               <Input
                 id="duration"
                 type="number"
@@ -302,7 +322,7 @@ export default function EditProgramPage() {
               />
             </div>
             <div>
-              <Label htmlFor="durationType">Type</Label>
+              <Label htmlFor="durationType">{currentLang === 'ar' ? 'النوع' : 'Type'}</Label>
               <Select value={formData.durationType} onValueChange={(value) => handleInputChange('durationType', value)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -319,7 +339,7 @@ export default function EditProgramPage() {
           </div>
 
           <div>
-            <Label htmlFor="rating">Rating (1-5)</Label>
+            <Label htmlFor="rating">{currentLang === 'ar' ? 'التقييم (1-5)' : 'Rating (1-5)'}</Label>
             <Input
               id="rating"
               type="number"
@@ -333,7 +353,7 @@ export default function EditProgramPage() {
           </div>
 
           <div>
-            <Label htmlFor="participants">Total Participants</Label>
+            <Label htmlFor="participants">{currentLang === 'ar' ? 'إجمالي المشاركين' : 'Total Participants'}</Label>
             <Input
               id="participants"
               type="number"
@@ -347,13 +367,13 @@ export default function EditProgramPage() {
 
         {/* Program Requirements */}
         <div>
-          <Label>Program Requirements</Label>
+          <Label>{currentLang === 'ar' ? 'متطلبات البرنامج' : 'Program Requirements'}</Label>
           <div className="space-y-3 mt-2">
             <div className="flex gap-2">
               <Input
                 value={requirementInput}
                 onChange={(e) => setRequirementInput(e.target.value)}
-                placeholder="Enter a program requirement"
+                placeholder={currentLang === 'ar' ? 'أدخل متطلباً للبرنامج' : 'Enter a program requirement'}
                 onKeyPress={(e) => e.key === 'Enter' && addRequirement()}
               />
               <button
@@ -361,7 +381,7 @@ export default function EditProgramPage() {
                 onClick={addRequirement}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
-                Add
+                {currentLang === 'ar' ? 'إضافة' : 'Add'}
               </button>
             </div>
             {formData.requirements.length > 0 && (
@@ -374,7 +394,7 @@ export default function EditProgramPage() {
                       onClick={() => removeRequirement(index)}
                       className="text-red-600 hover:text-red-800 text-sm"
                     >
-                      Remove
+                      {currentLang === 'ar' ? 'إزالة' : 'Remove'}
                     </button>
                   </div>
                 ))}
@@ -385,13 +405,13 @@ export default function EditProgramPage() {
 
         {/* Learning Objectives */}
         <div>
-          <Label>Learning Objectives</Label>
+          <Label>{currentLang === 'ar' ? 'الأهداف التعليمية' : 'Learning Objectives'}</Label>
           <div className="space-y-3 mt-2">
             <div className="flex gap-2">
               <Input
                 value={objectiveInput}
                 onChange={(e) => setObjectiveInput(e.target.value)}
-                placeholder="Enter a learning objective"
+                placeholder={currentLang === 'ar' ? 'أدخل هدفاً تعليمياً' : 'Enter a learning objective'}
                 onKeyPress={(e) => e.key === 'Enter' && addObjective()}
               />
               <button
@@ -399,7 +419,7 @@ export default function EditProgramPage() {
                 onClick={addObjective}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
               >
-                Add
+                {currentLang === 'ar' ? 'إضافة' : 'Add'}
               </button>
             </div>
             {formData.objectives.length > 0 && (
@@ -412,7 +432,7 @@ export default function EditProgramPage() {
                       onClick={() => removeObjective(index)}
                       className="text-red-600 hover:text-red-800 text-sm"
                     >
-                      Remove
+                      {currentLang === 'ar' ? 'إزالة' : 'Remove'}
                     </button>
                   </div>
                 ))}
@@ -426,20 +446,23 @@ export default function EditProgramPage() {
           selectedImage={formData.featuredImage}
           onImageSelect={(url) => handleInputChange('featuredImage', url)}
           onImageRemove={() => handleInputChange('featuredImage', '')}
-          label="Program Featured Image"
+          label={currentLang === 'ar' ? 'صورة البرنامج المميزة' : 'Program Featured Image'}
         />
 
         {/* URL Slug */}
         <div>
-          <Label htmlFor="slug">URL Slug</Label>
+          <Label htmlFor="slug">{currentLang === 'ar' ? 'رابط URL' : 'URL Slug'}</Label>
           <Input
             id="slug"
             value={formData.slug}
             onChange={(e) => handleInputChange('slug', e.target.value)}
-            placeholder="program-url-slug"
+            placeholder={currentLang === 'ar' ? 'رابط-البرنامج' : 'program-url-slug'}
           />
           <p className="text-xs text-gray-500 mt-1">
-            Used in URLs. Use lowercase letters, numbers, and hyphens only.
+            {currentLang === 'ar' 
+              ? 'يُستخدم في الروابط. استخدم الأحرف الصغيرة والأرقام والشرطات فقط.'
+              : 'Used in URLs. Use lowercase letters, numbers, and hyphens only.'
+            }
           </p>
         </div>
 

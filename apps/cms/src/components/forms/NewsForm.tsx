@@ -21,6 +21,7 @@ import BilingualTextFields from '@/components/forms/BilingualTextFields';
 import MediaSelector from '@/components/forms/MediaSelector';
 import PublicationSettings from '@/components/forms/PublicationSettings';
 import LexicalRichTextEditor from './LexicalRichTextEditor';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Category {
   id: string;
@@ -59,6 +60,7 @@ interface NewsFormProps {
 
 export default function NewsForm({ initialData, isEditing = false, newsId }: NewsFormProps) {
   const router = useRouter();
+  const { currentLang, isRTL } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [categories] = useState<Category[]>([
     { id: '1', nameAr: 'البرامج', nameEn: 'Programs' },
@@ -131,7 +133,7 @@ export default function NewsForm({ initialData, isEditing = false, newsId }: New
       
       // Validate required fields
       if (!submitData.titleAr || !submitData.titleEn || !submitData.contentAr || !submitData.contentEn) {
-        toast.error('Please fill in all required fields');
+        toast.error(currentLang === 'ar' ? 'يرجى ملء جميع الحقول المطلوبة' : 'Please fill in all required fields');
         setLoading(false);
         return;
       }
@@ -146,14 +148,17 @@ export default function NewsForm({ initialData, isEditing = false, newsId }: New
       });
 
       if (response.ok) {
-        toast.success(isEditing ? 'News updated successfully!' : 'News created successfully!');
+        const successMsg = isEditing 
+          ? (currentLang === 'ar' ? 'تم تحديث الخبر بنجاح!' : 'News updated successfully!')
+          : (currentLang === 'ar' ? 'تم إنشاء الخبر بنجاح!' : 'News created successfully!');
+        toast.success(successMsg);
         router.push('/admin/news');
       } else {
-        throw new Error('Failed to save news');
+        throw new Error(currentLang === 'ar' ? 'فشل في حفظ الخبر' : 'Failed to save news');
       }
     } catch (error) {
       console.error('Error saving news:', error);
-      toast.error('Failed to save news. Please try again.');
+      toast.error(currentLang === 'ar' ? 'فشل في حفظ الخبر. يرجى المحاولة مرة أخرى.' : 'Failed to save news. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -175,8 +180,14 @@ export default function NewsForm({ initialData, isEditing = false, newsId }: New
 
   return (
     <FormLayout
-      title={isEditing ? 'Edit News Article' : 'Create News Article'}
-      description={isEditing ? 'Update the news article information' : 'Create a new news article for publication'}
+      title={isEditing 
+        ? (currentLang === 'ar' ? 'تعديل المقال الإخباري' : 'Edit News Article')
+        : (currentLang === 'ar' ? 'إنشاء مقال إخباري جديد' : 'Create News Article')
+      }
+      description={isEditing 
+        ? (currentLang === 'ar' ? 'تحديث معلومات المقال الإخباري' : 'Update the news article information')
+        : (currentLang === 'ar' ? 'إنشاء مقال إخباري جديد للنشر' : 'Create a new news article for publication')
+      }
       onBack={handleBack}
       onSave={handleSave}
       onPreview={handlePreview}
@@ -199,54 +210,79 @@ export default function NewsForm({ initialData, isEditing = false, newsId }: New
           onSummaryEnChange={(value) => handleInputChange('summaryEn', value)}
           onContentArChange={(value) => handleInputChange('contentAr', value)}
           onContentEnChange={(value) => handleInputChange('contentEn', value)}
-          titleLabel="Article Title"
-          summaryLabel="Article Summary"
-          contentLabel="Article Content"
+          titleLabel={currentLang === 'ar' ? 'عنوان المقال' : 'Article Title'}
+          summaryLabel={currentLang === 'ar' ? 'ملخص المقال' : 'Article Summary'}
+          contentLabel={currentLang === 'ar' ? 'محتوى المقال' : 'Article Content'}
           contentRows={8}
+          required
         />
 
         {/* Author Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label htmlFor="authorEn">Author (English)</Label>
-            <Input
-              id="authorEn"
-              value={formData.authorEn}
-              onChange={(e) => handleInputChange('authorEn', e.target.value)}
-              placeholder="Author name in English"
-            />
-          </div>
-          <div>
-            <Label htmlFor="authorAr">Author (Arabic)</Label>
-            <Input
-              id="authorAr"
-              value={formData.authorAr}
-              onChange={(e) => handleInputChange('authorAr', e.target.value)}
-              placeholder="اسم الكاتب بالعربية"
-              dir="rtl"
-            />
+        <div className={`bg-gradient-to-r from-purple-50/80 to-pink-50/80 dark:from-purple-950/20 dark:to-pink-950/20 rounded-2xl p-6 border-2 border-purple-200/30 dark:border-purple-800/30 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <h3 className="text-lg font-semibold text-[#00234E] dark:text-gray-100 mb-4 font-readex">
+            {currentLang === 'ar' ? 'معلومات الكاتب' : 'Author Information'}
+          </h3>
+          <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${isRTL ? 'md:grid-flow-col-dense' : ''}`}>
+            <div className={isRTL ? 'md:order-2' : 'md:order-1'}>
+              <Label htmlFor="authorEn" className="font-readex font-medium text-[#00234E] dark:text-gray-100">
+                {currentLang === 'ar' ? 'الكاتب (إنجليزي)' : 'Author (English)'}
+              </Label>
+              <Input
+                id="authorEn"
+                value={formData.authorEn}
+                onChange={(e) => handleInputChange('authorEn', e.target.value)}
+                placeholder={currentLang === 'ar' ? 'اسم الكاتب بالإنجليزية' : 'Author name in English'}
+                className="font-readex mt-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 focus:border-[#00808A] dark:focus:border-[#4db8c4] focus:ring-2 focus:ring-[#00808A]/20 dark:focus:ring-[#4db8c4]/20 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                dir="ltr"
+              />
+            </div>
+            <div className={isRTL ? 'md:order-1' : 'md:order-2'}>
+              <Label htmlFor="authorAr" className="font-readex font-medium text-[#00234E] dark:text-gray-100">
+                {currentLang === 'ar' ? 'الكاتب (عربي)' : 'Author (Arabic)'}
+              </Label>
+              <Input
+                id="authorAr"
+                value={formData.authorAr}
+                onChange={(e) => handleInputChange('authorAr', e.target.value)}
+                placeholder={currentLang === 'ar' ? 'اسم الكاتب بالعربية' : 'اسم الكاتب بالعربية'}
+                className="font-readex mt-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 focus:border-[#00808A] dark:focus:border-[#4db8c4] focus:ring-2 focus:ring-[#00808A]/20 dark:focus:ring-[#4db8c4]/20 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                dir="rtl"
+              />
+            </div>
           </div>
         </div>
 
         {/* Featured Image */}
-        <MediaSelector
-          selectedImage={formData.image}
-          onImageSelect={(url) => handleInputChange('image', url)}
-          onImageRemove={() => handleInputChange('image', '')}
-          label="Featured Image"
-        />
+        <div className="bg-gradient-to-r from-blue-50/80 to-indigo-50/80 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-2xl p-6 border-2 border-blue-200/30 dark:border-blue-800/30">
+          <h3 className={`text-lg font-semibold text-[#00234E] dark:text-gray-100 mb-4 font-readex ${isRTL ? 'text-right' : 'text-left'}`}>
+            {currentLang === 'ar' ? 'الصورة البارزة' : 'Featured Image'}
+          </h3>
+          <MediaSelector
+            selectedImage={formData.image}
+            onImageSelect={(url) => handleInputChange('image', url)}
+            onImageRemove={() => handleInputChange('image', '')}
+            label={currentLang === 'ar' ? 'الصورة البارزة' : 'Featured Image'}
+          />
+        </div>
 
         {/* URL Slug */}
-        <div>
-          <Label htmlFor="slug">URL Slug</Label>
+        <div className={`bg-gradient-to-r from-teal-50/80 to-cyan-50/80 dark:from-teal-950/20 dark:to-cyan-950/20 rounded-2xl p-6 border-2 border-teal-200/30 dark:border-teal-800/30 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <Label htmlFor="slug" className="font-readex font-medium text-[#00234E] dark:text-gray-100 text-lg">
+            {currentLang === 'ar' ? 'رابط المقال' : 'URL Slug'}
+          </Label>
           <Input
             id="slug"
             value={formData.slug}
             onChange={(e) => handleInputChange('slug', e.target.value)}
-            placeholder="article-url-slug"
+            placeholder={currentLang === 'ar' ? 'رابط-المقال' : 'article-url-slug'}
+            className="font-readex mt-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 focus:border-[#00808A] dark:focus:border-[#4db8c4] focus:ring-2 focus:ring-[#00808A]/20 dark:focus:ring-[#4db8c4]/20 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            dir="ltr"
           />
-          <p className="text-xs text-gray-500 mt-1">
-            Used in URLs. Use lowercase letters, numbers, and hyphens only.
+          <p className={`text-sm text-gray-600 dark:text-gray-400 mt-3 font-readex ${isRTL ? 'text-right' : 'text-left'}`}>
+            {currentLang === 'ar' 
+              ? 'يُستخدم في الروابط. استخدم الأحرف الصغيرة والأرقام والشرطات فقط.'
+              : 'Used in URLs. Use lowercase letters, numbers, and hyphens only.'
+            }
           </p>
         </div>
 

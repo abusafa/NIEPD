@@ -403,7 +403,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-[#00234E] text-white py-12">
         <div className="container mx-auto px-6">
-          <div className={`flex flex-col md:flex-row items-center justify-between ${currentLang === 'ar' ? 'md:flex-row-reverse' : ''}`}>
+          <div className={`flex flex-col md:flex-row items-center justify-between ${currentLang === 'ar' ? 'md:' : ''}`}>
             <div className={`flex items-center ${currentLang === 'ar' ? 'space-x-reverse space-x-3' : 'space-x-3'} mb-4 md:mb-0`}>
               <Image
                 src="/images/logos/niepd-logo-horizontal.svg"

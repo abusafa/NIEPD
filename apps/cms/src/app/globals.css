@@ -499,3 +499,154 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ======================
+   RTL Support Styles
+   ====================== */
+
+/* RTL-specific improvements */
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+/* Better RTL support for form elements */
+.rtl input[type="text"],
+.rtl input[type="email"],
+.rtl input[type="password"],
+.rtl input[type="search"],
+.rtl textarea {
+  text-align: right;
+}
+
+.ltr input[type="text"],
+.ltr input[type="email"],
+.ltr input[type="password"],
+.ltr input[type="search"],
+.ltr textarea {
+  text-align: left;
+}
+
+/* RTL support for select elements */
+.rtl select {
+  text-align: right;
+  padding-right: 0.75rem;
+  padding-left: 2rem;
+}
+
+.ltr select {
+  text-align: left;
+  padding-left: 0.75rem;
+  padding-right: 2rem;
+}
+
+/* Better Arabic text rendering */
+html[lang="ar"] {
+  font-feature-settings: "liga", "kern", "calt";
+  text-rendering: optimizeLegibility;
+}
+
+/* Improved spacing for Arabic content */
+.lang-ar .space-y-1 > * + * {
+  margin-top: 0.35rem;
+}
+
+.lang-ar .space-y-2 > * + * {
+  margin-top: 0.6rem;
+}
+
+.lang-ar .space-y-3 > * + * {
+  margin-top: 0.85rem;
+}
+
+/* Better line-height for Arabic text */
+.lang-ar {
+  line-height: 1.7;
+}
+
+.lang-ar .text-xs {
+  line-height: 1.6;
+}
+
+.lang-ar .text-sm {
+  line-height: 1.65;
+}
+
+/* Ensure proper RTL behavior for flex containers */
+.rtl .flex {
+  direction: rtl;
+}
+
+.rtl .inline-flex {
+  direction: rtl;
+}
+
+/* RTL-specific table improvements */
+.rtl table {
+  direction: rtl;
+}
+
+.rtl th {
+  text-align: right;
+}
+
+.rtl td {
+  text-align: right;
+}
+
+/* RTL dropdown menus */
+.rtl [role="menu"],
+.rtl [role="listbox"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* RTL modal and dialog positioning */
+.rtl .dialog-content,
+.rtl .modal-content {
+  text-align: right;
+}
+
+/* RTL breadcrumb navigation */
+.rtl .breadcrumb {
+  direction: rtl;
+}
+
+.rtl .breadcrumb-separator::before {
+  content: "\u003C"; /* < symbol for RTL */
+}
+
+/* RTL card layout improvements */
+.rtl .card-header,
+.rtl .card-content,
+.rtl .card-footer {
+  text-align: right;
+}
+
+/* RTL notification and toast positioning */
+.rtl .toast,
+.rtl .notification {
+  right: auto;
+  left: 1rem;
+}
+
+/* Fix for Arabic text in buttons and badges */
+.lang-ar .btn,
+.lang-ar .badge {
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* RTL sidebar and navigation improvements */
+.rtl .sidebar {
+  right: 0;
+  left: auto;
+}
+
+.rtl .sidebar-toggle {
+  right: auto;
+  left: 1rem;
+}

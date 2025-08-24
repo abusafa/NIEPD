@@ -26,6 +26,7 @@ import DataTable from '@/components/shared/DataTable';
 import { useCRUD } from '@/hooks/useCRUD';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { ConfirmationModal, useConfirmationModal } from '@/components/ui/confirmation-modal';
 
 interface MediaItem {
   id: string;
@@ -42,13 +43,51 @@ interface MediaItem {
 
 export default function MediaPage() {
   const { currentLang, t, isRTL } = useLanguage();
+  const { modalState, showConfirmation, hideConfirmation, setLoading } = useConfirmationModal();
+  const [uploading, setUploading] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDeleteItem = async (item: MediaItem) => {
+    showConfirmation({
+      title: currentLang === 'ar' ? 'تأكيد الحذف' : 'Confirm Deletion',
+      description: currentLang === 'ar' 
+        ? `هل أنت متأكد من أنك تريد حذف "${item.originalName}"؟ لا يمكن التراجع عن هذا الإجراء.`
+        : `Are you sure you want to delete "${item.originalName}"? This action cannot be undone.`,
+      confirmText: currentLang === 'ar' ? 'حذف' : 'Delete',
+      cancelText: currentLang === 'ar' ? 'إلغاء' : 'Cancel',
+      variant: 'destructive',
+      onConfirm: async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(`/api/media/${item.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
+
+          if (response.ok) {
+            actions.refresh?.(); // Refresh the list
+            // Don't show toast here as it's handled by the API success
+          } else {
+            const error = await response.json();
+            toast.error(error.error || (currentLang === 'ar' ? 'فشل في حذف الملف' : 'Failed to delete file'));
+          }
+        } catch (error) {
+          console.error('Delete error:', error);
+          toast.error(currentLang === 'ar' ? 'فشل في حذف الملف' : 'Failed to delete file');
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
+  };
+
   const [state, actions] = useCRUD<MediaItem>({
     endpoint: '/api/media',
     resourceName: 'Media File',
   });
-  const [uploading, setUploading] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = async (files: FileList) => {
     if (!files || files.length === 0) return;
@@ -153,7 +192,7 @@ export default function MediaPage() {
       label: currentLang === 'ar' ? 'الملف' : 'File',
       labelAr: 'الملف',
       render: (_: unknown, item: MediaItem) => (
-        <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        <div className={`flex items-center gap-3`}>
           <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
             {item.mimeType.startsWith('image/') ? (
               <img
@@ -242,7 +281,7 @@ export default function MediaPage() {
       label: currentLang === 'ar' ? 'حذف' : 'Delete',
       labelAr: 'حذف',
       icon: <Trash2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />,
-      onClick: (item: MediaItem) => actions.deleteItem(item.id),
+      onClick: (item: MediaItem) => handleDeleteItem(item),
       variant: 'destructive' as const,
     },
   ];
@@ -292,6 +331,18 @@ export default function MediaPage() {
 
   return (
     <div className={`space-y-6 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      <ConfirmationModal
+        open={modalState.open}
+        onOpenChange={hideConfirmation}
+        title={modalState.title}
+        description={modalState.description}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        onConfirm={modalState.onConfirm}
+        loading={modalState.loading}
+        variant={modalState.variant}
+        icon={modalState.icon}
+      />
       {/* Upload Area */}
       <Card className="border-2 border-[#00808A]/10">
         <CardContent className="pt-6">

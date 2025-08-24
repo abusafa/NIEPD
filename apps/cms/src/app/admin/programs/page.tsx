@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
 import { useCRUD } from '@/hooks/useCRUD';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProgramItem {
   id: string;
@@ -44,6 +45,7 @@ interface ProgramItem {
 
 export default function ProgramsPage() {
   const router = useRouter();
+  const { currentLang, t } = useLanguage();
   const [state, actions] = useCRUD<ProgramItem>({
     endpoint: '/api/programs',
     resourceName: 'Program',
@@ -92,7 +94,7 @@ export default function ProgramsPage() {
   const columns = [
     {
       key: 'title',
-      label: 'Program',
+      label: currentLang === 'ar' ? 'البرنامج' : 'Program',
       render: (_: unknown, program: ProgramItem) => (
         <div className="space-y-1">
           <div className="font-medium text-sm">{program.titleEn}</div>
@@ -100,17 +102,17 @@ export default function ProgramsPage() {
           <div className="flex gap-2">
             {program.featured && (
               <Badge variant="outline" className="text-xs">
-                Featured
+                {currentLang === 'ar' ? 'مميز' : 'Featured'}
               </Badge>
             )}
             {program.isFree && (
               <Badge variant="outline" className="text-xs text-green-600">
-                Free
+                {currentLang === 'ar' ? 'مجاني' : 'Free'}
               </Badge>
             )}
             {program.isCertified && (
               <Badge variant="outline" className="text-xs text-blue-600">
-                Certified
+                {currentLang === 'ar' ? 'معتمد' : 'Certified'}
               </Badge>
             )}
           </div>
@@ -119,28 +121,42 @@ export default function ProgramsPage() {
     },
     {
       key: 'level',
-      label: 'Level',
+      label: currentLang === 'ar' ? 'المستوى' : 'Level',
       render: (_: unknown, program: ProgramItem) => (
         <Badge className={getLevelColor(program.level)}>
-          {program.level}
+          {currentLang === 'ar' 
+            ? program.level === 'BEGINNER' ? 'مبتدئ'
+            : program.level === 'INTERMEDIATE' ? 'متوسط'
+            : program.level === 'ADVANCED' ? 'متقدم'
+            : program.level === 'EXPERT' ? 'خبير'
+            : program.level
+            : program.level
+          }
         </Badge>
       ),
     },
     {
       key: 'duration',
-      label: 'Duration',
+      label: currentLang === 'ar' ? 'المدة' : 'Duration',
       render: (_: unknown, program: ProgramItem) => (
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-gray-400" />
           <span className="text-sm">
-            {program.duration} {program.durationType.toLowerCase()}
+            {program.duration} {currentLang === 'ar' 
+              ? program.durationType === 'HOURS' ? 'ساعة'
+              : program.durationType === 'DAYS' ? 'يوم'
+              : program.durationType === 'WEEKS' ? 'أسبوع'
+              : program.durationType === 'MONTHS' ? 'شهر'
+              : program.durationType.toLowerCase()
+              : program.durationType.toLowerCase()
+            }
           </span>
         </div>
       ),
     },
     {
       key: 'participants',
-      label: 'Participants',
+      label: currentLang === 'ar' ? 'المشاركون' : 'Participants',
       render: (_: unknown, program: ProgramItem) => (
         <div className="flex items-center gap-2">
           <User className="h-4 w-4 text-gray-400" />
@@ -150,16 +166,22 @@ export default function ProgramsPage() {
     },
     {
       key: 'status',
-      label: 'Status',
+      label: currentLang === 'ar' ? 'الحالة' : 'Status',
       render: (_: unknown, program: ProgramItem) => (
         <Badge className={getStatusColor(program.status)}>
-          {program.status}
+          {currentLang === 'ar' 
+            ? program.status === 'PUBLISHED' ? 'منشور'
+            : program.status === 'DRAFT' ? 'مسودة'
+            : program.status === 'REVIEW' ? 'قيد المراجعة'
+            : program.status
+            : program.status
+          }
         </Badge>
       ),
     },
     {
       key: 'updatedAt',
-      label: 'Updated',
+      label: currentLang === 'ar' ? 'آخر تحديث' : 'Updated',
       render: (_: unknown, program: ProgramItem) => (
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-gray-400" />
@@ -171,17 +193,17 @@ export default function ProgramsPage() {
 
   const tableActions = [
     {
-      label: 'View',
+      label: currentLang === 'ar' ? 'عرض' : 'View',
       icon: <Eye className="mr-2 h-4 w-4" />,
       onClick: handleView,
     },
     {
-      label: 'Edit',
+      label: currentLang === 'ar' ? 'تعديل' : 'Edit',
       icon: <Edit className="mr-2 h-4 w-4" />,
       onClick: handleEdit,
     },
     {
-      label: 'Delete',
+      label: currentLang === 'ar' ? 'حذف' : 'Delete',
       icon: <Trash2 className="mr-2 h-4 w-4" />,
       onClick: (program: ProgramItem) => actions.deleteItem(program.id),
       variant: 'destructive' as const,
@@ -191,57 +213,57 @@ export default function ProgramsPage() {
   const filterOptions = [
     {
       key: 'status',
-      label: 'Status',
+      label: currentLang === 'ar' ? 'الحالة' : 'Status',
       options: [
-        { value: 'PUBLISHED', label: 'Published' },
-        { value: 'REVIEW', label: 'Under Review' },
-        { value: 'DRAFT', label: 'Draft' },
+        { value: 'PUBLISHED', label: currentLang === 'ar' ? 'منشور' : 'Published' },
+        { value: 'REVIEW', label: currentLang === 'ar' ? 'قيد المراجعة' : 'Under Review' },
+        { value: 'DRAFT', label: currentLang === 'ar' ? 'مسودة' : 'Draft' },
       ],
     },
     {
       key: 'level',
-      label: 'Level',
+      label: currentLang === 'ar' ? 'المستوى' : 'Level',
       options: [
-        { value: 'BEGINNER', label: 'Beginner' },
-        { value: 'INTERMEDIATE', label: 'Intermediate' },
-        { value: 'ADVANCED', label: 'Advanced' },
-        { value: 'EXPERT', label: 'Expert' },
+        { value: 'BEGINNER', label: currentLang === 'ar' ? 'مبتدئ' : 'Beginner' },
+        { value: 'INTERMEDIATE', label: currentLang === 'ar' ? 'متوسط' : 'Intermediate' },
+        { value: 'ADVANCED', label: currentLang === 'ar' ? 'متقدم' : 'Advanced' },
+        { value: 'EXPERT', label: currentLang === 'ar' ? 'خبير' : 'Expert' },
       ],
     },
   ];
 
   const stats = [
     {
-      label: 'Total Programs',
+      label: currentLang === 'ar' ? 'إجمالي البرامج' : 'Total Programs',
       value: state.items?.length ?? 0,
     },
     {
-      label: 'Published',
+      label: currentLang === 'ar' ? 'منشور' : 'Published',
       value: (state.items ?? []).filter(p => p.status === 'PUBLISHED').length,
     },
     {
-      label: 'Featured',
+      label: currentLang === 'ar' ? 'مميز' : 'Featured',
       value: (state.items ?? []).filter(p => p.featured).length,
     },
     {
-      label: 'Total Participants',
+      label: currentLang === 'ar' ? 'إجمالي المشاركين' : 'Total Participants',
       value: (state.items ?? []).reduce((sum, p) => sum + p.participants, 0),
     },
   ];
 
   return (
     <DataTable<ProgramItem>
-      title="Programs Management"
-      description="Manage training programs and courses"
+      title={currentLang === 'ar' ? 'إدارة البرامج' : 'Programs Management'}
+      description={currentLang === 'ar' ? 'إدارة البرامج التدريبية والدورات' : 'Manage training programs and courses'}
       data={state.items || []}
       columns={columns}
       actions={tableActions}
       loading={state.loading}
       onCreate={handleCreate}
-      createButtonText="New Program"
-      searchPlaceholder="Search programs..."
-      emptyMessage="No programs found"
-      emptyDescription="Create your first training program"
+      createButtonText={currentLang === 'ar' ? 'برنامج جديد' : 'New Program'}
+      searchPlaceholder={currentLang === 'ar' ? 'البحث في البرامج...' : 'Search programs...'}
+      emptyMessage={currentLang === 'ar' ? 'لا توجد برامج' : 'No programs found'}
+      emptyDescription={currentLang === 'ar' ? 'أنشئ أول برنامج تدريبي' : 'Create your first training program'}
       filters={filterOptions}
       stats={stats}
     />

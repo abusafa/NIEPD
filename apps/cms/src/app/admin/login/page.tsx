@@ -75,13 +75,15 @@ function LoginContent() {
           </Button>
         </div>
         
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-[#00234E] font-readex">المعهد الوطني للتطوير المهني التعليمي</h1>
+        <div className={`text-center ${isRTL ? 'text-right' : 'text-left'}`}>
+          <h1 className="text-3xl font-bold text-[#00234E] font-readex">
+            {currentLang === 'ar' ? 'المعهد الوطني للتطوير المهني التعليمي' : 'National Institute for Educational Professional Development'}
+          </h1>
           <p className="mt-2 text-gray-600 font-readex">{currentLang === 'ar' ? 'نظام إدارة المحتوى' : 'Content Management System'}</p>
         </div>
 
         <Card className="border-2 border-[#00808A]/10 shadow-xl">
-          <CardHeader className="text-center">
+          <CardHeader className={`text-center ${isRTL ? 'text-right' : 'text-left'}`}>
             <CardTitle className="text-[#00234E] font-readex">{t('auth.loginTitle')}</CardTitle>
             <CardDescription className="font-readex">
               {t('auth.loginSubtitle')}
@@ -121,7 +123,7 @@ function LoginContent() {
                     placeholder={currentLang === 'ar' ? 'أدخل كلمة المرور' : 'Enter your password'}
                     required
                     disabled={isLoading}
-                    className={`font-readex ${isRTL ? 'text-right pr-10' : 'text-left'}`}
+                    className={`font-readex ${isRTL ? 'text-right pl-10' : 'text-left pr-10'}`}
                   />
                   <button
                     type="button"

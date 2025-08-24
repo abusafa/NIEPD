@@ -86,24 +86,22 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
     fetchNews();
   }, [t.error]);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return currentLang === 'ar' 
-      ? date.toLocaleDateString('ar-SA', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-        })
-      : date.toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-        });
-  };
+
 
   const truncateText = (text: string, maxLength: number = 150) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
+  };
+
+  // Category mappings for display
+  const categoryLabels: Record<string, { ar: string; en: string }> = {
+    'programs': { ar: 'البرامج', en: 'Programs' },
+    'partnerships': { ar: 'الشراكات', en: 'Partnerships' },
+    'announcements': { ar: 'الإعلانات', en: 'Announcements' },
+    'achievements': { ar: 'الإنجازات', en: 'Achievements' },
+    'events': { ar: 'الفعاليات', en: 'Events' },
+    'general': { ar: 'عام', en: 'General' },
+    'news': { ar: 'أخبار', en: 'News' }
   };
 
   // Get unique categories from news items
@@ -111,18 +109,37 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
     new Set(newsItems.map(item => item.category).filter(Boolean))
   );
 
+  const normalizeText = (text: string) => {
+    return text.toLowerCase()
+      .replace(/[\u064B-\u0652]/g, '') // Remove Arabic diacritics
+      .trim();
+  };
+
   const filteredNews = newsItems.filter(item => {
-    const matchesSearch = searchTerm === '' || 
-      (currentLang === 'ar' ? item.titleAr : item.titleEn)
-        .toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (currentLang === 'ar' ? item.summaryAr : item.summaryEn)
-        .toLowerCase().includes(searchTerm.toLowerCase());
+    // Enhanced search logic
+    if (searchTerm) {
+      const normalizedSearch = normalizeText(searchTerm);
+      const titleText = normalizeText(currentLang === 'ar' ? item.titleAr || '' : item.titleEn || '');
+      const summaryText = normalizeText(currentLang === 'ar' ? item.summaryAr || '' : item.summaryEn || '');
+      const categoryText = normalizeText(categoryLabels[item.category]?.[currentLang] || item.category || '');
+      const authorText = normalizeText(currentLang === 'ar' ? item.authorAr || '' : item.authorEn || '');
+      
+      const matchesSearch = titleText.includes(normalizedSearch) ||
+                           summaryText.includes(normalizedSearch) ||
+                           categoryText.includes(normalizedSearch) ||
+                           authorText.includes(normalizedSearch);
+      
+      if (!matchesSearch) return false;
+    }
     
-    const matchesCategory = filterCategory === 'all' || 
-      (filterCategory === 'featured' && item.featured) ||
-      item.category === filterCategory;
-    
-    return matchesSearch && matchesCategory;
+    // Category filtering
+    if (filterCategory === 'all') {
+      return true;
+    } else if (filterCategory === 'featured') {
+      return item.featured === true;
+    } else {
+      return item.category === filterCategory;
+    }
   });
 
   if (loading) {
@@ -185,20 +202,54 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
               placeholder={t.search}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full pl-10 pr-10 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600 w-5 h-5 flex items-center justify-center"
+                aria-label={currentLang === 'ar' ? 'مسح البحث' : 'Clear search'}
+              >
+                ×
+              </button>
+            )}
           </div>
           
-          {/* Filter Toggle */}
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-6 py-3 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors"
-          >
-            <Filter className="w-5 h-5" />
-            {t.filters}
-            {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
+          {/* Filter Controls */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-6 py-3 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors"
+            >
+              <Filter className="w-5 h-5" />
+              {t.filters}
+              {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+            
+            {/* Clear Filters Button */}
+            {(searchTerm || filterCategory !== 'all') && (
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setFilterCategory('all');
+                }}
+                className="px-4 py-3 text-sm text-neutral-600 hover:text-neutral-800 transition-colors"
+              >
+                {currentLang === 'ar' ? 'مسح المرشحات' : 'Clear Filters'}
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Results Counter */}
+        {(searchTerm || filterCategory !== 'all') && (
+          <div className="mt-4 text-sm text-neutral-600">
+            {currentLang === 'ar' 
+              ? `تم العثور على ${filteredNews.length} ${filteredNews.length === 1 ? 'خبر' : 'أخبار'}`
+              : `Found ${filteredNews.length} ${filteredNews.length === 1 ? 'news item' : 'news items'}`
+            }
+          </div>
+        )}
 
         {/* Filter Options */}
         {showFilters && (
@@ -234,7 +285,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
                       : 'bg-white text-neutral-700 hover:bg-neutral-100 border border-neutral-200'
                   }`}
                 >
-                  {category}
+                  {categoryLabels[category]?.[currentLang] || category}
                 </button>
               ))}
             </div>
@@ -242,12 +293,15 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
         )}
       </div>
 
-      {/* Featured News (if any) */}
-      {filteredNews.filter(item => item.featured).length > 0 && filterCategory === 'all' && (
+      {/* Featured News Section */}
+      {filteredNews.filter(item => item.featured).length > 0 && (filterCategory === 'all' || filterCategory === 'featured') && (
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-secondary-700 mb-6">{t.featured}</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {filteredNews.filter(item => item.featured).slice(0, 2).map((item) => (
+            {(filterCategory === 'featured' 
+              ? filteredNews.filter(item => item.featured)
+              : filteredNews.filter(item => item.featured).slice(0, 2)
+            ).map((item) => (
               <div key={item.id} className="card group hover:shadow-lg transition-all duration-300 lg:flex">
                 {/* News Image */}
                 {item.image && (
@@ -286,7 +340,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
                     </div>
                     <div className="flex items-center">
                       <Calendar className="w-4 h-4 mr-1" />
-                      <span>{formatDate(currentLang === 'ar' ? item.dateAr : item.dateEn)}</span>
+                      <span>{currentLang === 'ar' ? item.dateAr : item.dateEn}</span>
                     </div>
                   </div>
                   
@@ -304,14 +358,20 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
         </div>
       )}
 
-      {/* Regular News Grid */}
-      {filteredNews.length === 0 ? (
+      {/* Regular News Grid or No Results Message */}
+      {filterCategory === 'featured' && filteredNews.length === 0 ? (
+        <div className="text-center py-12">
+          <Eye className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
+          <p className="text-neutral-500 text-lg">{t.noNews}</p>
+        </div>
+      ) : filterCategory !== 'featured' && filteredNews.length === 0 ? (
         <div className="text-center py-12">
           <Eye className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
           <p className="text-neutral-500 text-lg">{t.noNews}</p>
         </div>
       ) : (
         <div>
+          {/* Regular News Grid - only show for non-featured filters */}
           {filterCategory !== 'featured' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredNews
@@ -336,7 +396,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
                     {item.category && (
                       <div className="inline-block px-3 py-1 bg-primary-100 text-primary-800 text-sm font-medium rounded-full mb-3">
                         <Tag className="w-3 h-3 mr-1 inline" />
-                        {item.category}
+                        {categoryLabels[item.category]?.[currentLang] || item.category}
                       </div>
                     )}
                     
@@ -358,7 +418,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ currentLang }) => {
                       </div>
                       <div className="flex items-center">
                         <Calendar className="w-4 h-4 mr-1" />
-                        <span>{formatDate(currentLang === 'ar' ? item.dateAr : item.dateEn)}</span>
+                        <span>{currentLang === 'ar' ? item.dateAr : item.dateEn}</span>
                       </div>
                     </div>
                     

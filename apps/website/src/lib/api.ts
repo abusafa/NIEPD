@@ -105,7 +105,7 @@ const transformNewsToLegacy = (news: NewsItem): LegacyNewsItem => ({
   summaryEn: news.summaryEn,
   contentAr: news.contentAr,
   contentEn: news.contentEn,
-  category: news.category?.nameAr || '',
+  category: news.category?.nameEn?.toLowerCase() || news.category?.nameAr || '',
   authorAr: news.author?.firstName || '',
   authorEn: news.author?.username || '',
   dateAr: new Date(news.createdAt).toLocaleDateString('ar-SA'),
@@ -330,13 +330,51 @@ export const dataService = {
 
   // News
   async getNews(): Promise<LegacyNewsItem[]> {
-    const news = await cmsApi.getNews()
-    return news.map(transformNewsToLegacy)
+    try {
+      const news = await cmsApi.getNews()
+      if (news && news.length > 0) {
+        return news.map(transformNewsToLegacy)
+      } else {
+        console.log('No news from CMS, falling back to static data')
+        // Fallback to static data
+        return await this.getStaticNews()
+      }
+    } catch (error) {
+      console.error('CMS API failed, falling back to static data:', error)
+      // Fallback to static data
+      return await this.getStaticNews()
+    }
+  },
+
+  async getStaticNews(): Promise<LegacyNewsItem[]> {
+    try {
+      // Fetch static news data
+      const response = await fetch('/data/news.json')
+      if (!response.ok) throw new Error('Failed to fetch static news')
+      const staticNews = await response.json()
+      return staticNews || []
+    } catch (error) {
+      console.error('Error loading static news data:', error)
+      return []
+    }
   },
 
   async getNewsById(id: number): Promise<LegacyNewsItem | null> {
-    const newsItem = await cmsApi.getNewsById(id)
-    return newsItem ? transformNewsToLegacy(newsItem) : null
+    try {
+      const newsItem = await cmsApi.getNewsById(id)
+      if (newsItem) {
+        return transformNewsToLegacy(newsItem)
+      } else {
+        // Fallback to static data
+        const staticNews = await this.getStaticNews()
+        return staticNews.find(item => item.id === id) || null
+      }
+    } catch (error) {
+      console.error('CMS API failed, falling back to static data:', error)
+      // Fallback to static data
+      const staticNews = await this.getStaticNews()
+      return staticNews.find(item => item.id === id) || null
+    }
   },
 
   async getFeaturedNews(): Promise<LegacyNewsItem[]> {
@@ -416,57 +454,57 @@ export const dataService = {
     const members = await cmsApi.getOrganizationalStructure()
     
     // Group members by ID prefix (board-, mgmt-, dept-)
-    const board = members.filter(m => m.id.startsWith('board-'))
-    const management = members.filter(m => m.id.startsWith('mgmt-'))
-    const departments = members.filter(m => m.id.startsWith('dept-'))
+    const board = members.filter(m => m.id.toString().startsWith('board-'))
+    const management = members.filter(m => m.id.toString().startsWith('mgmt-'))
+    const departments = members.filter(m => m.id.toString().startsWith('dept-'))
 
     return {
       board: board.map(m => ({
         id: m.id,
         nameAr: m.nameAr,
         nameEn: m.nameEn,
-        titleAr: m.positionAr,
-        titleEn: m.positionEn,
-        roleAr: m.positionAr,
-        roleEn: m.positionEn,
-        bioAr: m.descriptionAr,
-        bioEn: m.descriptionEn,
-        photo: m.image,
-        email: '',
-        phone: '',
-        linkedin: '',
-        twitter: '',
+        titleAr: m.titleAr,
+        titleEn: m.titleEn,
+        roleAr: m.roleAr,
+        roleEn: m.roleEn,
+        bioAr: m.bioAr,
+        bioEn: m.bioEn,
+        photo: m.photo,
+        email: m.email || '',
+        phone: m.phone || '',
+        linkedin: m.linkedin || '',
+        twitter: m.twitter || '',
         icon: 'User',
-        isChairman: m.id === 'board-1',
+        isChairman: m.id.toString() === 'board-1' || m.id === 1,
       })),
       management: management.map(m => ({
         id: m.id,
         nameAr: m.nameAr,
         nameEn: m.nameEn,
-        titleAr: m.positionAr,
-        titleEn: m.positionEn,
-        roleAr: m.positionAr,
-        roleEn: m.positionEn,
-        bioAr: m.descriptionAr,
-        bioEn: m.descriptionEn,
-        photo: m.image,
-        email: '',
-        phone: '',
-        linkedin: '',
-        twitter: '',
+        titleAr: m.titleAr,
+        titleEn: m.titleEn,
+        roleAr: m.roleAr,
+        roleEn: m.roleEn,
+        bioAr: m.bioAr,
+        bioEn: m.bioEn,
+        photo: m.photo,
+        email: m.email || '',
+        phone: m.phone || '',
+        linkedin: m.linkedin || '',
+        twitter: m.twitter || '',
         icon: 'User',
       })),
       departments: departments.map(m => ({
         id: m.id,
         nameAr: m.nameAr,
         nameEn: m.nameEn,
-        titleAr: m.positionAr,
-        titleEn: m.positionEn,
-        roleAr: m.positionAr,
-        roleEn: m.positionEn,
-        bioAr: m.descriptionAr,
-        bioEn: m.descriptionEn,
-        photo: m.image,
+        titleAr: m.titleAr,
+        titleEn: m.titleEn,
+        roleAr: m.roleAr,
+        roleEn: m.roleEn,
+        bioAr: m.bioAr,
+        bioEn: m.bioEn,
+        photo: m.photo,
         icon: 'Building',
         staffCount: 10, // Default value since not available from CMS
       })),
