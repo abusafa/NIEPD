@@ -9,21 +9,27 @@ async function setupDatabase() {
   try {
     console.log('Setting up database...');
 
-    // Create default admin user
-    await createDefaultAdmin();
+    // Import existing data first 
+    await importData();
 
-    // Get admin user ID for author references
-    const adminUser = await prisma.user.findFirst({
-      where: { role: 'SUPER_ADMIN' },
-      select: { id: true }
+    // After import, get or create admin user for future use
+    let adminUser = await prisma.user.findFirst({
+      where: { OR: [{ role: 'SUPER_ADMIN' }, { role: 'ADMIN' }] },
+      select: { id: true, email: true, role: true }
     });
 
     if (!adminUser) {
-      throw new Error('Default admin user not found');
+      // Create default admin if no admin users exist
+      await createDefaultAdmin();
+      adminUser = await prisma.user.findFirst({
+        where: { role: 'SUPER_ADMIN' },
+        select: { id: true, email: true, role: true }
+      });
     }
 
-    // Import existing data
-    await importData(adminUser.id);
+    if (adminUser) {
+      console.log(`Admin user available: ${adminUser.email} (ID: ${adminUser.id}) - Role: ${adminUser.role}`);
+    }
 
     console.log('Database setup completed successfully!');
   } catch (error) {
@@ -34,11 +40,18 @@ async function setupDatabase() {
   }
 }
 
-async function importData(adminUserId: string) {
+async function importData() {
   console.log('Importing data...');
+  
+  // Use a known admin user ID from the users.json file
+  const adminUserId = "5"; // This is the ADMIN user in users.json
+  console.log(`Using admin user ID: ${adminUserId} for content authorship`);
 
-  // Define data files and their corresponding models
-  const dataFiles = [
+  // Track successful imports to handle dependencies
+  const successfulImports = new Set<string>();
+
+  // Define data files and their corresponding models (in dependency order)
+  const coreDataFiles = [
     {
       file: 'users.json',
       model: 'user',
@@ -444,9 +457,14 @@ async function importData(adminUserId: string) {
         updatedAt: new Date(item.updatedAt),
       }))
     },
+  ];
+
+  // Relationship files that depend on core data being imported successfully
+  const relationshipFiles = [
     {
       file: 'news-tags.json',
       model: 'newsTag',
+      dependencies: ['news', 'tag'],
       transform: (data: any[]) => data.map(item => ({
         newsId: item.newsId.toString(),
         tagId: item.tagId.toString(),
@@ -455,6 +473,7 @@ async function importData(adminUserId: string) {
     {
       file: 'program-tags.json',
       model: 'programTag',
+      dependencies: ['program', 'tag'],
       transform: (data: any[]) => data.map(item => ({
         programId: item.programId.toString(),
         tagId: item.tagId.toString(),
@@ -463,6 +482,7 @@ async function importData(adminUserId: string) {
     {
       file: 'event-tags.json',
       model: 'eventTag',
+      dependencies: ['event', 'tag'],
       transform: (data: any[]) => data.map(item => ({
         eventId: item.eventId.toString(),
         tagId: item.tagId.toString(),
@@ -472,7 +492,8 @@ async function importData(adminUserId: string) {
 
   const dataDirectory = path.join(process.cwd(), 'data');
 
-  for (const { file, model, transform } of dataFiles) {
+  // First, import core data files
+  for (const { file, model, transform } of coreDataFiles) {
     try {
       const filePath = path.join(dataDirectory, file);
       
@@ -487,19 +508,115 @@ async function importData(adminUserId: string) {
 
       console.log(`Importing ${transformedData.length} records from ${file}...`);
 
-      // Clear existing data
-      await (prisma as any)[model].deleteMany();
+      // Clear existing data (unless skipDelete is true)
+      const skipDelete = (coreDataFiles.find(f => f.model === model) as any)?.skipDelete;
+      if (!skipDelete) {
+        await (prisma as any)[model].deleteMany();
+      }
 
       // Import new data
+      let successCount = 0;
+      let errorCount = 0;
+      
       for (const item of transformedData) {
         try {
-          await (prisma as any)[model].create({ data: item });
+          // For users, use upsert to avoid conflicts with existing admin user
+          if (model === 'user') {
+            await prisma.user.upsert({
+              where: { id: item.id },
+              update: item,
+              create: item
+            });
+          } else {
+            await (prisma as any)[model].create({ data: item });
+          }
+          successCount++;
         } catch (error) {
-          console.error(`Error importing ${model} record:`, error);
+          errorCount++;
+          console.error(`Error importing ${model} record (${item.id || 'unknown'}):`, error.message);
         }
       }
 
-      console.log(`✓ Imported ${file}`);
+      console.log(`✓ Imported ${file}: ${successCount} successful, ${errorCount} failed`);
+      
+      // Track successful imports if most records were successful
+      if (successCount > 0 && successCount > errorCount) {
+        successfulImports.add(model);
+        console.log(`✅ ${model} marked as successfully imported`);
+      }
+    } catch (error) {
+      console.error(`Error importing ${file}:`, error);
+    }
+  }
+
+  // Then, import relationship data files (only if dependencies are met)
+  console.log('\n--- Importing Relationship Data ---');
+  for (const { file, model, dependencies, transform } of relationshipFiles) {
+    try {
+      // Check if all dependencies are satisfied
+      const missingDeps = dependencies.filter(dep => !successfulImports.has(dep));
+      if (missingDeps.length > 0) {
+        console.log(`⚠️ Skipping ${file} - missing dependencies: ${missingDeps.join(', ')}`);
+        continue;
+      }
+
+      const filePath = path.join(dataDirectory, file);
+      
+      if (!fs.existsSync(filePath)) {
+        console.log(`File not found: ${file}, skipping...`);
+        continue;
+      }
+
+      const rawData = fs.readFileSync(filePath, 'utf8');
+      const jsonData = JSON.parse(rawData);
+      const transformedData = await transform(jsonData);
+
+      console.log(`Importing ${transformedData.length} relationship records from ${file}...`);
+
+      // Clear existing relationship data
+      await (prisma as any)[model].deleteMany();
+
+      // Import new relationship data with validation
+      let successCount = 0;
+      let errorCount = 0;
+      
+      for (const item of transformedData) {
+        try {
+          // Verify parent records exist before creating relationship
+          const parentChecks = [];
+          if (model === 'newsTag') {
+            parentChecks.push(
+              prisma.news.findUnique({ where: { id: item.newsId } }),
+              prisma.tag.findUnique({ where: { id: item.tagId } })
+            );
+          } else if (model === 'programTag') {
+            parentChecks.push(
+              prisma.program.findUnique({ where: { id: item.programId } }),
+              prisma.tag.findUnique({ where: { id: item.tagId } })
+            );
+          } else if (model === 'eventTag') {
+            parentChecks.push(
+              prisma.event.findUnique({ where: { id: item.eventId } }),
+              prisma.tag.findUnique({ where: { id: item.tagId } })
+            );
+          }
+
+          const parents = await Promise.all(parentChecks);
+          if (parents.some(parent => !parent)) {
+            errorCount++;
+            continue; // Skip if parent record doesn't exist
+          }
+
+          await (prisma as any)[model].create({ data: item });
+          successCount++;
+        } catch (error) {
+          errorCount++;
+          console.error(`Error importing ${model} relationship:`, error.message);
+        }
+      }
+
+      console.log(`✓ Imported ${file}: ${successCount} successful, ${errorCount} failed`);
+      
     } catch (error) {
       console.error(`Error importing ${file}:`, error);
     }

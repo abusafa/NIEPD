@@ -33,13 +33,13 @@ const Logo: React.FC<LogoProps> = ({
     : 'National Institute for Professional Educational Development Logo';
 
   return (
-    <Image 
+    <img 
       src={logoVariants[variant]}
       alt={altText}
       width={200}
       height={200}
       className={`w-auto ${sizeClasses[size]} ${className}`}
-      priority
+      // priority
     />
   );
 };
