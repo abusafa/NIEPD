@@ -325,7 +325,7 @@ export default function Home() {
             <div className="max-w-5xl mx-auto text-center text-white">
               {/* Logo */}
               <div className="mb-8">
-                <Image
+                <img
                   src="/images/logos/png/شعار المعهد الوطني للتطوير المهني التعليمي-06-03.png"
                   alt="NIEPD Logo"
                   width={150}
@@ -405,7 +405,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className={`flex flex-col md:flex-row items-center justify-between ${currentLang === 'ar' ? 'md:' : ''}`}>
             <div className={`flex items-center ${currentLang === 'ar' ? 'space-x-reverse space-x-3' : 'space-x-3'} mb-4 md:mb-0`}>
-              <Image
+              <img
                 src="/images/logos/niepd-logo-horizontal.svg"
                 alt="NIEPD Logo"
                 width={150}
