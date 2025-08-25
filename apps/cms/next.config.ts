@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
     PORT: process.env.PORT || "3001",
   },
   images: {
-    domains: ['localhost'],
     remotePatterns: [
       {
         protocol: 'http',
@@ -17,9 +16,25 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'niepd-cms.rafed.io',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: '**',
+        pathname: '/uploads/**',
       }
     ],
+    // Allow all image formats and handle Arabic filenames
+    formats: ['image/webp', 'image/avif'],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   // Disable type checking during build to allow successful builds with type errors
   typescript: {
