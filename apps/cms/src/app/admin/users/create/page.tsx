@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { 
@@ -12,10 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import FormLayout from '@/components/shared/FormLayout';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ArrowLeft, Eye, EyeOff, User, Mail, UserCheck, Shield } from 'lucide-react';
+import { 
+  User, 
+  Mail, 
+  Shield, 
+  UserCheck, 
+  Eye, 
+  EyeOff,
+  CheckCircle,
+  XCircle
+} from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { FormFieldWrapper, ValidationError } from '@/components/forms/FormValidation';
 
 interface CreateUserForm {
   email: string;
@@ -28,12 +39,61 @@ interface CreateUserForm {
   isActive: boolean;
 }
 
+const userRoles = [
+  { 
+    value: 'SUPER_ADMIN', 
+    label: 'Super Admin',
+    labelAr: 'مدير عام',
+    icon: Shield,
+    color: 'text-red-600 dark:text-red-400',
+    description: 'Full system access including user management and system settings',
+    descriptionAr: 'وصول كامل إلى النظام بما في ذلك إدارة المستخدمين وإعدادات النظام'
+  },
+  { 
+    value: 'ADMIN', 
+    label: 'Admin',
+    labelAr: 'مدير',
+    icon: Shield,
+    color: 'text-purple-600 dark:text-purple-400',
+    description: 'User management, all content management, and site settings',
+    descriptionAr: 'إدارة المستخدمين وجميع إدارة المحتوى وإعدادات الموقع'
+  },
+  { 
+    value: 'EDITOR', 
+    label: 'Editor',
+    labelAr: 'محرر',
+    icon: UserCheck,
+    color: 'text-blue-600 dark:text-blue-400',
+    description: 'All content management and publishing permissions',
+    descriptionAr: 'جميع إدارة المحتوى وأذونات النشر'
+  },
+  { 
+    value: 'AUTHOR', 
+    label: 'Author',
+    labelAr: 'كاتب',
+    icon: User,
+    color: 'text-green-600 dark:text-green-400',
+    description: 'Create and edit own content, submit for review',
+    descriptionAr: 'إنشاء وتحرير المحتوى الخاص، وتقديمه للمراجعة'
+  },
+  { 
+    value: 'VIEWER', 
+    label: 'Viewer',
+    labelAr: 'مشاهد',
+    icon: Eye,
+    color: 'text-gray-600 dark:text-gray-400',
+    description: 'Read-only access to all content',
+    descriptionAr: 'الوصول للقراءة فقط إلى جميع المحتوى'
+  },
+];
+
 export default function CreateUserPage() {
   const router = useRouter();
+  const { currentLang, t, isRTL } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
   
   const [formData, setFormData] = useState<CreateUserForm>({
     email: '',
@@ -46,51 +106,64 @@ export default function CreateUserPage() {
     isActive: true,
   });
 
-  const roles = [
-    { value: 'SUPER_ADMIN', label: 'Super Admin', icon: Shield, color: 'text-red-600' },
-    { value: 'ADMIN', label: 'Admin', icon: Shield, color: 'text-purple-600' },
-    { value: 'EDITOR', label: 'Editor', icon: UserCheck, color: 'text-blue-600' },
-    { value: 'AUTHOR', label: 'Author', icon: User, color: 'text-green-600' },
-    { value: 'VIEWER', label: 'Viewer', icon: Eye, color: 'text-gray-600' },
-  ];
-
   const handleInputChange = (field: keyof CreateUserForm, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    if (error) setError('');
+    // Clear error for this field when user edits it
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
   };
 
   const validateForm = (): boolean => {
-    if (!formData.email || !formData.username || !formData.password) {
-      setError('Email, username, and password are required');
-      return false;
+    const newErrors: Record<string, string> = {};
+
+    // Required fields
+    if (!formData.email.trim()) {
+      newErrors.email = t('validation.required');
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = t('validation.email');
+      }
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return false;
+    if (!formData.username.trim()) {
+      newErrors.username = t('validation.required');
+    } else {
+      const usernameRegex = /^[a-zA-Z0-9._-]+$/;
+      if (!usernameRegex.test(formData.username)) {
+        newErrors.username = t('validation.username');
+      }
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      return false;
+    if (!formData.password) {
+      newErrors.password = t('validation.required');
+    } else if (formData.password.length < 8) {
+      newErrors.password = t('validation.passwordLength', { length: 8 });
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError('Please enter a valid email address');
-      return false;
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = t('validation.required');
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = t('validation.passwordMatch');
     }
 
-    return true;
+    if (!formData.role) {
+      newErrors.role = t('validation.required');
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     if (!validateForm()) return;
     
     setIsLoading(true);
-    setError('');
 
     try {
       const response = await fetch('/api/users', {
@@ -113,16 +186,16 @@ export default function CreateUserPage() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success('User created successfully');
+        toast.success(t('users.createSuccess'));
         router.push('/admin/users');
       } else {
-        setError(data.error || 'Failed to create user');
-        toast.error(data.error || 'Failed to create user');
+        setErrors({ api: data.error || t('users.createFailed') });
+        toast.error(data.error || t('users.createFailed'));
       }
     } catch (error) {
       console.error('Create user error:', error);
-      setError('An error occurred while creating the user');
-      toast.error('An error occurred while creating the user');
+      setErrors({ api: t('users.createError') });
+      toast.error(t('users.createError'));
     } finally {
       setIsLoading(false);
     }
@@ -132,254 +205,324 @@ export default function CreateUserPage() {
     router.push('/admin/users');
   };
 
-  const selectedRole = roles.find(role => role.value === formData.role);
+  const selectedRole = userRoles.find(role => role.value === formData.role);
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mb-6">
-        <Button
-          variant="ghost"
-          onClick={handleBack}
-          className="mb-4"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Users
-        </Button>
-        
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Create New User</h1>
-          <p className="text-gray-600">Add a new user to the system with appropriate permissions.</p>
-        </div>
-      </div>
+    <FormLayout
+      title={t('users.createUser')}
+      description={t('users.createUserDesc')}
+      onBack={handleBack}
+      onSave={handleSubmit}
+      loading={isLoading}
+      isEditing={false}
+      showPreview={false}
+      showWorkflow={false}
+    >
+      {errors.api && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertDescription>{errors.api}</AlertDescription>
+        </Alert>
+      )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5" />
-            User Details
-          </CardTitle>
-        </CardHeader>
-        
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+      <div className="space-y-8">
+        {/* Basic Information */}
+        <section className="space-y-6">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-1 bg-gradient-to-b from-blue-600 to-cyan-600 rounded-full" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 font-readex">
+              {t('users.basicInfo')}
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormFieldWrapper 
+              label={t('users.firstName')}
+              error={errors.firstName}
+            >
+              <Input
+                id="firstName"
+                type="text"
+                value={formData.firstName}
+                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                placeholder={t('users.firstNamePlaceholder')}
+                disabled={isLoading}
+                className="font-readex"
+                dir={isRTL ? "rtl" : "ltr"}
+              />
+            </FormFieldWrapper>
 
-            {/* Basic Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    type="text"
-                    value={formData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    placeholder="Enter first name"
-                    disabled={isLoading}
-                  />
-                </div>
+            <FormFieldWrapper 
+              label={t('users.lastName')}
+              error={errors.lastName}
+            >
+              <Input
+                id="lastName"
+                type="text"
+                value={formData.lastName}
+                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                placeholder={t('users.lastNamePlaceholder')}
+                disabled={isLoading}
+                className="font-readex"
+                dir={isRTL ? "rtl" : "ltr"}
+              />
+            </FormFieldWrapper>
+          </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    placeholder="Enter last name"
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">
-                  Email <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    placeholder="Enter email address"
-                    className="pl-10"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="username">
-                  Username <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="username"
-                    type="text"
-                    value={formData.username}
-                    onChange={(e) => handleInputChange('username', e.target.value)}
-                    placeholder="Enter username"
-                    className="pl-10"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
+          <FormFieldWrapper 
+            label={t('users.email')}
+            required
+            error={errors.email}
+          >
+            <div className="relative">
+              <Mail className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-3 h-4 w-4 text-gray-400`} />
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                placeholder={t('users.emailPlaceholder')}
+                className={isRTL ? "pr-10 font-readex" : "pl-10 font-readex"}
+                required
+                disabled={isLoading}
+                dir={isRTL ? "rtl" : "ltr"}
+              />
             </div>
+          </FormFieldWrapper>
 
-            {/* Password */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900">Security</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="password">
-                    Password <span className="text-red-500">*</span>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
-                      placeholder="Enter password"
-                      required
-                      disabled={isLoading}
-                      minLength={6}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                      disabled={isLoading}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">
-                    Confirm Password <span className="text-red-500">*</span>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                      placeholder="Confirm password"
-                      required
-                      disabled={isLoading}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                      disabled={isLoading}
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
+          <FormFieldWrapper 
+            label={t('users.username')}
+            required
+            error={errors.username}
+          >
+            <div className="relative">
+              <User className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-3 h-4 w-4 text-gray-400`} />
+              <Input
+                id="username"
+                type="text"
+                value={formData.username}
+                onChange={(e) => handleInputChange('username', e.target.value)}
+                placeholder={t('users.usernamePlaceholder')}
+                className={isRTL ? "pr-10 font-readex" : "pl-10 font-readex"}
+                required
+                disabled={isLoading}
+                dir={isRTL ? "rtl" : "ltr"}
+              />
             </div>
+            <p className="text-xs text-gray-500 mt-1 font-readex">
+              {t('users.usernameHelper')}
+            </p>
+          </FormFieldWrapper>
+        </section>
 
-            {/* Role & Status */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900">Permissions & Status</h3>
-              
-              <div className="space-y-2">
-                <Label>Role</Label>
-                <Select 
-                  value={formData.role} 
-                  onValueChange={(value) => handleInputChange('role', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue>
-                      {selectedRole && (
-                        <div className="flex items-center gap-2">
-                          <selectedRole.icon className={`h-4 w-4 ${selectedRole.color}`} />
-                          {selectedRole.label}
-                        </div>
-                      )}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {roles.map((role) => {
-                      const Icon = role.icon;
-                      return (
-                        <SelectItem key={role.value} value={role.value}>
-                          <div className="flex items-center gap-2">
-                            <Icon className={`h-4 w-4 ${role.color}`} />
-                            {role.label}
-                          </div>
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="isActive"
-                  checked={formData.isActive}
-                  onChange={(e) => handleInputChange('isActive', e.target.checked)}
-                  className="rounded"
+        {/* Security */}
+        <section className="space-y-6">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-1 bg-gradient-to-b from-amber-600 to-orange-600 rounded-full" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 font-readex">
+              {t('users.security')}
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormFieldWrapper 
+              label={t('users.password')}
+              required
+              error={errors.password}
+            >
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  placeholder={t('users.passwordPlaceholder')}
+                  required
                   disabled={isLoading}
+                  className="font-readex"
+                  dir="ltr"
                 />
-                <Label htmlFor="isActive">Account is active</Label>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`absolute inset-y-0 ${isRTL ? 'left-0 pl-3' : 'right-0 pr-3'} flex items-center text-gray-400 hover:text-gray-600`}
+                  disabled={isLoading}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
               </div>
-            </div>
+              <p className="text-xs text-gray-500 mt-1 font-readex">
+                {t('users.passwordHelper')}
+              </p>
+            </FormFieldWrapper>
 
-            {/* Submit */}
-            <div className="flex justify-end space-x-4 pt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleBack}
-                disabled={isLoading}
+            <FormFieldWrapper 
+              label={t('users.confirmPassword')}
+              required
+              error={errors.confirmPassword}
+            >
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                  placeholder={t('users.confirmPasswordPlaceholder')}
+                  required
+                  disabled={isLoading}
+                  className="font-readex"
+                  dir="ltr"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className={`absolute inset-y-0 ${isRTL ? 'left-0 pl-3' : 'right-0 pr-3'} flex items-center text-gray-400 hover:text-gray-600`}
+                  disabled={isLoading}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </FormFieldWrapper>
+          </div>
+        </section>
+
+        {/* Permissions & Status */}
+        <section className="space-y-6">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-1 bg-gradient-to-b from-purple-600 to-indigo-600 rounded-full" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 font-readex">
+              {t('users.permissions')}
+            </h3>
+          </div>
+          
+          <FormFieldWrapper 
+            label={t('users.role')}
+            required
+            error={errors.role}
+          >
+            <Select 
+              value={formData.role} 
+              onValueChange={(value) => handleInputChange('role', value)}
+              disabled={isLoading}
+            >
+              <SelectTrigger className="font-readex bg-white dark:bg-gray-800 border-2 hover:border-[#00808A] dark:hover:border-[#00808A] transition-colors focus:ring-2 focus:ring-[#00808A] focus:ring-offset-1">
+                <SelectValue>
+                  {selectedRole && (
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-full p-1.5 bg-gray-100 dark:bg-gray-700">
+                        <selectedRole.icon className={`h-4 w-4 ${selectedRole.color}`} />
+                      </div>
+                      {currentLang === 'ar' ? selectedRole.labelAr : selectedRole.label}
+                    </div>
+                  )}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 shadow-lg rounded-lg overflow-hidden">
+                {userRoles.map((role) => {
+                  const RoleIcon = role.icon;
+                  return (
+                    <SelectItem key={role.value} value={role.value} className="font-readex hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer py-2 border-b border-gray-100 dark:border-gray-700 last:border-none">
+                      <div className="flex items-center gap-3 py-1 px-1">
+                        <div className="rounded-full p-1.5 bg-gray-100 dark:bg-gray-700/70">
+                          <RoleIcon className={`h-4 w-4 ${role.color}`} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-medium text-gray-900 dark:text-gray-100">
+                            {currentLang === 'ar' ? role.labelAr : role.label}
+                          </span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">
+                            {currentLang === 'ar' ? role.descriptionAr : role.description}
+                          </span>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </FormFieldWrapper>
+
+          <div className="flex items-start space-x-3">
+            <Checkbox
+              id="isActive"
+              checked={formData.isActive}
+              onCheckedChange={(checked) => handleInputChange('isActive', Boolean(checked))}
+              disabled={isLoading}
+              className={`${isRTL ? 'ml-2' : 'mr-2'} mt-1`}
+            />
+            <div>
+              <Label 
+                htmlFor="isActive" 
+                className={`font-readex flex items-center gap-2 ${formData.isActive ? 'text-green-600' : 'text-gray-600'}`}
               >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                    Creating...
-                  </>
+                {formData.isActive ? (
+                  <CheckCircle className="h-4 w-4 text-green-600" />
                 ) : (
-                  'Create User'
+                  <XCircle className="h-4 w-4 text-gray-400" />
                 )}
-              </Button>
+                {t('users.accountActive')}
+              </Label>
+              <p className="text-xs text-gray-500 font-readex mt-1">
+                {t('users.accountActiveHelper')}
+              </p>
             </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+          </div>
+        </section>
+
+        {/* Role Permissions Reference */}
+        <section className="p-6 bg-gradient-to-r from-slate-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl border border-slate-200/60 dark:border-gray-700/40 shadow-sm">
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 font-readex">
+            {t('users.roleReference')}
+          </h4>
+          <div className="space-y-3">
+            {userRoles.map(role => {
+              const RoleIcon = role.icon;
+              return (
+                <div key={role.value} className={`flex items-start gap-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <RoleIcon className={`h-5 w-5 ${role.color} mt-0.5`} />
+                  <div>
+                    <span className={`font-medium text-gray-900 dark:text-gray-100 font-readex ${role.color}`}>
+                      {currentLang === 'ar' ? role.labelAr : role.label}:
+                    </span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300 font-readex ml-2">
+                      {currentLang === 'ar' ? role.descriptionAr : role.description}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Security Notice */}
+        <section className="p-6 bg-gradient-to-r from-amber-50/50 to-amber-50 dark:from-amber-900/10 dark:to-amber-900/20 rounded-2xl border border-amber-200/60 dark:border-amber-700/30 shadow-sm">
+          <h4 className="font-semibold text-amber-800 dark:text-amber-400 mb-4 font-readex flex items-center gap-2">
+            <Shield className="h-5 w-5" />
+            {t('users.securityNotice')}
+          </h4>
+          <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-2 font-readex">
+            <li className={`flex items-start gap-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+              <div className="min-w-2 h-2 w-2 rounded-full bg-amber-600 dark:bg-amber-400 mt-1.5" />
+              {t('users.securityTip1')}
+            </li>
+            <li className={`flex items-start gap-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+              <div className="min-w-2 h-2 w-2 rounded-full bg-amber-600 dark:bg-amber-400 mt-1.5" />
+              {t('users.securityTip2')}
+            </li>
+            <li className={`flex items-start gap-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+              <div className="min-w-2 h-2 w-2 rounded-full bg-amber-600 dark:bg-amber-400 mt-1.5" />
+              {t('users.securityTip3')}
+            </li>
+          </ul>
+        </section>
+      </div>
+    </FormLayout>
   );
 }
-

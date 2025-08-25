@@ -1,19 +1,20 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
 
-// Language type
-export type Language = 'ar' | 'en';
+// Available languages
+export type Language = 'en' | 'ar';
 
-// Language context interface
+// Language context type
 interface LanguageContextType {
   currentLang: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string, params?: Record<string, string>) => string;
+  t: (key: string, params?: Record<string, string | number>) => string;
   isRTL: boolean;
 }
 
-// Create context
+// Context initialization
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 // Translation interface
@@ -51,6 +52,8 @@ const translations: Record<Language, Translation> = {
     language: 'اللغة',
     arabic: 'العربية',
     english: 'الإنجليزية',
+    refresh: 'تحديث',
+    filters: 'الفلاتر',
 
     // Navigation & Layout
     dashboard: 'لوحة الإدارة',
@@ -81,11 +84,11 @@ const translations: Record<Language, Translation> = {
 
     // Dashboard
     dashboard_page: {
-      title: 'لوحة التحكم الرئيسية',
+      title: 'اللوحة الرئيسية',
       welcome: 'مرحباً بك في نظام إدارة المحتوى',
       overview: 'نظرة عامة',
       recentActivity: 'النشاط الأخير',
-      quickActions: 'الإجراءات السريعة',
+      quickActions: 'إجراءات سريعة',
       statistics: 'الإحصائيات'
     },
 
@@ -98,194 +101,63 @@ const translations: Record<Language, Translation> = {
       totalViews: 'إجمالي المشاهدات',
       activeUsers: 'المستخدمون النشطون',
       publishedContent: 'المحتوى المنشور',
-      draftContent: 'المحتوى المسودة'
+      draftContent: 'المسودات'
     },
 
     // Content Management
     content: {
       title: 'العنوان',
-      titleAr: 'العنوان بالعربية',
-      titleEn: 'العنوان بالإنجليزية',
-      description: 'الوصف',
-      descriptionAr: 'الوصف بالعربية',
-      descriptionEn: 'الوصف بالإنجليزية',
-      content: 'المحتوى',
-      contentAr: 'المحتوى بالعربية',
-      contentEn: 'المحتوى بالإنجليزية',
-      image: 'الصورة',
-      featured: 'مميز',
-      published: 'منشور',
-      draft: 'مسودة',
+      slug: 'الرابط الدائم',
+      author: 'المؤلف',
       category: 'التصنيف',
-      tags: 'العلامات',
-      author: 'الكاتب',
-      publishDate: 'تاريخ النشر',
+      categories: 'التصنيفات',
+      tag: 'الوسم',
+      tags: 'الوسوم',
       createdAt: 'تاريخ الإنشاء',
       updatedAt: 'تاريخ التحديث',
-      slug: 'الرابط المخصص'
-    },
-
-    // News Management
-    news: {
-      title: 'إدارة الأخبار',
-      description: 'إدارة المقالات الإخبارية والإعلانات',
-      createNew: 'مقال جديد',
-      editNews: 'تعديل الخبر',
-      newsList: 'قائمة الأخبار',
-      newsDetails: 'تفاصيل الخبر',
-      addNews: 'إضافة خبر',
-      deleteConfirm: 'هل أنت متأكد من حذف هذا الخبر؟',
-      publishConfirm: 'هل تريد نشر هذا الخبر؟',
-      summary: 'الملخص',
-      summaryAr: 'الملخص بالعربية',
-      summaryEn: 'الملخص بالإنجليزية',
-      // Enhanced features
-      publish: 'نشر',
-      unpublish: 'إلغاء النشر',
-      submitForReview: 'إرسال للمراجعة',
-      publishSuccess: 'تم نشر المقال بنجاح',
-      unpublishSuccess: 'تم إلغاء نشر المقال بنجاح',
-      submitReviewSuccess: 'تم إرسال المقال للمراجعة بنجاح',
-      publishError: 'فشل في نشر المقال',
-      unpublishError: 'فشل في إلغاء نشر المقال',
-      submitReviewError: 'فشل في إرسال المقال للمراجعة',
-      searchPlaceholder: 'البحث في المقالات...',
-      emptyMessage: 'لم يتم العثور على مقالات',
-      emptyDescription: 'أنشئ أول مقال إخباري',
-      // Status
-      published: 'منشور',
+      publishedAt: 'تاريخ النشر',
+      status: 'الحالة',
+      featured: 'مميز',
       draft: 'مسودة',
-      underReview: 'تحت المراجعة',
-      // Statistics
-      totalArticles: 'إجمالي المقالات',
-      totalCount: 'العدد الإجمالي',
-      publishedArticles: 'مقالات منشورة',
-      featuredArticles: 'مقالات مميزة',
-      // Filters
-      statusFilter: 'الحالة',
-      featuredFilter: 'المميزة',
-      categoryFilter: 'التصنيف',
-      featuredOnly: 'المميزة فقط',
-      nonFeatured: 'غير مميزة'
+      published: 'منشور',
+      scheduled: 'مجدول',
+      archived: 'مؤرشف',
+      content: 'المحتوى',
+      description: 'الوصف',
+      summary: 'الملخص',
+      image: 'الصورة',
+      images: 'الصور',
+      file: 'الملف',
+      files: 'الملفات',
+      media: 'الوسائط',
+      attachment: 'مرفق',
+      attachments: 'مرفقات',
+      link: 'رابط',
+      links: 'روابط',
+      dateRange: 'نطاق التاريخ',
+      startDate: 'تاريخ البدء',
+      endDate: 'تاريخ الانتهاء',
+      location: 'الموقع'
     },
 
-    // Programs Management
-    programs: {
-      title: 'إدارة البرامج',
-      description: 'إدارة البرامج التدريبية والدورات',
-      createNew: 'برنامج جديد',
-      editProgram: 'تعديل البرنامج',
-      programsList: 'قائمة البرامج',
-      programDetails: 'تفاصيل البرنامج',
-      addProgram: 'إضافة برنامج',
-      deleteConfirm: 'هل أنت متأكد من حذف هذا البرنامج؟',
-      duration: 'المدة',
-      startDate: 'تاريخ البداية',
-      endDate: 'تاريخ النهاية',
-      capacity: 'السعة',
-      instructor: 'المدرب',
-      price: 'السعر',
-      prerequisites: 'المتطلبات المسبقة',
-      // Enhanced features
-      publish: 'نشر',
-      unpublish: 'إلغاء النشر',
-      submitForReview: 'إرسال للمراجعة',
-      publishSuccess: 'تم نشر البرنامج بنجاح',
-      unpublishSuccess: 'تم إلغاء نشر البرنامج بنجاح',
-      submitReviewSuccess: 'تم إرسال البرنامج للمراجعة بنجاح',
-      publishError: 'فشل في نشر البرنامج',
-      unpublishError: 'فشل في إلغاء نشر البرنامج',
-      submitReviewError: 'فشل في إرسال البرنامج للمراجعة',
-      searchPlaceholder: 'البحث في البرامج...',
-      emptyMessage: 'لم يتم العثور على برامج',
-      emptyDescription: 'أنشئ أول برنامج تدريبي',
-      // Program specific
-      level: 'المستوى',
-      participants: 'المشاركون',
-      free: 'مجاني',
-      certified: 'معتمد',
-      // Levels
-      beginner: 'مبتدئ',
-      intermediate: 'متوسط',
-      advanced: 'متقدم',
-      expert: 'خبير',
-      // Duration types
-      hours: 'ساعة',
-      days: 'يوم',
-      weeks: 'أسبوع',
-      months: 'شهر',
-      // Statistics
-      totalPrograms: 'إجمالي البرامج',
-      publishedPrograms: 'برامج منشورة',
-      featuredPrograms: 'برامج مميزة',
-      freePrograms: 'برامج مجانية',
-      // Filters
-      levelFilter: 'المستوى',
-      typeFilter: 'النوع',
-      certificationFilter: 'الشهادة',
-      freeFilter: 'البرامج المجانية',
-      paidFilter: 'البرامج المدفوعة',
-      certifiedFilter: 'معتمد',
-      nonCertifiedFilter: 'غير معتمد'
+    // Validation
+    validation: {
+      required: 'هذا الحقل مطلوب',
+      email: 'يرجى إدخال بريد إلكتروني صحيح',
+      username: 'الاسم يمكن أن يحتوي فقط على حروف، أرقام، نقاط، شرطات سفلية وشرطات',
+      passwordLength: 'كلمة المرور يجب أن تكون على الأقل {length} أحرف',
+      passwordMatch: 'كلمتي المرور غير متطابقتين',
+      dateFormat: 'صيغة التاريخ غير صحيحة',
+      phoneFormat: 'صيغة رقم الهاتف غير صحيحة',
+      urlFormat: 'صيغة الرابط غير صحيحة',
+      numberOnly: 'يرجى إدخال أرقام فقط',
+      minValue: 'القيمة يجب أن تكون على الأقل {min}',
+      maxValue: 'القيمة يجب أن تكون أقل من {max}',
+      minLength: 'يجب أن يكون الطول على الأقل {min} أحرف',
+      maxLength: 'يجب أن يكون الطول أقل من {max} أحرف'
     },
 
-    // Events Management
-    events: {
-      title: 'إدارة الفعاليات',
-      description: 'إدارة ورش العمل والمؤتمرات والندوات',
-      createNew: 'فعالية جديدة',
-      editEvent: 'تعديل الفعالية',
-      eventsList: 'قائمة الفعاليات',
-      eventDetails: 'تفاصيل الفعالية',
-      addEvent: 'إضافة فعالية',
-      deleteConfirm: 'هل أنت متأكد من حذف هذه الفعالية؟',
-      location: 'الموقع',
-      locationAr: 'الموقع بالعربية',
-      locationEn: 'الموقع بالإنجليزية',
-      dateTime: 'التاريخ والوقت',
-      registrationRequired: 'التسجيل مطلوب',
-      maxAttendees: 'الحد الأقصى للحضور',
-      // Enhanced features
-      publish: 'نشر',
-      unpublish: 'إلغاء النشر',
-      submitForReview: 'إرسال للمراجعة',
-      publishSuccess: 'تم نشر الفعالية بنجاح',
-      unpublishSuccess: 'تم إلغاء نشر الفعالية بنجاح',
-      submitReviewSuccess: 'تم إرسال الفعالية للمراجعة بنجاح',
-      publishError: 'فشل في نشر الفعالية',
-      unpublishError: 'فشل في إلغاء نشر الفعالية',
-      submitReviewError: 'فشل في إرسال الفعالية للمراجعة',
-      searchPlaceholder: 'البحث في الفعاليات...',
-      emptyMessage: 'لم يتم العثور على فعاليات',
-      emptyDescription: 'أنشئ أول فعالية',
-      // Event specific
-      venue: 'المكان',
-      venueAr: 'المكان بالعربية',
-      venueEn: 'المكان بالإنجليزية',
-      eventType: 'نوع الفعالية',
-      eventTypeAr: 'نوع الفعالية بالعربية',
-      eventTypeEn: 'نوع الفعالية بالإنجليزية',
-      capacity: 'السعة',
-      noLimit: 'بدون حد',
-      // Event Status
-      eventStatus: 'حالة الفعالية',
-      publishStatus: 'حالة النشر',
-      upcoming: 'قادم',
-      ongoing: 'جاري',
-      past: 'سابق',
-      cancelled: 'ملغي',
-      // Statistics
-      totalEvents: 'إجمالي الفعاليات',
-      upcomingEvents: 'فعاليات قادمة',
-      futureEvents: 'فعاليات مستقبلية',
-      publishedEvents: 'فعاليات منشورة',
-      featuredEvents: 'فعاليات مميزة',
-      // Filters
-      eventStatusFilter: 'حالة الفعالية',
-      publishStatusFilter: 'حالة النشر'
-    },
-
-    // User Management
+    // Users management
     users: {
       title: 'إدارة المستخدمين',
       description: 'إدارة مستخدمي النظام وصلاحياتهم',
@@ -336,268 +208,155 @@ const translations: Record<Language, Translation> = {
       systemAdministrators: 'مدراء النظام',
       contentCreators: 'منشئو المحتوى',
       authorsAndEditors: 'كتاب ومحررون',
+      totalCount: 'العدد الإجمالي',
       // Filters
-      roleFilter: 'الدور',
-      statusFilter: 'الحالة'
+      roleFilter: 'تصفية حسب الدور',
+      statusFilter: 'تصفية حسب الحالة',
+      allRoles: 'جميع الأدوار',
+      allStatus: 'جميع الحالات',
+      // New additions for user creation
+      createUser: 'إنشاء مستخدم جديد',
+      createUserDesc: 'قم بإنشاء حساب مستخدم جديد وتحديد صلاحياته في النظام',
+      basicInfo: 'المعلومات الأساسية',
+      firstNamePlaceholder: 'أدخل الاسم الأول',
+      lastNamePlaceholder: 'أدخل الاسم الأخير',
+      emailPlaceholder: 'أدخل البريد الإلكتروني',
+      usernamePlaceholder: 'أدخل اسم المستخدم',
+      usernameHelper: 'يمكن استخدام الحروف والأرقام والنقاط والشرطات فقط',
+      security: 'الأمان',
+      passwordPlaceholder: 'أدخل كلمة المرور',
+      confirmPasswordPlaceholder: 'تأكيد كلمة المرور',
+      passwordHelper: 'يجب أن تكون كلمة المرور 8 أحرف على الأقل',
+      permissions: 'الصلاحيات والحالة',
+      accountActive: 'الحساب نشط',
+      accountActiveHelper: 'المستخدمون غير النشطين لا يمكنهم تسجيل الدخول إلى النظام',
+      roleReference: 'مرجع الأدوار والصلاحيات',
+      securityNotice: 'تنبيه أمني',
+      securityTip1: 'منح دور المدير العام فقط للأشخاص الموثوق بهم',
+      securityTip2: 'سيتم إرسال إشعار للمستخدم عند إنشاء حسابه',
+      securityTip3: 'تغيير دور المستخدم سيؤثر على صلاحياته فوراً',
+      securityTip4: 'سيتم إرسال إشعار للمستخدم عند تعديل حسابه',
+      securityTip5: 'تغيير كلمة المرور سيتطلب من المستخدم تسجيل الدخول مرة أخرى',
+      securityTip6: 'إلغاء تفعيل المستخدم سيمنع وصوله فوراً',
+      createSuccess: 'تم إنشاء المستخدم بنجاح',
+      createFailed: 'فشل في إنشاء المستخدم',
+      createError: 'حدث خطأ أثناء إنشاء المستخدم',
+      // Edit page specific
+      editUserDesc: 'تحديث معلومات المستخدم وصلاحياته',
+      loadUserError: 'فشل في تحميل بيانات المستخدم',
+      updateSuccess: 'تم تحديث المستخدم بنجاح',
+      updateFailed: 'فشل في تحديث المستخدم',
+      updateError: 'حدث خطأ أثناء تحديث المستخدم',
+      passwordManagement: 'إدارة كلمة المرور',
+      changePassword: 'تغيير كلمة المرور',
+      changePasswordHelper: 'حدد هذا لتعيين كلمة مرور جديدة للمستخدم',
+      newPassword: 'كلمة المرور الجديدة',
+      confirmNewPassword: 'تأكيد كلمة المرور الجديدة',
+      // View page specific
+      userProfile: 'ملف المستخدم',
+      userProfileDesc: 'عرض وإدارة حساب المستخدم',
+      userNotFound: 'المستخدم غير موجود',
+      userNotFoundDesc: 'المستخدم المطلوب غير موجود',
+      rolePermissions: 'صلاحيات الدور',
+      currentRole: 'الدور الحالي',
+      contentContributions: 'مساهمات المحتوى',
+      newsArticles: 'مقالات إخبارية',
+      programs: 'البرامج',
+      events: 'الفعاليات',
+      pages: 'الصفحات',
+      totalContentCreated: 'إجمالي المحتوى المنشأ',
+      items: 'عنصر',
+      activityTimeline: 'الجدول الزمني للنشاط',
+      accountCreated: 'تم إنشاء الحساب',
+      profileUpdated: 'تم تحديث الملف الشخصي',
+      accountStatus: 'حالة الحساب',
+      memberSince: 'عضو منذ',
+      contactInformation: 'معلومات التواصل',
+      quickActions: 'إجراءات سريعة',
+      editProfile: 'تعديل الملف الشخصي',
+      sendEmail: 'إرسال بريد إلكتروني',
+      activateUser: 'تفعيل المستخدم',
+      deactivateUser: 'إلغاء تفعيل المستخدم',
+      deleteUser: 'حذف المستخدم',
+      activate: 'تفعيل',
+      deactivate: 'إلغاء تفعيل',
+      activateConfirm: 'هل أنت متأكد من تفعيل هذا المستخدم؟',
+      deactivateConfirm: 'هل أنت متأكد من إلغاء تفعيل هذا المستخدم؟',
+      deleteSuccess: 'تم حذف المستخدم بنجاح',
+      deleteError: 'فشل في حذف المستخدم'
     },
 
-    // Categories Management
-    categories: {
-      title: 'إدارة التصنيفات',
-      description: 'تنظيم المحتوى باستخدام التصنيفات والتصنيفات الفرعية',
-      createNew: 'تصنيف جديد',
-      editCategory: 'تعديل التصنيف',
-      categoriesList: 'قائمة التصنيفات',
-      categoryDetails: 'تفاصيل التصنيف',
-      addCategory: 'إضافة تصنيف',
-      deleteConfirm: 'هل أنت متأكد من حذف هذا التصنيف؟',
-      searchPlaceholder: 'البحث في التصنيفات...',
-      emptyMessage: 'لم يتم العثور على تصنيفات',
-      emptyDescription: 'أنشئ أول تصنيف لتنظيم المحتوى',
-      cannotDeleteWithContent: 'لا يمكن حذف تصنيف يحتوي على تصنيفات فرعية أو محتوى',
-      // Category specific
-      category: 'التصنيف',
-      type: 'النوع',
-      slug: 'الرابط المختصر',
-      usage: 'الاستخدام',
-      items: 'عناصر',
-      subcategories: 'الفئات الفرعية',
-      parent: 'الوالد',
-      noCategory: 'بدون تصنيف',
-      // Types
-      types: {
-        NEWS: 'الأخبار',
-        PROGRAMS: 'البرامج',
-        EVENTS: 'الفعاليات',
-        PAGES: 'الصفحات',
-        GENERAL: 'عام'
-      },
-      // Usage breakdown
-      newsCount: 'أخبار',
-      programsCount: 'برامج',
-      eventsCount: 'فعاليات',
-      pagesCount: 'صفحات',
-      // Statistics
-      totalCategories: 'إجمالي التصنيفات',
-      newsCategories: 'تصنيفات الأخبار',
-      organizeNews: 'لتنظيم الأخبار',
-      programCategories: 'تصنيفات البرامج',
-      organizePrograms: 'لتنظيم البرامج',
-      parentCategories: 'التصنيفات الرئيسية',
-      withoutParent: 'بدون تصنيف والد',
-      // Filters
-      typeFilter: 'النوع',
-      hierarchyFilter: 'التسلسل الهرمي',
-      parentCategoriesFilter: 'التصنيفات الرئيسية',
-      subcategoriesFilter: 'التصنيفات الفرعية'
-    },
-
-    // Pages Management
-    pages: {
-      title: 'إدارة الصفحات',
-      description: 'إدارة الصفحات الثابتة والسياسات والمحتوى الإعلامي',
-      createNew: 'صفحة جديدة',
-      editPage: 'تعديل الصفحة',
-      pagesList: 'قائمة الصفحات',
-      pageDetails: 'تفاصيل الصفحة',
-      addPage: 'إضافة صفحة',
-      deleteConfirm: 'هل أنت متأكد من حذف هذه الصفحة؟',
-      searchPlaceholder: 'البحث في الصفحات...',
-      emptyMessage: 'لم يتم العثور على صفحات',
-      emptyDescription: 'أنشئ أول صفحة ثابتة',
-      // Enhanced features
-      publish: 'نشر',
-      unpublish: 'إلغاء النشر',
-      submitForReview: 'إرسال للمراجعة',
-      publishSuccess: 'تم نشر الصفحة بنجاح',
-      unpublishSuccess: 'تم إلغاء نشر الصفحة بنجاح',
-      submitReviewSuccess: 'تم إرسال الصفحة للمراجعة بنجاح',
-      publishError: 'فشل في نشر الصفحة',
-      unpublishError: 'فشل في إلغاء نشر الصفحة',
-      submitReviewError: 'فشل في إرسال الصفحة للمراجعة',
-      // Page specific
-      page: 'الصفحة',
-      template: 'القالب',
-      visibility: 'الرؤية',
-      pageType: 'نوع الصفحة',
-      // Templates
-      default: 'افتراضي',
-      landing: 'صفحة هبوط',
-      policy: 'سياسة',
-      about: 'حول',
-      contact: 'تواصل',
-      // Visibility
-      public: 'عامة',
-      private: 'خاصة',
-      restricted: 'مقيدة',
-      // Statistics
-      totalPages: 'إجمالي الصفحات',
-      publishedPages: 'صفحات منشورة',
-      draftPages: 'صفحات مسودة',
-      policyPages: 'صفحات السياسات',
-      // Filters
-      templateFilter: 'القالب',
-      visibilityFilter: 'الرؤية',
-      statusFilter: 'الحالة'
-    },
-
-    // Partners Management
+    // Partners management
     partners: {
       title: 'إدارة الشركاء',
-      description: 'إدارة شركاء المنظمة والرعاة والمتعاونين',
+      description: 'إدارة الشركاء والرعاة',
       createNew: 'شريك جديد',
       editPartner: 'تعديل الشريك',
       partnersList: 'قائمة الشركاء',
       partnerDetails: 'تفاصيل الشريك',
       addPartner: 'إضافة شريك',
       deleteConfirm: 'هل أنت متأكد من حذف هذا الشريك؟',
-      searchPlaceholder: 'البحث في الشركاء...',
-      emptyMessage: 'لم يتم العثور على شركاء',
-      emptyDescription: 'أضف أول شريك للمنظمة',
-      // Partner specific
-      partner: 'الشريك',
-      organization: 'المنظمة',
-      partnerType: 'نوع الشراكة',
-      website: 'الموقع الإلكتروني',
+      name: 'اسم الشريك',
+      nameAr: 'الاسم بالعربية',
+      nameEn: 'الاسم بالإنجليزية',
       logo: 'الشعار',
-      contact: 'جهة التواصل',
-      email: 'البريد الإلكتروني',
-      phone: 'رقم الهاتف',
-      // Partner Types
-      sponsor: 'راعي',
-      collaborator: 'متعاون',
-      supplier: 'مورد',
-      client: 'عميل',
-      strategic: 'استراتيجي',
-      // Statistics
-      totalPartners: 'إجمالي الشركاء',
-      featuredPartners: 'شركاء مميزون',
-      activePartners: 'شركاء نشطون',
-      sponsorPartners: 'شركاء راعون',
-      // Filters
-      typeFilter: 'نوع الشراكة',
-      statusFilter: 'الحالة',
-      featuredFilter: 'المميز'
+      website: 'الموقع الإلكتروني',
+      type: 'نوع الشراكة',
+      order: 'الترتيب',
+      featured: 'مميز',
+      partnershipStartDate: 'تاريخ بدء الشراكة',
+      partnershipEndDate: 'تاريخ انتهاء الشراكة'
     },
 
-    // FAQ Management
+    // FAQ management
     faq: {
-      title: 'إدارة الأسئلة الشائعة',
-      description: 'إدارة الأسئلة المتكررة وإجاباتها',
+      title: 'الأسئلة الشائعة',
+      description: 'إدارة الأسئلة الشائعة والإجابات',
       createNew: 'سؤال جديد',
-      editFAQ: 'تعديل السؤال',
+      editFaq: 'تعديل السؤال',
       faqList: 'قائمة الأسئلة',
       faqDetails: 'تفاصيل السؤال',
-      addFAQ: 'إضافة سؤال',
+      addFaq: 'إضافة سؤال',
       deleteConfirm: 'هل أنت متأكد من حذف هذا السؤال؟',
-      searchPlaceholder: 'البحث في الأسئلة والأجوبة...',
-      emptyMessage: 'لم يتم العثور على أسئلة',
-      emptyDescription: 'أضف أول سؤال شائع',
-      // Enhanced features
-      publish: 'نشر',
-      unpublish: 'إلغاء النشر',
-      submitForReview: 'إرسال للمراجعة',
-      publishSuccess: 'تم نشر السؤال بنجاح',
-      unpublishSuccess: 'تم إلغاء نشر السؤال بنجاح',
-      submitReviewSuccess: 'تم إرسال السؤال للمراجعة بنجاح',
-      publishError: 'فشل في نشر السؤال',
-      unpublishError: 'فشل في إلغاء نشر السؤال',
-      submitReviewError: 'فشل في إرسال السؤال للمراجعة',
-      // FAQ specific
       question: 'السؤال',
+      answer: 'الإجابة',
+      category: 'التصنيف',
+      order: 'الترتيب',
+      status: 'الحالة',
+      active: 'نشط',
+      inactive: 'غير نشط',
       questionAr: 'السؤال بالعربية',
       questionEn: 'السؤال بالإنجليزية',
-      answer: 'الإجابة',
       answerAr: 'الإجابة بالعربية',
-      answerEn: 'الإجابة بالإنجليزية',
-      faqCategory: 'تصنيف الأسئلة',
-      priority: 'الأولوية',
-      helpfulness: 'مدى الفائدة',
-      views: 'المشاهدات',
-      // Priority levels
-      high: 'عالية',
-      medium: 'متوسطة',
-      low: 'منخفضة',
-      // Categories
-      general: 'عامة',
-      technical: 'تقنية',
-      account: 'الحساب',
-      billing: 'الفواتير',
-      support: 'الدعم',
-      // Statistics
-      totalFAQ: 'إجمالي الأسئلة',
-      publishedFAQ: 'أسئلة منشورة',
-      draftFAQ: 'أسئلة مسودة',
-      highPriorityFAQ: 'أسئلة عالية الأولوية',
-      // Filters
-      categoryFilter: 'التصنيف',
-      priorityFilter: 'الأولوية',
-      statusFilter: 'الحالة'
+      answerEn: 'الإجابة بالإنجليزية'
     },
 
-    // Authentication
-    auth: {
-      login: 'تسجيل الدخول',
-      loginTitle: 'تسجيل الدخول إلى لوحة الإدارة',
-      loginSubtitle: 'أدخل بياناتك للوصول إلى نظام إدارة المحتوى',
-      usernameOrEmail: 'اسم المستخدم أو البريد الإلكتروني',
-      password: 'كلمة المرور',
-      rememberMe: 'تذكرني',
-      forgotPassword: 'نسيت كلمة المرور؟',
-      loginError: 'خطأ في تسجيل الدخول',
-      invalidCredentials: 'بيانات الاعتماد غير صحيحة',
-      logoutSuccess: 'تم تسجيل الخروج بنجاح'
-    },
-
-    // Forms
-    form: {
-      required: 'هذا الحقل مطلوب',
-      invalidEmail: 'البريد الإلكتروني غير صحيح',
-      passwordMismatch: 'كلمات المرور غير متطابقة',
-      minLength: 'الحد الأدنى {min} أحرف',
-      maxLength: 'الحد الأقصى {max} حرف',
-      selectOption: 'اختر خياراً',
-      uploadImage: 'رفع صورة',
-      dragDropImage: 'اسحب وأفلت الصورة هنا أو انقر للاختيار'
-    },
-
-    // Messages
-    messages: {
-      success: 'تم بنجاح',
-      error: 'حدث خطأ',
-      createSuccess: 'تم الإنشاء بنجاح',
-      updateSuccess: 'تم التحديث بنجاح',
-      deleteSuccess: 'تم الحذف بنجاح',
-      saveSuccess: 'تم الحفظ بنجاح',
-      uploadSuccess: 'تم رفع الملف بنجاح',
-      networkError: 'خطأ في الشبكة',
-      serverError: 'خطأ في الخادم',
-      notFound: 'لم يتم العثور على البيانات',
-      unauthorized: 'غير مخول للوصول',
-      forbidden: 'ممنوع الوصول'
-    },
-
-    // Media Library
-    media: {
-      title: 'مكتبة الوسائط',
-      uploadFiles: 'رفع الملفات',
-      selectFiles: 'اختيار الملفات',
-      dragDrop: 'اسحب وأفلت الملفات هنا',
-      supportedFormats: 'الصيغ المدعومة: JPG, PNG, GIF, PDF, DOC, DOCX',
-      fileSize: 'حجم الملف',
-      fileName: 'اسم الملف',
-      fileType: 'نوع الملف',
-      uploadDate: 'تاريخ الرفع',
-      deleteFile: 'حذف الملف',
-      copyUrl: 'نسخ الرابط'
-    },
-
-    // Theme
-    theme: {
-      light: 'فاتح',
-      dark: 'داكن',
-      system: 'النظام',
-      toggle: 'تغيير المظهر'
+    // Contact messages
+    contact: {
+      title: 'رسائل التواصل',
+      description: 'إدارة رسائل التواصل والاستفسارات',
+      messagesList: 'قائمة الرسائل',
+      messageDetails: 'تفاصيل الرسالة',
+      deleteConfirm: 'هل أنت متأكد من حذف هذه الرسالة؟',
+      senderName: 'اسم المرسل',
+      senderEmail: 'البريد الإلكتروني للمرسل',
+      senderPhone: 'رقم هاتف المرسل',
+      subject: 'الموضوع',
+      message: 'الرسالة',
+      receivedAt: 'تاريخ الاستلام',
+      status: 'الحالة',
+      read: 'مقروءة',
+      unread: 'غير مقروءة',
+      replied: 'تم الرد',
+      markAsRead: 'تحديد كمقروء',
+      markAsUnread: 'تحديد كغير مقروء',
+      sendReply: 'إرسال رد',
+      replyMessage: 'رسالة الرد',
+      noMessages: 'لا توجد رسائل',
+      allMessages: 'جميع الرسائل',
+      newMessages: 'الرسائل الجديدة',
+      readMessages: 'الرسائل المقروءة',
+      repliedMessages: 'الرسائل المجاب عليها'
     }
   },
   
@@ -629,6 +388,8 @@ const translations: Record<Language, Translation> = {
     language: 'Language',
     arabic: 'Arabic',
     english: 'English',
+    refresh: 'Refresh',
+    filters: 'Filters',
 
     // Navigation & Layout
     dashboard: 'Dashboard',
@@ -682,188 +443,57 @@ const translations: Record<Language, Translation> = {
     // Content Management
     content: {
       title: 'Title',
-      titleAr: 'Arabic Title',
-      titleEn: 'English Title',
-      description: 'Description',
-      descriptionAr: 'Arabic Description',
-      descriptionEn: 'English Description',
-      content: 'Content',
-      contentAr: 'Arabic Content',
-      contentEn: 'English Content',
-      image: 'Image',
-      featured: 'Featured',
-      published: 'Published',
-      draft: 'Draft',
-      category: 'Category',
-      tags: 'Tags',
+      slug: 'Slug',
       author: 'Author',
-      publishDate: 'Publish Date',
+      category: 'Category',
+      categories: 'Categories',
+      tag: 'Tag',
+      tags: 'Tags',
       createdAt: 'Created At',
       updatedAt: 'Updated At',
-      slug: 'Slug'
-    },
-
-    // News Management
-    news: {
-      title: 'News Management',
-      description: 'Manage news articles and announcements',
-      createNew: 'New Article',
-      editNews: 'Edit News',
-      newsList: 'News List',
-      newsDetails: 'News Details',
-      addNews: 'Add News',
-      deleteConfirm: 'Are you sure you want to delete this article?',
-      publishConfirm: 'Do you want to publish this article?',
-      summary: 'Summary',
-      summaryAr: 'Arabic Summary',
-      summaryEn: 'English Summary',
-      // Enhanced features
-      publish: 'Publish',
-      unpublish: 'Unpublish',
-      submitForReview: 'Submit for Review',
-      publishSuccess: 'Article published successfully',
-      unpublishSuccess: 'Article unpublished successfully',
-      submitReviewSuccess: 'Article submitted for review successfully',
-      publishError: 'Failed to publish article',
-      unpublishError: 'Failed to unpublish article',
-      submitReviewError: 'Failed to submit for review',
-      searchPlaceholder: 'Search articles...',
-      emptyMessage: 'No articles found',
-      emptyDescription: 'Create your first news article',
-      // Status
-      published: 'Published',
+      publishedAt: 'Published At',
+      status: 'Status',
+      featured: 'Featured',
       draft: 'Draft',
-      underReview: 'Under Review',
-      // Statistics
-      totalArticles: 'Total Articles',
-      totalCount: 'Total count',
-      publishedArticles: 'Published articles',
-      featuredArticles: 'Featured articles',
-      // Filters
-      statusFilter: 'Status',
-      featuredFilter: 'Featured',
-      categoryFilter: 'Category',
-      featuredOnly: 'Featured Only',
-      nonFeatured: 'Non-Featured'
-    },
-
-    // Programs Management
-    programs: {
-      title: 'Programs Management',
-      description: 'Manage training programs and courses',
-      createNew: 'New Program',
-      editProgram: 'Edit Program',
-      programsList: 'Programs List',
-      programDetails: 'Program Details',
-      addProgram: 'Add Program',
-      deleteConfirm: 'Are you sure you want to delete this program?',
-      duration: 'Duration',
+      published: 'Published',
+      scheduled: 'Scheduled',
+      archived: 'Archived',
+      content: 'Content',
+      description: 'Description',
+      summary: 'Summary',
+      image: 'Image',
+      images: 'Images',
+      file: 'File',
+      files: 'Files',
+      media: 'Media',
+      attachment: 'Attachment',
+      attachments: 'Attachments',
+      link: 'Link',
+      links: 'Links',
+      dateRange: 'Date Range',
       startDate: 'Start Date',
       endDate: 'End Date',
-      capacity: 'Capacity',
-      instructor: 'Instructor',
-      price: 'Price',
-      prerequisites: 'Prerequisites',
-      // Enhanced features
-      publish: 'Publish',
-      unpublish: 'Unpublish',
-      submitForReview: 'Submit for Review',
-      publishSuccess: 'Program published successfully',
-      unpublishSuccess: 'Program unpublished successfully',
-      submitReviewSuccess: 'Program submitted for review successfully',
-      publishError: 'Failed to publish program',
-      unpublishError: 'Failed to unpublish program',
-      submitReviewError: 'Failed to submit for review',
-      searchPlaceholder: 'Search programs...',
-      emptyMessage: 'No programs found',
-      emptyDescription: 'Create your first training program',
-      // Program specific
-      level: 'Level',
-      participants: 'Participants',
-      free: 'Free',
-      certified: 'Certified',
-      // Levels
-      beginner: 'Beginner',
-      intermediate: 'Intermediate',
-      advanced: 'Advanced',
-      expert: 'Expert',
-      // Duration types
-      hours: 'hours',
-      days: 'days',
-      weeks: 'weeks',
-      months: 'months',
-      // Statistics
-      totalPrograms: 'Total Programs',
-      publishedPrograms: 'Published programs',
-      featuredPrograms: 'Featured programs',
-      freePrograms: 'Free programs',
-      // Filters
-      levelFilter: 'Level',
-      typeFilter: 'Type',
-      certificationFilter: 'Certification',
-      freeFilter: 'Free Programs',
-      paidFilter: 'Paid Programs',
-      certifiedFilter: 'Certified',
-      nonCertifiedFilter: 'Non-Certified'
+      location: 'Location'
     },
 
-    // Events Management
-    events: {
-      title: 'Events Management',
-      description: 'Manage workshops, conferences, and seminars',
-      createNew: 'New Event',
-      editEvent: 'Edit Event',
-      eventsList: 'Events List',
-      eventDetails: 'Event Details',
-      addEvent: 'Add Event',
-      deleteConfirm: 'Are you sure you want to delete this event?',
-      location: 'Location',
-      locationAr: 'Arabic Location',
-      locationEn: 'English Location',
-      dateTime: 'Date & Time',
-      registrationRequired: 'Registration Required',
-      maxAttendees: 'Max Attendees',
-      // Enhanced features
-      publish: 'Publish',
-      unpublish: 'Unpublish',
-      submitForReview: 'Submit for Review',
-      publishSuccess: 'Event published successfully',
-      unpublishSuccess: 'Event unpublished successfully',
-      submitReviewSuccess: 'Event submitted for review successfully',
-      publishError: 'Failed to publish event',
-      unpublishError: 'Failed to unpublish event',
-      submitReviewError: 'Failed to submit for review',
-      searchPlaceholder: 'Search events...',
-      emptyMessage: 'No events found',
-      emptyDescription: 'Create your first event',
-      // Event specific
-      venue: 'Venue',
-      venueAr: 'Arabic Venue',
-      venueEn: 'English Venue',
-      eventType: 'Event Type',
-      eventTypeAr: 'Arabic Event Type',
-      eventTypeEn: 'English Event Type',
-      capacity: 'Capacity',
-      noLimit: 'No limit',
-      // Event Status
-      eventStatus: 'Event Status',
-      publishStatus: 'Publish Status',
-      upcoming: 'Upcoming',
-      ongoing: 'Ongoing',
-      past: 'Past',
-      cancelled: 'Cancelled',
-      // Statistics
-      totalEvents: 'Total Events',
-      upcomingEvents: 'Upcoming Events',
-      futureEvents: 'Future events',
-      publishedEvents: 'Published events',
-      featuredEvents: 'Featured events',
-      // Filters
-      eventStatusFilter: 'Event Status',
-      publishStatusFilter: 'Publish Status'
+    // Validation
+    validation: {
+      required: 'This field is required',
+      email: 'Please enter a valid email address',
+      username: 'Username can only contain letters, numbers, dots, underscores, and hyphens',
+      passwordLength: 'Password must be at least {length} characters long',
+      passwordMatch: 'Passwords do not match',
+      dateFormat: 'Invalid date format',
+      phoneFormat: 'Invalid phone number format',
+      urlFormat: 'Invalid URL format',
+      numberOnly: 'Please enter numbers only',
+      minValue: 'Value must be at least {min}',
+      maxValue: 'Value must be less than {max}',
+      minLength: 'Length must be at least {min} characters',
+      maxLength: 'Length must be less than {max} characters'
     },
 
-    // User Management
+    // Users management
     users: {
       title: 'User Management',
       description: 'Manage system users and their permissions',
@@ -914,203 +544,155 @@ const translations: Record<Language, Translation> = {
       systemAdministrators: 'System administrators',
       contentCreators: 'Content Creators',
       authorsAndEditors: 'Authors and editors',
+      totalCount: 'Total count',
       // Filters
-      roleFilter: 'Role',
-      statusFilter: 'Status'
-    },
-
-    // Categories Management
-    categories: {
-      title: 'Categories Management',
-      description: 'Organize your content with categories and subcategories',
-      createNew: 'New Category',
-      editCategory: 'Edit Category',
-      categoriesList: 'Categories List',
-      categoryDetails: 'Category Details',
-      addCategory: 'Add Category',
-      deleteConfirm: 'Are you sure you want to delete this category?',
-      searchPlaceholder: 'Search categories...',
-      emptyMessage: 'No categories found',
-      emptyDescription: 'Create your first category to organize content',
-      cannotDeleteWithContent: 'Cannot delete category with subcategories or content',
-      // Category specific
-      category: 'Category',
-      type: 'Type',
-      slug: 'Slug',
-      usage: 'Usage',
+      roleFilter: 'Filter by Role',
+      statusFilter: 'Filter by Status',
+      allRoles: 'All Roles',
+      allStatus: 'All Status',
+      // New additions for user creation
+      createUser: 'Create New User',
+      createUserDesc: 'Create a new user account and assign appropriate permissions',
+      basicInfo: 'Basic Information',
+      firstNamePlaceholder: 'Enter first name',
+      lastNamePlaceholder: 'Enter last name',
+      emailPlaceholder: 'Enter email address',
+      usernamePlaceholder: 'Enter username',
+      usernameHelper: 'Only letters, numbers, dots, underscores and hyphens allowed',
+      security: 'Security',
+      passwordPlaceholder: 'Enter password',
+      confirmPasswordPlaceholder: 'Confirm password',
+      passwordHelper: 'Password must be at least 8 characters long',
+      permissions: 'Permissions & Status',
+      accountActive: 'Account is active',
+      accountActiveHelper: 'Inactive users cannot log in to the system',
+      roleReference: 'Role Permissions Reference',
+      securityNotice: 'Security Notice',
+      securityTip1: 'Only assign Super Admin role to trusted personnel',
+      securityTip2: 'Users will receive a notification when their account is created',
+      securityTip3: 'Changing a user\'s role takes effect immediately',
+      securityTip4: 'Users will receive a notification when their account is modified',
+      securityTip5: 'Password changes will require the user to log in again',
+      securityTip6: 'Deactivating a user will immediately revoke their access',
+      createSuccess: 'User created successfully',
+      createFailed: 'Failed to create user',
+      createError: 'An error occurred while creating the user',
+      // Edit page specific
+      editUserDesc: 'Update user account information and permissions',
+      loadUserError: 'Failed to load user data',
+      updateSuccess: 'User updated successfully',
+      updateFailed: 'Failed to update user',
+      updateError: 'An error occurred while updating the user',
+      passwordManagement: 'Password Management',
+      changePassword: 'Change Password',
+      changePasswordHelper: 'Check this to set a new password for the user',
+      newPassword: 'New Password',
+      confirmNewPassword: 'Confirm New Password',
+      // View page specific
+      userProfile: 'User Profile',
+      userProfileDesc: 'View and manage user account',
+      userNotFound: 'User not found',
+      userNotFoundDesc: 'The requested user could not be found',
+      rolePermissions: 'Role Permissions',
+      currentRole: 'Current Role',
+      contentContributions: 'Content Contributions',
+      newsArticles: 'News Articles',
+      programs: 'Programs',
+      events: 'Events',
+      pages: 'Pages',
+      totalContentCreated: 'Total Content Created',
       items: 'items',
-      subcategories: 'Subcategories',
-      parent: 'Parent',
-      noCategory: 'No Category',
-      // Types
-      types: {
-        NEWS: 'News',
-        PROGRAMS: 'Programs',
-        EVENTS: 'Events',
-        PAGES: 'Pages',
-        GENERAL: 'General'
-      },
-      // Usage breakdown
-      newsCount: 'News',
-      programsCount: 'Programs',
-      eventsCount: 'Events',
-      pagesCount: 'Pages',
-      // Statistics
-      totalCategories: 'Total Categories',
-      newsCategories: 'News Categories',
-      organizeNews: 'For organizing news',
-      programCategories: 'Program Categories',
-      organizePrograms: 'For organizing programs',
-      parentCategories: 'Parent Categories',
-      withoutParent: 'Without parent category',
-      // Filters
-      typeFilter: 'Type',
-      hierarchyFilter: 'Hierarchy',
-      parentCategoriesFilter: 'Parent Categories',
-      subcategoriesFilter: 'Subcategories'
+      activityTimeline: 'Activity Timeline',
+      accountCreated: 'Account Created',
+      profileUpdated: 'Profile Updated',
+      accountStatus: 'Account Status',
+      memberSince: 'Member Since',
+      contactInformation: 'Contact Information',
+      quickActions: 'Quick Actions',
+      editProfile: 'Edit Profile',
+      sendEmail: 'Send Email',
+      activateUser: 'Activate User',
+      deactivateUser: 'Deactivate User',
+      deleteUser: 'Delete User',
+      activate: 'Activate',
+      deactivate: 'Deactivate',
+      activateConfirm: 'Are you sure you want to activate this user?',
+      deactivateConfirm: 'Are you sure you want to deactivate this user?',
+      deleteSuccess: 'User deleted successfully',
+      deleteError: 'Failed to delete user'
     },
 
-    // Pages Management
-    pages: {
-      title: 'Pages Management',
-      description: 'Manage static pages, policies, and informational content',
-      createNew: 'New Page',
-      editPage: 'Edit Page',
-      pagesList: 'Pages List',
-      pageDetails: 'Page Details',
-      addPage: 'Add Page',
-      deleteConfirm: 'Are you sure you want to delete this page?',
-      searchPlaceholder: 'Search pages...',
-      emptyMessage: 'No pages found',
-      emptyDescription: 'Create your first static page',
-      // Enhanced features
-      publish: 'Publish',
-      unpublish: 'Unpublish',
-      submitForReview: 'Submit for Review',
-      publishSuccess: 'Page published successfully',
-      unpublishSuccess: 'Page unpublished successfully',
-      submitReviewSuccess: 'Page submitted for review successfully',
-      publishError: 'Failed to publish page',
-      unpublishError: 'Failed to unpublish page',
-      submitReviewError: 'Failed to submit for review',
-      // Page specific
-      page: 'Page',
-      template: 'Template',
-      visibility: 'Visibility',
-      pageType: 'Page Type',
-      // Templates
-      default: 'Default',
-      landing: 'Landing Page',
-      policy: 'Policy',
-      about: 'About',
-      contact: 'Contact',
-      // Visibility
-      public: 'Public',
-      private: 'Private',
-      restricted: 'Restricted',
-      // Statistics
-      totalPages: 'Total Pages',
-      publishedPages: 'Published pages',
-      draftPages: 'Draft pages',
-      policyPages: 'Policy pages',
-      // Filters
-      templateFilter: 'Template',
-      visibilityFilter: 'Visibility',
-      statusFilter: 'Status'
-    },
-
-    // Partners Management
+    // Partners management
     partners: {
       title: 'Partners Management',
-      description: 'Manage organizational partners, sponsors, and collaborators',
+      description: 'Manage partners and sponsors',
       createNew: 'New Partner',
       editPartner: 'Edit Partner',
       partnersList: 'Partners List',
       partnerDetails: 'Partner Details',
       addPartner: 'Add Partner',
       deleteConfirm: 'Are you sure you want to delete this partner?',
-      searchPlaceholder: 'Search partners...',
-      emptyMessage: 'No partners found',
-      emptyDescription: 'Add your first organization partner',
-      // Partner specific
-      partner: 'Partner',
-      organization: 'Organization',
-      partnerType: 'Partnership Type',
-      website: 'Website',
+      name: 'Partner Name',
+      nameAr: 'Name in Arabic',
+      nameEn: 'Name in English',
       logo: 'Logo',
-      contact: 'Contact',
-      email: 'Email',
-      phone: 'Phone',
-      // Partner Types
-      sponsor: 'Sponsor',
-      collaborator: 'Collaborator',
-      supplier: 'Supplier',
-      client: 'Client',
-      strategic: 'Strategic',
-      // Statistics
-      totalPartners: 'Total Partners',
-      featuredPartners: 'Featured partners',
-      activePartners: 'Active partners',
-      sponsorPartners: 'Sponsor partners',
-      // Filters
-      typeFilter: 'Partnership Type',
-      statusFilter: 'Status',
-      featuredFilter: 'Featured'
+      website: 'Website',
+      type: 'Partnership Type',
+      order: 'Order',
+      featured: 'Featured',
+      partnershipStartDate: 'Partnership Start Date',
+      partnershipEndDate: 'Partnership End Date'
     },
 
-    // FAQ Management
+    // FAQ management
     faq: {
-      title: 'FAQ Management',
+      title: 'Frequently Asked Questions',
       description: 'Manage frequently asked questions and answers',
       createNew: 'New Question',
-      editFAQ: 'Edit Question',
+      editFaq: 'Edit Question',
       faqList: 'Questions List',
       faqDetails: 'Question Details',
-      addFAQ: 'Add Question',
+      addFaq: 'Add Question',
       deleteConfirm: 'Are you sure you want to delete this question?',
-      searchPlaceholder: 'Search questions and answers...',
-      emptyMessage: 'No questions found',
-      emptyDescription: 'Add your first FAQ question',
-      // Enhanced features
-      publish: 'Publish',
-      unpublish: 'Unpublish',
-      submitForReview: 'Submit for Review',
-      publishSuccess: 'Question published successfully',
-      unpublishSuccess: 'Question unpublished successfully',
-      submitReviewSuccess: 'Question submitted for review successfully',
-      publishError: 'Failed to publish question',
-      unpublishError: 'Failed to unpublish question',
-      submitReviewError: 'Failed to submit for review',
-      // FAQ specific
       question: 'Question',
-      questionAr: 'Arabic Question',
-      questionEn: 'English Question',
       answer: 'Answer',
-      answerAr: 'Arabic Answer',
-      answerEn: 'English Answer',
-      faqCategory: 'FAQ Category',
-      priority: 'Priority',
-      helpfulness: 'Helpfulness',
-      views: 'Views',
-      // Priority levels
-      high: 'High',
-      medium: 'Medium',
-      low: 'Low',
-      // Categories
-      general: 'General',
-      technical: 'Technical',
-      account: 'Account',
-      billing: 'Billing',
-      support: 'Support',
-      // Statistics
-      totalFAQ: 'Total FAQ',
-      publishedFAQ: 'Published questions',
-      draftFAQ: 'Draft questions',
-      highPriorityFAQ: 'High priority questions',
-      // Filters
-      categoryFilter: 'Category',
-      priorityFilter: 'Priority',
-      statusFilter: 'Status'
+      category: 'Category',
+      order: 'Order',
+      status: 'Status',
+      active: 'Active',
+      inactive: 'Inactive',
+      questionAr: 'Question in Arabic',
+      questionEn: 'Question in English',
+      answerAr: 'Answer in Arabic',
+      answerEn: 'Answer in English'
+    },
+
+    // Contact messages
+    contact: {
+      title: 'Contact Messages',
+      description: 'Manage contact messages and inquiries',
+      messagesList: 'Messages List',
+      messageDetails: 'Message Details',
+      deleteConfirm: 'Are you sure you want to delete this message?',
+      senderName: 'Sender Name',
+      senderEmail: 'Sender Email',
+      senderPhone: 'Sender Phone',
+      subject: 'Subject',
+      message: 'Message',
+      receivedAt: 'Received At',
+      status: 'Status',
+      read: 'Read',
+      unread: 'Unread',
+      replied: 'Replied',
+      markAsRead: 'Mark as Read',
+      markAsUnread: 'Mark as Unread',
+      sendReply: 'Send Reply',
+      replyMessage: 'Reply Message',
+      noMessages: 'No Messages',
+      allMessages: 'All Messages',
+      newMessages: 'New Messages',
+      readMessages: 'Read Messages',
+      repliedMessages: 'Replied Messages'
     },
 
     // Authentication
@@ -1181,86 +763,91 @@ const translations: Record<Language, Translation> = {
 };
 
 // Helper function to get nested translation
-const getNestedTranslation = (obj: Translation, path: string): string => {
-  const keys = path.split('.');
-  let current: Record<string, unknown> = obj;
+const getNestedTranslation = (obj: Translation, path: string[]): string => {
+  let current: string | Translation = obj;
   
-  for (const key of keys) {
-    if (current && typeof current === 'object' && key in current) {
-      current = current[key] as Record<string, unknown>;
-    } else {
-      return path; // Return the key if translation not found
+  for (const key of path) {
+    if (typeof current === 'string' || current === undefined) {
+      return key;
     }
+    current = current[key] || key;
   }
   
-  return typeof current === 'string' ? current : path;
+  return typeof current === 'string' ? current : path[path.length - 1];
 };
 
-// Helper function to replace parameters in translation strings
-const replaceParams = (str: string, params?: Record<string, string>): string => {
-  if (!params) return str;
+// Helper to replace params in translation strings
+const replaceParams = (text: string, params?: Record<string, string | number>): string => {
+  if (!params) return text;
   
-  return str.replace(/\{(\w+)\}/g, (match, key) => {
-    return params[key] || match;
-  });
+  let result = text;
+  for (const [key, value] of Object.entries(params)) {
+    result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value));
+  }
+  
+  return result;
 };
 
-// Language provider component
+// Language Provider Component
 interface LanguageProviderProps {
   children: ReactNode;
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [currentLang, setCurrentLang] = useState<Language>('ar');
+  const [currentLang, setCurrentLang] = useState<Language>('en');
+  const [isRTL, setIsRTL] = useState(false);
+  const pathname = usePathname();
 
-  // Load language preference from localStorage on mount
   useEffect(() => {
-    const savedLang = localStorage.getItem('cms-language') as Language;
-    if (savedLang && (savedLang === 'ar' || savedLang === 'en')) {
+    // Load language preference from localStorage on mount
+    const savedLang = localStorage.getItem('language');
+    if (savedLang === 'ar' || savedLang === 'en') {
       setCurrentLang(savedLang);
+      setIsRTL(savedLang === 'ar');
     }
   }, []);
 
-  // Update document attributes and localStorage when language changes
   useEffect(() => {
-    document.documentElement.setAttribute('lang', currentLang);
-    document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
-    localStorage.setItem('cms-language', currentLang);
-  }, [currentLang]);
+    // Update document direction based on language
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    document.documentElement.lang = currentLang;
+    
+    // Add RTL class to body if arabic
+    if (isRTL) {
+      document.body.classList.add('rtl');
+    } else {
+      document.body.classList.remove('rtl');
+    }
+  }, [isRTL, currentLang]);
 
+  // Function to change language
   const setLanguage = (lang: Language) => {
     setCurrentLang(lang);
+    setIsRTL(lang === 'ar');
+    localStorage.setItem('language', lang);
   };
 
-  const t = (key: string, params?: Record<string, string>): string => {
-    const translation = getNestedTranslation(translations[currentLang], key);
+  // Translation function
+  const t = (key: string, params?: Record<string, string | number>): string => {
+    const path = key.split('.');
+    const translation = getNestedTranslation(translations[currentLang], path);
     return replaceParams(translation, params);
   };
 
-  const isRTL = currentLang === 'ar';
-
-  const value: LanguageContextType = {
-    currentLang,
-    setLanguage,
-    t,
-    isRTL,
-  };
-
   return (
-    <LanguageContext.Provider value={value}>
+    <LanguageContext.Provider value={{ currentLang, setLanguage, t, isRTL }}>
       {children}
     </LanguageContext.Provider>
   );
 }
 
-// Custom hook to use language context
-export function useLanguage(): LanguageContextType {
+// Hook to use language context
+export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
+  
   if (context === undefined) {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
+  
   return context;
-}
-
-// Export language context for direct access if needed
-export { LanguageContext };
+};
